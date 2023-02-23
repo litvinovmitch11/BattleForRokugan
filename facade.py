@@ -95,3 +95,6 @@ class Facade:
     def show_another_battle_token(self, token_id):
         # can only if have opportunity
         pass
+
+    def make_new_game(self, player_count):
+        pass
