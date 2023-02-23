@@ -57,32 +57,43 @@ class BattleToken:  # should be incomplete type
     pass
 
 
+class ControlToken:
+    pass
+
+
 class Board:
 
     def __init__(self):
         self.round = 0
         self.players = []
         self.all_provinces = []
-        self.putted_battle_tokens = []
-        self.putted_control_tokens = []
+        self.putted_battle_tokens = []  # should be inside province
+        self.putted_control_tokens = []  # should be inside province
         self.can_put_army_token = have_land_way
         for i in range(30):
             self.all_provinces.append(Province(i))
 
-    def put_battle_token(self, battle_token: BattleToken, id_start: int, id_finish: int):
+    def put_battle_token(self, battle_token: BattleToken, ind_start: int, ind_finish: int):
         # incomplete type for this line
         self.putted_battle_tokens.append(battle_token)
-        if id_start == id_finish:
+        if ind_start == ind_finish:
             for province in self.all_provinces:
-                if province.ind == id_start:
+                if province.ind == ind_start:
                     province.items_inside.append(battle_token)
         else:
-            if self.can_put_army_token[id_start][id_finish] == 0:
+            if self.can_put_army_token[ind_start][ind_finish] == 0:
                 return False
-            self.can_put_army_token[id_start][id_finish] = 0
+            self.can_put_army_token[ind_start][ind_finish] = 0
 
-    def add_player(self):
-        self.players.append(Player())
+    def put_control_token(self, control_token: ControlToken, ind: int):
+        # incomplete type for this line
+        self.putted_control_tokens.append(control_token)
+        for item in self.all_provinces[ind].items_inside:
+            if type(item) == ControlToken and item.caste == control_token.caste:
+                control_token.visible = True
+
+    def add_player(self, id_player: int):
+        self.players.append(Player(id_player))
 
 
 class BattleToken:  # and here initialization
@@ -96,25 +107,31 @@ class BattleToken:  # and here initialization
         self.in_active = False
         self.visible = False
 
-    def put_on_board(self, my_board: Board, id_start: int, id_finish: int):
+    def put_on_board(self, my_board: Board, ind_start: int, ind_finish: int):
         self.on_board = True
-        my_board.put_battle_token(self, id_start, id_finish)
+        my_board.put_battle_token(self, ind_start, ind_finish)
 
     def make_visible(self):
         self.visible = True
 
 
-class ControlToken:
+class ControlToken:  # and here initialization
     def __init__(self, caste: Caste):
         self.visible = False
+        self.on_board = False
         self.caste = caste
+
+    def put_on_board(self, my_board: Board, ind: int):
+        self.on_board = True
+        my_board.put_control_token(self, ind)
 
 
 class Player:
-    def __init__(self):
+    def __init__(self, id_player: int):
         self.caste = None
         self.battle_token = []
         self.active = []
+        self.id_player = id_player
 
     def put_caste(self, caste_name):
         self.caste = caste_name
@@ -194,6 +211,5 @@ class Province:
 
 if __name__ == "__main__":
     board = Board()
-    board.add_player()
-    board.add_player()
-    pass
+    board.add_player(1)
+    board.add_player(2)
