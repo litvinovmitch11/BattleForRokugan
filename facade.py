@@ -13,6 +13,7 @@ class Facade:
         return ["tsaplya"]
 
     def choose_clan(self):
+        print("Выберите свой клан\n")
         a = input(*self.free_caste())
         self.caste = a
         # next_step
@@ -38,19 +39,33 @@ class Facade:
             return ["all"]
         return []
 
-    def use_card(self, player, card):
-        player_cards = self.get_player_cards(self, player)
+    def get_battle_token_reset(self, player_id):
+        # ask to server about battle token
+        if player_id == 1:
+            return []
+        return ["all_tokens"]
+
+    def use_card(self):
+        player_cards = self.get_all_my_cards()
         if len(player_cards) != 0:
-            decision = input("Хотите сыграть карту?\n")
+            print("Хотите сыграть карту?\nВы можете выбрать из:")
+            decision = input(*player_cards)
+            if decision is not None:
+                # give card to server
+                # play_card()
+                return True
+            else:
+                return False
         else:
             print("У вас нет карт, вы пропускаете ход\n")
         # should cut later
 
         # if card == None, move come to next player
-        pass
+        return False
 
-    def show_someone_reset(self, player, whose_reset):
-        # show players battle_token
+    def show_someone_reset(self, whose_reset):
+        reset = self.get_battle_token_reset(whose_reset)
+        # show players battle_token reset
         pass
 
     def get_all_my_battle_token(self, player):
@@ -73,5 +88,10 @@ class Facade:
         # obvi
         pass
 
-    def show_battle_token(self, token_id):
+    def show_my_battle_token(self, token_id):
+        # can alltime, if token_id is correct
+        pass
+
+    def show_another_battle_token(self, token_id):
+        # can only if have opportunity
         pass
