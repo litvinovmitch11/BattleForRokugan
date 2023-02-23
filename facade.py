@@ -4,21 +4,37 @@ class Facade:
 
     def __init__(self, player_id):
         self.player = player_id
+        self.caste = None
         # request to server say about new player
 
-    def choose_clan(self, player, free_clans):
+    def free_caste(self):
+        if self.player == 1:
+            return ["crab"]
+        return ["tsaplya"]
+
+    def choose_clan(self):
+        a = input(*self.free_caste())
+        self.caste = a
+        # next_step
+
+    def get_possible_positions_battle_token(self):
+        # same for all players
         pass
 
-    def put_control_token(self, player, pos_on_board):
+    def get_possible_positions_control_token(self):
+        # same for all players
+        pass
+
+    def put_control_token(self, pos_on_board):
         # check is can player put control token on this position
         pass
 
-    def put_battle_token(self, player, pos_on_board):
+    def put_battle_token(self, pos_on_board):
         # check is can player put control token on this position
         pass
 
-    def get_player_cards(self, player):
-        if player == "crab":
+    def get_all_my_cards(self):
+        if self.player == "crab":
             return ["all"]
         return []
 
@@ -37,22 +53,12 @@ class Facade:
         # show players battle_token
         pass
 
-    ####################################################################
-
-    def get_battle_token(self, player):
+    def get_all_my_battle_token(self, player):
         # all token have status. Some on board (face up/down), some free, some used.
         pass
 
-    def get_control_token(self, player):
+    def get_all_my_control_token(self, player):
         # all token have status. Some on board (face up/down), some free, (?some used?)
-        pass
-
-    def get_possible_positions_battle_token(self):
-        # same for all players
-        pass
-
-    def get_possible_positions_control_token(self):
-        # same for all players
         pass
 
     def round_count(self):
