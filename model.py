@@ -77,6 +77,11 @@ class Board:
                 free_castes.append(watching_caste)
         return free_castes
 
+    def make_all_battle_token_visible(self):
+        for player in self.players:
+            for battle_token in player.battle_tokens:
+                battle_token.make_visible()
+
 
 class BattleToken:  # and here initialization
 
@@ -92,9 +97,7 @@ class BattleToken:  # and here initialization
     def put_on_board(self, my_board: Board, ind_start: int, ind_finish: int):
         self.on_board = True
         if ind_start == ind_finish:
-            for province in my_board.all_provinces:
-                if province.ind == ind_start:
-                    province.items_inside.append(self)
+            my_board.all_provinces[ind_start].protection_battle_token.append(self)
         else:
             my_board.all_provinces[ind_start].battle_outside.append(ind_start)
             my_board.all_provinces[ind_finish].battle_inside.append(ind_finish)
@@ -115,8 +118,8 @@ class ControlToken:  # and here initialization
 
     def put_on_board(self, my_board: Board, ind: int):
         self.on_board = True
-        for item in my_board.all_provinces[ind].items_inside:
-            if type(item) == ControlToken and item.caste == self.caste:
+        for item in my_board.all_provinces[ind].control_tokens:
+            if item.caste == self.caste:
                 self.visible = True
 
     def make_visible(self):
@@ -126,28 +129,41 @@ class ControlToken:  # and here initialization
 class Player:
     def __init__(self, id_player: int, my_board: Board):
         self.caste = None
-        self.battle_token = []
+        self.battle_tokens = []
+        self.control_tokens = []
         self.active = []
         self.id_player = id_player
         self.my_board = my_board
 
-    def put_caste(self, caste_name):
-        self.caste = caste_name
+    def choose_caste(self, caste: Caste):
+        self.caste = caste
+        self.take_battle_token()
+        self.take_control_token()
+        for province in self.my_board.all_provinces:
+            if province.caste == caste and province.capital:
+                province.control_tokens.append(self.control_tokens[0])
+                self.control_tokens[0].on_board = True
+                break
 
     def take_battle_token(self):
         power_army = [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 4, 4, 5]
         for power in power_army:
-            self.battle_token.append(BattleToken(self.caste, power, TokenType.army))
+            self.battle_tokens.append(BattleToken(self.caste, power, TokenType.army))
         for power in [1, 1, 2]:
-            self.battle_token.append(BattleToken(self.caste, power, TokenType.fleet))
+            self.battle_tokens.append(BattleToken(self.caste, power, TokenType.fleet))
         for power in [1, 2]:
-            self.battle_token.append(BattleToken(self.caste, power, TokenType.shinobi))
+            self.battle_tokens.append(BattleToken(self.caste, power, TokenType.shinobi))
         for power in [2, 2]:
-            self.battle_token.append(BattleToken(self.caste, power, TokenType.blessing))
-        self.battle_token.append(BattleToken(self.caste, 0, TokenType.diplomacy))
-        self.battle_token.append(BattleToken(self.caste, 0, TokenType.pogrom))
-        self.battle_token.append(BattleToken(self.caste, 0, TokenType.empty))
-        random.shuffle(self.battle_token)
+            self.battle_tokens.append(BattleToken(self.caste, power, TokenType.blessing))
+        self.battle_tokens.append(BattleToken(self.caste, 0, TokenType.diplomacy))
+        self.battle_tokens.append(BattleToken(self.caste, 0, TokenType.pogrom))
+        self.battle_tokens.append(BattleToken(self.caste, 0, TokenType.empty))
+        random.shuffle(self.battle_tokens)
+
+    def take_control_token(self):
+        power = 2 if self.caste == Caste.crab else 1
+        for i in range(30):
+            self.control_tokens.append(ControlToken(self.caste, power))
 
     def make_active(self):
         for token in self.active:
@@ -156,12 +172,12 @@ class Player:
                 self.active.append(token)
                 break
         while len(self.active) < 6:
-            for token in self.battle_token:
+            for token in self.battle_tokens:
                 if not token.in_active and not token.on_board and not token.in_reset:
                     self.active.append(token)
                     token.in_active = True
                     break
-        random.shuffle(self.battle_token)
+        random.shuffle(self.battle_tokens)
 
     def put_battle_token_on_board(self, battle_token: BattleToken, ind_start: int, ind_finish: int):
         battle_token.put_on_board(self.my_board, ind_start, ind_finish)
@@ -180,11 +196,11 @@ class Province:
         self.shadow = False
         self.owning_caste = None
         self.ind = ind
-        self.items_inside = []
 
         self.battle_inside = []
         self.battle_outside = []
-        self.control_token = []
+        self.protection_battle_token = []
+        self.control_tokens = []
 
         self.glory_points = 0
         if ind in [27, 25, 23, 18, 16, 14, 5]:
