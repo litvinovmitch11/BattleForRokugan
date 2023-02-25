@@ -1,100 +1,81 @@
-# dose Facade knows whose request? If yes, info about player are useless
+# Везде, где возвращаю BattleToken или ControlToken, судя по всему эти классы будут приведены в простой вид
+# Чтобы Леша смог их отрисовать (вероятно просто айдиншник/какой стороной повернут/позицию на карте)
+
+from model import *
+
 
 class Facade:
 
-    def __init__(self, player_id):
-        self.player = player_id
-        self.caste = None
-        # request to server say about new player
+    def __init__(self, my_board: Board):
+        self.board = my_board
 
-    def free_caste(self):
-        if self.player == 1:
-            return ["crab"]
-        return ["tsaplya"]
-
-    def choose_clan(self):
-        print("Выберите свой клан\n")
-        a = input(*self.free_caste())
-        self.caste = a
-        # next_step
-
-    def get_possible_positions_battle_token(self):
-        # same for all players
+    def make_player_unique_id(self) -> int:
+        # need to assign id to a player
         pass
 
-    def get_possible_positions_control_token(self):
-        # same for all players
+    def add_player(self, player_id: int) -> bool:
+        # видимо раз добавляю player в фасад, то знаю на какую доску
         pass
 
-    def put_control_token(self, pos_on_board):
-        # check is can player put control token on this position
-        pass
+    def get_free_caste(self) -> list[Caste]:
+        # return free cast for this board
+        return self.board.get_free_caste()
 
-    def put_battle_token(self, pos_on_board):
-        # check is can player put control token on this position
-        pass
-
-    def get_all_my_cards(self):
-        if self.player == "crab":
-            return ["all"]
-        return []
-
-    def get_battle_token_reset(self, player_id):
-        # ask to server about battle token
-        if player_id == 1:
-            return []
-        return ["all_tokens"]
-
-    def use_card(self):
-        player_cards = self.get_all_my_cards()
-        if len(player_cards) != 0:
-            print("Хотите сыграть карту?\nВы можете выбрать из:")
-            decision = input(*player_cards)
-            if decision is not None:
-                # give card to server
-                # play_card()
-                return True
-            else:
-                return False
-        else:
-            print("У вас нет карт, вы пропускаете ход\n")
-        # should cut later
-
-        # if card == None, move come to next player
+    def set_clan(self, player_id: int, my_caste: Caste) -> bool:
+        if my_caste in self.board.get_free_caste():
+            # here adding putting this cast to this player
+            return True
         return False
 
-    def show_someone_reset(self, whose_reset):
-        reset = self.get_battle_token_reset(whose_reset)
+    def get_possible_positions_battle_token(self) -> list[tuple[int, int]]:
+        # attack from id_1 to id_2. if id_1 == id_2 -> can protect
+        # same for all players
+        pass
+
+    def get_possible_positions_control_token(self, my_board: Board) -> list[int]:
+        # need in preparation phase. Return all province without an owner
+        pass
+
+    def put_control_token(self, player_id: int, ind_province: int) -> bool:
+        # check is can player put control token on this position
+        pass
+
+    def put_battle_token(self, player_id: int, ind_province_from: int, int_province_to: int) -> bool:
+        # if from == to, token put like protecting
+        pass
+
+    def show_someone_reset(self, whose_reset_id: int) -> list[BattleToken]:
         # show players battle_token reset
         pass
 
-    def get_all_my_battle_token(self, player):
+    def show_active(self, player_id: int) -> list[BattleToken]:
         # all token have status. Some on board (face up/down), some free, some used.
         pass
 
-    def get_all_my_control_token(self, player):
+    def show_control_token(self, player_id: int) -> list[ControlToken]:
         # all token have status. Some on board (face up/down), some free, (?some used?)
         pass
 
-    def round_count(self):
+    def round_count(self) -> int:
         # return 0 if preparing, 6 if ending game, 1-5 else
         pass
 
-    def get_board(self):
-        # return all board (all status), may be replaced by many function
+    def get_board(self) -> Board:
+        # return all board (all status), may be replaced by many function, should rewrite
         pass
 
-    def whose_move(self):
-        # obvi
+    def whose_move(self) -> int:
+        # return player_id whose move
         pass
 
-    def show_my_battle_token(self, token_id):
-        # can alltime, if token_id is correct
+    def show_battle_token_on_board(self, player_id: int, token_id: int) -> BattleToken:
+        # probably not int, maybe info about token or position
+        # if token_id on board and player has the opportunity
         pass
 
-    def show_another_battle_token(self, token_id):
-        # can only if have opportunity
+    def use_card(self, card_id: int):  # -> bool :
         pass
 
-    def make_new_game(self, player_count):
+    def get_all_my_cards(self, player_id: int):  # -> list[Card]:
+        # card will include not soon
         pass
