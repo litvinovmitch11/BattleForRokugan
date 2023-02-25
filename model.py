@@ -1,5 +1,5 @@
 import random
-import enum
+from all_include import *
 
 have_land_way = [[1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -33,28 +33,7 @@ have_land_way = [[1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1]]
 
 
-class Caste(enum.Enum):
-    crab = "crab"
-    crane = "crane"
-    lion = "lion"
-    scorpion = "scorpion"
-    unicorn = "unicorn"
-    dragon = "dragon"
-    phoenix = "phoenix"
-
-
-class TokenType(enum.Enum):
-    army = "army"
-    fleet = "fleet"
-    shinobi = "shinobi"
-    blessing = "blessing"
-    diplomacy = "diplomacy"
-    pogrom = "pogrom"
-    empty = "empty"
-
-
 class Board:
-
     def __init__(self):
         self.round = 0
         self.players = []
@@ -66,7 +45,7 @@ class Board:
     def add_player(self, id_player: int):
         self.players.append(Player(id_player, self))
 
-    def get_free_caste(self):
+    def get_free_caste(self) -> list[Caste]:
         free_castes = []
         for watching_caste in Caste:
             used_caste = False
@@ -83,8 +62,7 @@ class Board:
                 battle_token.make_visible()
 
 
-class BattleToken:  # and here initialization
-
+class BattleToken:
     def __init__(self, caste: Caste, power: int, token_type: TokenType):
         self.caste = caste
         self.power = power
@@ -92,7 +70,7 @@ class BattleToken:  # and here initialization
         self.on_board = False
         self.in_reset = False
         self.in_active = False
-        self.visible = False
+        self.visible = token_type == TokenType.blessing
 
     def put_on_board(self, my_board: Board, ind_start: int, ind_finish: int):
         self.on_board = True
@@ -109,7 +87,7 @@ class BattleToken:  # and here initialization
         self.visible = True
 
 
-class ControlToken:  # and here initialization
+class ControlToken:
     def __init__(self, caste: Caste, power: int):
         self.visible = False
         self.on_board = False
@@ -192,17 +170,21 @@ class Province:
         self.capital = False
         self.coastal = False  # прибержная
         self.mainland = False  # материковая
-        self.caste = None
         self.shadow = False
+        self.caste = None
         self.owning_caste = None
-        self.ind = ind
 
         self.battle_inside = []
         self.battle_outside = []
         self.protection_battle_token = []
         self.control_tokens = []
 
+        self.ind = ind
         self.glory_points = 0
+
+        self.set_correct_field_value(ind)
+
+    def set_correct_field_value(self, ind):
         if ind in [27, 25, 23, 18, 16, 14, 5]:
             self.capital = True
         if ind in [3, 4]:
