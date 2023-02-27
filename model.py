@@ -217,5 +217,3 @@ class Province:
 
 if __name__ == "__main__":
     board = Board()
-    board.add_player(1)
-    board.add_player(2)
