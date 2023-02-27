@@ -5,9 +5,19 @@ package basic;
 service Basic{
 
   rpc Echo(Message) returns (Message){}
+  rpc PutControlToken(PlayerProvinceId) returns (Key){}
 
 }
 
 message Message {
   string message = 1;
+}
+
+message PlayerProvinceId {
+  int32 player_id = 1;
+  int32 province_id = 2;
+}
+
+message Key {
+  bool key = 1;
 }

@@ -36,11 +36,11 @@ class Facade:
         # need in preparation phase. Return all province without an owner
         pass
 
-    def put_control_token(self, player_id: int, ind_province: int) -> bool:
+    def put_control_token(self, player_id: int, province_id: int) -> bool:
         # check is can player put control token on this position
         pass
 
-    def put_battle_token(self, player_id: int, ind_province_from: int, int_province_to: int) -> bool:
+    def put_battle_token(self, player_id: int, province_from_id: int, province_to_id: int) -> bool:
         # if from == to, token put like protecting
         pass
 
