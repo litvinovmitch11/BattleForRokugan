@@ -9,13 +9,11 @@ class Facade:
     def __init__(self, my_board: Board):
         self.board = my_board
 
-    def make_player_unique_id(self) -> int:
-        # need to assign id to a player
-        pass
-
     def add_player(self, player_id: int) -> bool:
-        # видимо раз добавляю player в фасад, то знаю на какую доску
-        pass
+        if player_id not in self.board.players:
+            self.board.players.append(player_id)
+            return True
+        return False
 
     def get_free_caste(self) -> list[Caste]:
         # return free cast for this board
@@ -24,7 +22,7 @@ class Facade:
     def set_clan(self, player_id: int, my_caste: Caste) -> bool:
         if my_caste in self.board.get_free_caste():
             # here adding putting this cast to this player
-            return True
+            return self.board.set_clan_to_player(player_id, my_caste)
         return False
 
     def get_possible_positions_battle_token(self) -> list[tuple[int, int]]:
@@ -36,17 +34,19 @@ class Facade:
         # need in preparation phase. Return all province without an owner
         pass
 
-    def put_control_token(self, player_id: int, ind_province: int) -> bool:
+    def put_control_token(self, player_id: int, province_id: int) -> bool:
         # check is can player put control token on this position
         pass
 
-    def put_battle_token(self, player_id: int, ind_province_from: int, int_province_to: int) -> bool:
+    def put_battle_token(self, player_id: int, province_from_id: int, province_to_id: int) -> bool:
         # if from == to, token put like protecting
         pass
 
-    def show_someone_reset(self, whose_reset_id: int) -> list[BattleToken]:
+    def show_someone_reset(self, caste: Caste) -> list[BattleToken]:
         # show players battle_token reset
-        pass
+
+        # return False, if error, list[BattleToken] else
+        return self.board.show_player_reset(caste)
 
     def show_active(self, player_id: int) -> list[BattleToken]:
         # all token have status. Some on board (face up/down), some free, some used.
@@ -58,7 +58,7 @@ class Facade:
 
     def round_count(self) -> int:
         # return 0 if preparing, 6 if ending game, 1-5 else
-        pass
+        return self.board.round
 
     def get_board(self) -> Board:
         # return all board (all status), may be replaced by many function, should rewrite

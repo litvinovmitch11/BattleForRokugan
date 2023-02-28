@@ -42,8 +42,8 @@ class Board:
         for i in range(30):
             self.all_provinces.append(Province(i))
 
-    def add_player(self, id_player: int):
-        self.players.append(Player(id_player, self))
+    def add_player(self, player_id: int):
+        self.players.append(Player(player_id, self))
 
     def get_free_caste(self) -> list[Caste]:
         free_castes = []
@@ -61,6 +61,31 @@ class Board:
             for battle_token in player.battle_tokens:
                 battle_token.make_visible()
 
+    def get_all_provinces_without_control_token(self) -> list[int]:
+        ans = []
+        for province in self.all_provinces:
+            if province.owning_caste is None:
+                ans.append(province.ind)
+        return ans
+
+    def set_clan_to_player(self, player_id: int, my_caste: Caste) -> bool:
+        for player in self.players:
+            if player.player_id == player_id:
+                if player.caste is not None:
+                    return False
+                player.caste = my_caste
+                return True
+        return False
+
+    def show_player_reset(self, my_caste: Caste):
+        for player in self.players:
+            if player.caste == my_caste:
+                return player.show_reset()
+        return False
+
+    def show_player_active(self, player_id):
+        pass
+
 
 class BattleToken:
     def __init__(self, caste: Caste, power: int, token_type: TokenType):
@@ -73,15 +98,19 @@ class BattleToken:
         self.visible = token_type == TokenType.blessing
 
     def put_on_board(self, my_board: Board, ind_start: int, ind_finish: int):
+
         self.on_board = True
+        my_board.all_provinces[ind_start].protection_battle_token.append(self)
         if ind_start == ind_finish:
-            my_board.all_provinces[ind_start].protection_battle_token.append(self)
+            pass
         else:
             my_board.all_provinces[ind_start].battle_outside.append(ind_start)
             my_board.all_provinces[ind_finish].battle_inside.append(ind_finish)
             if my_board.can_put_army_token[ind_start][ind_finish] == 0:
+                self.on_board = False
                 return False
             my_board.can_put_army_token[ind_start][ind_finish] = 0
+            return True
 
     def make_visible(self):
         self.visible = True
@@ -94,11 +123,14 @@ class ControlToken:
         self.power = power
         self.caste = caste
 
-    def put_on_board(self, my_board: Board, ind: int):
+    def put_on_board(self, my_board: Board, province_id: int) -> bool:
+        if my_board.round == 0 and province_id not in my_board.get_all_provinces_without_control_token():
+            return False
         self.on_board = True
-        for item in my_board.all_provinces[ind].control_tokens:
+        for item in my_board.all_provinces[province_id].control_tokens:
             if item.caste == self.caste:
                 self.visible = True
+        return True
 
     def make_visible(self):
         self.visible = True
@@ -110,7 +142,7 @@ class Player:
         self.battle_tokens = []
         self.control_tokens = []
         self.active = []
-        self.id_player = id_player
+        self.player_id = id_player
         self.my_board = my_board
 
     def choose_caste(self, caste: Caste):
@@ -162,6 +194,13 @@ class Player:
 
     def put_control_token_on_board(self, control_token: ControlToken, ind: int):
         control_token.put_on_board(self.my_board, ind)
+
+    def show_reset(self) -> list[BattleToken]:
+        ans = []
+        for battle_token in self.battle_tokens:
+            if battle_token.in_reset:
+                ans.append(battle_token)
+        return ans
 
 
 class Province:
