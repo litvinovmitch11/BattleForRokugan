@@ -24,6 +24,11 @@ class BasicStub(object):
                 request_serializer=basic__pb2.PlayerProvinceId.SerializeToString,
                 response_deserializer=basic__pb2.Key.FromString,
                 )
+        self.RoundCount = channel.unary_unary(
+                '/basic.Basic/RoundCount',
+                request_serializer=basic__pb2.Empty.SerializeToString,
+                response_deserializer=basic__pb2.Count.FromString,
+                )
 
 
 class BasicServicer(object):
@@ -41,6 +46,12 @@ class BasicServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def RoundCount(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_BasicServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -53,6 +64,11 @@ def add_BasicServicer_to_server(servicer, server):
                     servicer.PutControlToken,
                     request_deserializer=basic__pb2.PlayerProvinceId.FromString,
                     response_serializer=basic__pb2.Key.SerializeToString,
+            ),
+            'RoundCount': grpc.unary_unary_rpc_method_handler(
+                    servicer.RoundCount,
+                    request_deserializer=basic__pb2.Empty.FromString,
+                    response_serializer=basic__pb2.Count.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -95,5 +111,22 @@ class Basic(object):
         return grpc.experimental.unary_unary(request, target, '/basic.Basic/PutControlToken',
             basic__pb2.PlayerProvinceId.SerializeToString,
             basic__pb2.Key.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def RoundCount(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/basic.Basic/RoundCount',
+            basic__pb2.Empty.SerializeToString,
+            basic__pb2.Count.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

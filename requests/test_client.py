@@ -18,14 +18,22 @@ class BasicClient(object):
         message = pb2.Message(message=message)
         return self.stub.Echo(message)
 
-    def req_1(self, player_id, province_id):
+    def put_control_token(self, player_id, province_id):
         context = pb2.PlayerProvinceId(player_id = player_id, province_id = province_id)
         return self.stub.PutControlToken(context)
+
+    def round_count(self):
+        return self.stub.RoundCount(pb2.Empty())
 
 
 if __name__ == '__main__':
     client = BasicClient()
-    result = client.req_1(player_id=312, province_id=31)
+
+    result = client.put_control_token(player_id=312, province_id=31)
     print(result.key)
+
     result = client.send_message(message=input())
     print(f'{result.message}')
+
+    result = client.round_count()
+    print(result.count)
