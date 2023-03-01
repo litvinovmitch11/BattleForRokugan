@@ -5,8 +5,8 @@ import facade
 
 class BasicService(pb2_grpc.BasicServicer):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, fd: facade.Facade, *args, **kwargs):
+        self.facade = fd
 
     def Echo(self, request, context):
         print("Echo")
@@ -16,14 +16,10 @@ class BasicService(pb2_grpc.BasicServicer):
 
     def PutControlToken(self, request, context):
         print("PutControlToken")
-        print(f"Player id: {request.player_id}")
-        print(f"Province id: {request.province_id}")
-        # result = facade.Facade.put_control_token()
-        result = {"key": True}
+        result = {"key": self.facade.put_control_token(request.player_id, request.province_id)}
         return pb2.Key(**result)
 
     def RoundCount(self, request, context):
         print("RoundCount")
-        # result = facade.Facade.round_count()
-        result = {"count": 3}
+        result = {"count": self.facade.round_count()}
         return pb2.Count(**result)
