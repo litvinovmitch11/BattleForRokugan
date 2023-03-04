@@ -77,15 +77,26 @@ class Board:
                 return True
         return False
 
-    def show_player_reset(self, my_caste: Caste):
+    def get_player_reset(self, player_id: int):
         for player in self.players:
-            if player.caste == my_caste:
+            if player.player_id == player_id:
                 return player.show_reset()
         return False
 
-    def show_player_active(self, player_id):
-        pass
+    def get_player_active(self, player_id: int):  # -> list[BattleToken]:
+        for player in self.players:
+            if player.player_id == player_id:
+                return player.active
 
+    def get_possible_position_to_put_battle_token(self):
+        return self.can_put_army_token
+
+    def get_possible_position_to_put_control_token(self):
+        ans = []
+        for province in self.all_provinces:
+            if len(province.control_tokens):
+                ans.append(province.ind)
+        return ans
 
 class BattleToken:
     def __init__(self, caste: Caste, power: int, token_type: TokenType):

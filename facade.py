@@ -25,14 +25,14 @@ class Facade:
             return self.board.set_clan_to_player(player_id, my_caste)
         return False
 
-    def get_possible_positions_battle_token(self) -> list[tuple[int, int]]:
-        # attack from id_1 to id_2. if id_1 == id_2 -> can protect
+    def get_possible_positions_battle_token(self) -> list[list[int]]:
+        # attack from id_1 to id_2 (1 - if can, 0 - else). if id_1 == id_2 -> can protect
         # same for all players
-        pass
+        return self.board.get_possible_position_to_put_battle_token()
 
     def get_possible_positions_control_token(self, my_board: Board) -> list[int]:
         # need in preparation phase. Return all province without an owner
-        pass
+        return my_board.get_possible_position_to_put_control_token()
 
     def put_control_token(self, player_id: int, province_id: int) -> bool:
         # check is can player put control token on this position
@@ -42,13 +42,14 @@ class Facade:
         # if from == to, token put like protecting
         pass
 
-    def show_someone_reset(self, caste: Caste) -> list[BattleToken]:
+    def show_someone_reset(self, player_id: int) -> list[BattleToken]:
         # show players battle_token reset
 
         # return False, if error, list[BattleToken] else
-        return self.board.show_player_reset(caste)
+        return self.board.get_player_reset(player_id)
 
     def show_active(self, player_id: int) -> list[BattleToken]:
+        return self.board.get_player_active(player_id)
         # all token have status. Some on board (face up/down), some free, some used.
         pass
 
