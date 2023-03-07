@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package basic;
+
+service Basic{
+
+  rpc Echo(Message) returns (Message){}
+  rpc PutControlToken(PlayerProvinceId) returns (Key){}
+  rpc RoundCount(Empty) returns (Count){}
+
+}
+
+message Empty {}
+
+message Message {
+  string message = 1;
+}
+
+message PlayerProvinceId {
+  int32 player_id = 1;
+  int32 province_id = 2;
+}
+
+message Key {
+  bool key = 1;
+}
+
+message Count {
+  int32 count = 1;
+}
