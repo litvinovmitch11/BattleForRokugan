@@ -33,71 +33,6 @@ have_land_way = [[1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1]]
 
 
-class Board:
-    def __init__(self):
-        self.round = 0
-        self.players = []
-        self.all_provinces = []
-        self.can_put_army_token = have_land_way
-        for i in range(30):
-            self.all_provinces.append(Province(i))
-
-    def add_player(self, player_id: int):
-        self.players.append(Player(player_id, self))
-
-    def get_free_caste(self) -> list[Caste]:
-        free_castes = []
-        for watching_caste in Caste:
-            used_caste = False
-            for player in self.players:
-                if player.caste == watching_caste:
-                    used_caste = True
-            if not used_caste:
-                free_castes.append(watching_caste)
-        return free_castes
-
-    def make_all_battle_token_visible(self):
-        for player in self.players:
-            for battle_token in player.battle_tokens:
-                battle_token.make_visible()
-
-    def get_all_provinces_without_control_token(self) -> list[int]:
-        ans = []
-        for province in self.all_provinces:
-            if province.owning_caste is None:
-                ans.append(province.ind)
-        return ans
-
-    def set_clan_to_player(self, player_id: int, my_caste: Caste) -> bool:
-        for player in self.players:
-            if player.player_id == player_id:
-                if player.caste is not None:
-                    return False
-                player.caste = my_caste
-                return True
-        return False
-
-    def get_player_reset(self, player_id: int):
-        for player in self.players:
-            if player.player_id == player_id:
-                return player.show_reset()
-        return False
-
-    def get_player_active(self, player_id: int):  # -> list[BattleToken]:
-        for player in self.players:
-            if player.player_id == player_id:
-                return player.active
-
-    def get_possible_position_to_put_battle_token(self):
-        return self.can_put_army_token
-
-    def get_possible_position_to_put_control_token(self):
-        ans = []
-        for province in self.all_provinces:
-            if len(province.control_tokens):
-                ans.append(province.ind)
-        return ans
-
 class BattleToken:
     def __init__(self, caste: Caste, power: int, token_type: TokenType):
         self.caste = caste
@@ -107,21 +42,6 @@ class BattleToken:
         self.in_reset = False
         self.in_active = False
         self.visible = token_type == TokenType.blessing
-
-    def put_on_board(self, my_board: Board, ind_start: int, ind_finish: int):
-
-        self.on_board = True
-        my_board.all_provinces[ind_start].protection_battle_token.append(self)
-        if ind_start == ind_finish:
-            pass
-        else:
-            my_board.all_provinces[ind_start].battle_outside.append(ind_start)
-            my_board.all_provinces[ind_finish].battle_inside.append(ind_finish)
-            if my_board.can_put_army_token[ind_start][ind_finish] == 0:
-                self.on_board = False
-                return False
-            my_board.can_put_army_token[ind_start][ind_finish] = 0
-            return True
 
     def make_visible(self):
         self.visible = True
@@ -134,37 +54,23 @@ class ControlToken:
         self.power = power
         self.caste = caste
 
-    def put_on_board(self, my_board: Board, province_id: int) -> bool:
-        if my_board.round == 0 and province_id not in my_board.get_all_provinces_without_control_token():
-            return False
-        self.on_board = True
-        for item in my_board.all_provinces[province_id].control_tokens:
-            if item.caste == self.caste:
-                self.visible = True
-        return True
-
     def make_visible(self):
         self.visible = True
 
 
 class Player:
-    def __init__(self, id_player: int, my_board: Board):
+    def __init__(self, player_id: int):
         self.caste = None
         self.battle_tokens = []
         self.control_tokens = []
         self.active = []
-        self.player_id = id_player
-        self.my_board = my_board
+        self.player_id = player_id
 
-    def choose_caste(self, caste: Caste):
-        self.caste = caste
+    def set_clan(self, my_caste: Caste) -> bool:
+        self.caste = my_caste
         self.take_battle_token()
         self.take_control_token()
-        for province in self.my_board.all_provinces:
-            if province.caste == caste and province.capital:
-                province.control_tokens.append(self.control_tokens[0])
-                self.control_tokens[0].on_board = True
-                break
+        return True
 
     def take_battle_token(self):
         power_army = [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 4, 4, 5]
@@ -187,7 +93,7 @@ class Player:
             self.control_tokens.append(ControlToken(self.caste, power))
 
     def make_active(self):
-        for token in self.active:
+        for token in self.battle_tokens:
             if token.type == TokenType.empty and not token.in_active:
                 token.in_active = True
                 self.active.append(token)
@@ -200,18 +106,83 @@ class Player:
                     break
         random.shuffle(self.battle_tokens)
 
-    def put_battle_token_on_board(self, battle_token: BattleToken, ind_start: int, ind_finish: int):
-        battle_token.put_on_board(self.my_board, ind_start, ind_finish)
-
-    def put_control_token_on_board(self, control_token: ControlToken, ind: int):
-        control_token.put_on_board(self.my_board, ind)
-
-    def show_reset(self) -> list[BattleToken]:
+    def get_reset(self) -> list[BattleToken]:
         ans = []
-        for battle_token in self.battle_tokens:
-            if battle_token.in_reset:
-                ans.append(battle_token)
+        for my_battle_token in self.battle_tokens:
+            if my_battle_token.in_reset:
+                ans.append(my_battle_token)
         return ans
+
+    def get_active(self) -> list[BattleToken]:
+        return self.active
+
+
+class Board:
+    def __init__(self):
+        self.round = 0
+        self.players = dict()
+        self.all_provinces = []
+        self.can_put_army_token = have_land_way
+        self.move_queue = []  # player_id whose move
+        for i in range(30):
+            self.all_provinces.append(Province(i))
+
+    def add_player(self, my_player: Player):
+        self.players[my_player.player_id] = my_player
+
+    def get_free_caste(self) -> list[Caste]:
+        free_castes = []
+        for watching_caste in Caste:
+            used_caste = False
+            for player in self.players.values():
+                if player.caste == watching_caste:
+                    used_caste = True
+            if not used_caste:
+                free_castes.append(watching_caste)
+        return free_castes
+
+    def make_all_battle_token_visible(self):
+        for player in self.players.values():
+            for my_battle_token in player.battle_tokens:
+                my_battle_token.make_visible()
+
+    def get_all_provinces_without_control_token(self) -> list[int]:
+        ans = []
+        for province in self.all_provinces:
+            if province.owning_caste is None:
+                ans.append(province.ind)
+        return ans
+
+    def get_possible_position_to_put_battle_token(self):
+        return self.can_put_army_token
+
+    def get_possible_position_to_put_control_token(self):
+        ans = []
+        for province in self.all_provinces:
+            if len(province.control_tokens):
+                ans.append(province.ind)
+        return ans
+
+    def put_on_board_battle_token(self, player_id: int, my_battle_token: BattleToken, ind_start: int,
+                                  ind_finish: int) -> bool:
+        if self.can_put_army_token[ind_start][ind_finish] == 0:
+            return False
+        # тут ещё надо удалить из актива и поставить на доску
+        my_battle_token.on_board = True
+        if ind_start == ind_finish:
+            self.all_provinces[ind_start].protection_battle_token.append(my_battle_token)
+        else:
+            self.all_provinces[ind_start].battle_outside.append(my_battle_token)
+            self.all_provinces[ind_finish].battle_inside.append(my_battle_token)
+            self.can_put_army_token[ind_start][ind_finish] = 0
+        return True
+
+    def put_on_board_control_token(self, my_control_token: ControlToken, province_id: int) -> bool:
+        my_control_token.on_board = True
+        for item in self.all_provinces[province_id].control_tokens:
+            if item.caste == my_control_token.caste:
+                my_control_token.visible = True
+        return True
 
 
 class Province:
@@ -267,3 +238,11 @@ class Province:
 
 if __name__ == "__main__":
     board = Board()
+    player1 = Player(1)
+    board.add_player(player1)
+    player1.set_clan(Caste.crab)
+    player1.make_active()
+    for battle_token in player1.active:
+        print(battle_token.type, battle_token.power)
+    print()
+    print(*board.get_free_caste())

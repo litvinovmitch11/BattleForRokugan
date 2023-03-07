@@ -20,9 +20,7 @@ class Facade:
         return self.board.get_free_caste()
 
     def set_clan(self, player_id: int, my_caste: Caste) -> bool:
-        if my_caste in self.board.get_free_caste():
-            # here adding putting this cast to this player
-            return self.board.set_clan_to_player(player_id, my_caste)
+        self.board.players[player_id].set_clan(my_caste)
         return False
 
     def get_possible_positions_battle_token(self) -> list[list[int]]:
@@ -30,7 +28,8 @@ class Facade:
         # same for all players
         return self.board.get_possible_position_to_put_battle_token()
 
-    def get_possible_positions_control_token(self, my_board: Board) -> list[int]:
+    @staticmethod
+    def get_possible_positions_control_token(my_board: Board) -> list[int]:
         # need in preparation phase. Return all province without an owner
         return my_board.get_possible_position_to_put_control_token()
 
@@ -46,10 +45,10 @@ class Facade:
         # show players battle_token reset
 
         # return False, if error, list[BattleToken] else
-        return self.board.get_player_reset(player_id)
+        return self.board.players[player_id].get_reset()
 
     def show_active(self, player_id: int) -> list[BattleToken]:
-        return self.board.get_player_active(player_id)
+        return self.board.players[player_id].get_active()
         # all token have status. Some on board (face up/down), some free, some used.
         pass
 
@@ -60,10 +59,6 @@ class Facade:
     def round_count(self) -> int:
         # return 0 if preparing, 6 if ending game, 1-5 else
         return self.board.round
-
-    def get_board(self) -> Board:
-        # return all board (all status), may be replaced by many function, should rewrite
-        pass
 
     def whose_move(self) -> int:
         # return player_id whose move
