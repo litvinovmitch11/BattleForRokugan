@@ -117,10 +117,41 @@ class Player:
         return self.active
 
 
+class GameState:
+
+    def __init__(self, players_id: list[int]):
+        self.id_move = 0  # 1st player start all time?
+        self.move_queue = players_id
+        self.round = 1
+        self.move_to_next_round = len(players_id)
+
+    def correct_move(self, player_id: int) -> bool:
+        return self.move_queue[self.id_move] == player_id
+
+    def next_round(self):  # !!! SHIT !!!
+        self.move_to_next_round -= 1
+        if self.move_to_next_round == 0:
+            self.round += 1
+            if self.round == 6:
+                return False
+            return True
+        return False
+
+
+# нужен ли порядок
+
+# Новый ход
+
+# раунд и чей ход.
+
 class Board:
-    def __init__(self):
-        self.round = 0
-        self.players = dict()
+    def __init__(self, players: list[Player]):
+        self.players = dict()  # id -> Class Player
+        for player in players:
+            self.players[player.player_id] = player
+
+        self.state = GameState([*self.players.keys()])
+
         self.all_provinces = []
         self.can_put_army_token = have_land_way
         self.move_queue = []  # player_id whose move
@@ -153,8 +184,13 @@ class Board:
                 ans.append(province.ind)
         return ans
 
-    def get_possible_position_to_put_battle_token(self):
-        return self.can_put_army_token
+    def get_possible_position_to_put_battle_token(self) -> list[tuple[int, int]]:  # (from, to)
+        ans = []
+        for i in range(len(self.can_put_army_token)):
+            for j in range(len(self.can_put_army_token[i])):
+                if self.can_put_army_token[i][j] == 1:
+                    ans.append((i, j))
+        return ans
 
     def get_possible_position_to_put_control_token(self):
         ans = []
@@ -177,7 +213,7 @@ class Board:
             self.can_put_army_token[ind_start][ind_finish] = 0
         return True
 
-    def put_on_board_control_token(self, my_control_token: ControlToken, province_id: int) -> bool:
+    def put_on_board_control_token(self, player_id: int, my_control_token: ControlToken, province_id: int) -> bool:
         my_control_token.on_board = True
         for item in self.all_provinces[province_id].control_tokens:
             if item.caste == my_control_token.caste:
@@ -237,8 +273,8 @@ class Province:
 
 
 if __name__ == "__main__":
-    board = Board()
     player1 = Player(1)
+    board = Board([player1])
     board.add_player(player1)
     player1.set_clan(Caste.crab)
     player1.make_active()

@@ -1,39 +1,49 @@
 # Везде, где возвращаю BattleToken или ControlToken, судя по всему эти классы будут приведены в простой вид
 # Чтобы Леша смог их отрисовать (вероятно просто айдиншник/какой стороной повернут/позицию на карте)
 
-from requests.model import *
+from model import *
 
 
 class Facade:
 
     def __init__(self, my_board: Board):
         self.board = my_board
+        self.unique_id = 1
+
+    def give_unique_id(self) -> int:
+        self.unique_id += 1
+        return self.unique_id
 
     def add_player(self, player_id: int) -> bool:
-        if player_id not in self.board.players:
+        if player_id not in self.board.players.keys():
             self.board.players.append(player_id)
             return True
         return False
 
-    def get_free_caste(self) -> list[Caste]:
-        # return free cast for this board
-        return self.board.get_free_caste()
-
-    def set_clan(self, player_id: int, my_caste: Caste) -> bool:
+    def set_caste(self, player_id: int, my_caste: Caste) -> bool:
         self.board.players[player_id].set_clan(my_caste)
         return False
-
-    def get_possible_positions_battle_token(self) -> list[list[int]]:
-        # attack from id_1 to id_2 (1 - if can, 0 - else). if id_1 == id_2 -> can protect
-        # same for all players
-        return self.board.get_possible_position_to_put_battle_token()
 
     @staticmethod
     def get_possible_positions_control_token(my_board: Board) -> list[int]:
         # need in preparation phase. Return all province without an owner
         return my_board.get_possible_position_to_put_control_token()
 
-    def put_control_token(self, player_id: int, province_id: int) -> bool:
+    def get_free_caste(self) -> list[Caste]:
+        # return free cast for this board
+        return self.board.get_free_caste()
+
+    ############################## and next it play time #####################################
+
+    def get_possible_positions_battle_token(self) -> list[tuple[int, int]]:
+        # attack from id_1 to id_2 (1 - if can, 0 - else). if id_1 == id_2 -> can protect
+        # same for all players
+        return self.board.get_possible_position_to_put_battle_token()
+
+    def put_control_token(self, player_id: int, my_control_token: ControlToken, province_id: int) -> bool:
+        if not self.board.state.correct_move(player_id):
+            return False
+        return self.board.put_on_board_control_token(player_id, my_control_token, province_id)
         # check is can player put control token on this position
         pass
 
@@ -58,11 +68,11 @@ class Facade:
 
     def round_count(self) -> int:
         # return 0 if preparing, 6 if ending game, 1-5 else
-        return self.board.round
+        return self.board.state.round
 
     def whose_move(self) -> int:
         # return player_id whose move
-        pass
+        return self.board.state.move_queue[self.board.state.id_move]
 
     def show_battle_token_on_board(self, player_id: int, token_id: int) -> BattleToken:
         # probably not int, maybe info about token or position
