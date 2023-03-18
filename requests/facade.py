@@ -4,36 +4,10 @@
 from model import *
 
 
-class Facade:
+class GameFacade:
 
     def __init__(self, my_board: Board):
         self.board = my_board
-        self.unique_id = 1
-
-    def give_unique_id(self) -> int:
-        self.unique_id += 1
-        return self.unique_id
-
-    def add_player(self, player_id: int) -> bool:
-        if player_id not in self.board.players.keys():
-            self.board.players.append(player_id)
-            return True
-        return False
-
-    def set_caste(self, player_id: int, my_caste: Caste) -> bool:
-        self.board.players[player_id].set_clan(my_caste)
-        return False
-
-    @staticmethod
-    def get_possible_positions_control_token(my_board: Board) -> list[int]:
-        # need in preparation phase. Return all province without an owner
-        return my_board.get_possible_position_to_put_control_token()
-
-    def get_free_caste(self) -> list[Caste]:
-        # return free cast for this board
-        return self.board.get_free_caste()
-
-    ############################## and next it play time #####################################
 
     def get_possible_positions_battle_token(self) -> list[tuple[int, int]]:
         # attack from id_1 to id_2 (1 - if can, 0 - else). if id_1 == id_2 -> can protect
@@ -85,3 +59,33 @@ class Facade:
     def get_all_my_cards(self, player_id: int):  # -> list[Card]:
         # card will include not soon
         pass
+
+
+class StarterFacade:
+
+    def __init__(self, my_board: Board):
+        self.board = my_board
+        self.unique_id = 1
+
+    def give_unique_id(self) -> int:
+        self.unique_id += 1
+        return self.unique_id
+
+    def add_player(self, player_id: int) -> bool:
+        if player_id not in self.board.players.keys():
+            self.board.players.append(player_id)
+            return True
+        return False
+
+    def set_caste(self, player_id: int, my_caste: Caste) -> bool:
+        self.board.players[player_id].set_clan(my_caste)
+        return False
+
+    @staticmethod
+    def get_possible_positions_control_token(my_board: Board) -> list[int]:
+        # need in preparation phase. Return all province without an owner
+        return my_board.get_possible_position_to_put_control_token()
+
+    def get_free_caste(self) -> list[Caste]:
+        # return free cast for this board
+        return self.board.get_free_caste()
