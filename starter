@@ -1,9 +1,15 @@
 import pygame
 import sys
 from map import Map
+from cntrl_token import control_token
 def run():
     pygame.init()
-    screen = pygame.display.set_mode((1000,667))
+
+    WIN_WIDTH = 1000  # Ширина создаваемого окна
+    WIN_HEIGHT = 667  # Высота (пока ровно под карту, потом буду менять)
+    DISPLAY = (WIN_WIDTH, WIN_HEIGHT)  # Группируем ширину и высоту в одну переменную
+
+    screen = pygame.display.set_mode(DISPLAY)
     pygame.display.set_caption("Battle For Rakugan")
     backgroung_color = (255,255,255)
     mapp = Map(screen)
@@ -13,7 +19,12 @@ def run():
             if event.type == pygame.QUIT:
                 sys.exit()
         screen.fill(backgroung_color)
+        bg = pygame.Surface((WIN_WIDTH, WIN_HEIGHT))  # Создание видимой поверхности
+        # будем использовать как фон
         mapp.output()
         pygame.display.flip()
+
+        #screen.blit(bg, (0, 0))  # Каждую итерацию необходимо всё перерисовывать
+        pygame.display.update()  # обновление и вывод всех изменений на экран
 
 run()
