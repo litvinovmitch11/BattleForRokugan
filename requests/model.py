@@ -119,15 +119,14 @@ class Player:
 
 class GameState:
 
-    def __init__(self, players_id: list[int]):
+    def __init__(self):
         self.id_move = 0  # 1st player start all time?
-        self.move_queue = players_id
+        self.move_queue = []  # player_ids
         self.round = 0
-        self.move_to_next_round = len(players_id)
-        self.player_count = len(players_id)
+        self.move_to_next_round = 100
 
     def correct_move(self, player_id: int) -> bool:
-        return self.move_queue[self.id_move % self.player_count] == player_id
+        return self.move_queue[self.id_move % len(self.move_queue)] == player_id
 
     def make_move(self) -> bool:  # !!! SHIT !!!
         # return true, if next round
@@ -136,6 +135,9 @@ class GameState:
         if self.move_to_next_round == 0:
             self.round += 1
         return True
+
+    def add_player(self, my_player: Player):
+        self.move_queue.append(my_player)
 
 
 # нужен ли порядок
@@ -205,12 +207,9 @@ class Province:
 
 
 class Board:
-    def __init__(self, players: list[Player]):
+    def __init__(self):
         self.players = dict()  # id -> Class Player
-        for player in players:
-            self.players[player.player_id] = player
-
-        self.state = GameState([*self.players.keys()])
+        self.state = GameState()
 
         self.all_provinces = []
         self.can_put_army_token = have_land_way
@@ -220,6 +219,7 @@ class Board:
 
     def add_player(self, my_player: Player):
         self.players[my_player.player_id] = my_player
+        self.state.add_player(my_player)
 
     def get_free_caste(self) -> list[Caste]:
         free_castes = []
@@ -288,7 +288,7 @@ class Board:
 
 if __name__ == "__main__":
     player1 = Player(1)
-    board = Board([player1])
+    board = Board()
     board.add_player(player1)
     player1.set_clan(Caste.crab)
     player1.make_active()
