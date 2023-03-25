@@ -67,13 +67,13 @@ class StarterFacade:
         self.board = my_board
         self.unique_id = 1
 
-    def give_unique_id(self) -> int:
+    def get_unique_id(self) -> int:
         self.unique_id += 1
         return self.unique_id
 
     def add_player(self, player_id: int) -> bool:
         if player_id not in self.board.players.keys():
-            self.board.players.append(player_id)
+            self.board.players[player_id] = Player(player_id)
             return True
         return False
 
