@@ -72,13 +72,13 @@ class StarterFacade:
         return self.unique_id
 
     def add_player(self, player_id: int) -> bool:
-        if player_id not in self.board.players.keys():
+        if player_id not in self.board.players.keys() and len(self.board.players) <= 4:
             self.board.players[player_id] = Player(player_id)
             return True
         return False
 
     def set_caste(self, player_id: int, my_caste: Caste) -> bool:
-        if my_caste not in self.get_free_caste():
+        if my_caste not in self.get_free_caste() or player_id not in board.players.keys():
             return False
         self.board.set_control_token_to_capital(my_caste, self.board.players[player_id].control_tokens[0])
         self.board.players[player_id].set_clan(my_caste)

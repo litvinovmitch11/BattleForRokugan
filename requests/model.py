@@ -136,8 +136,12 @@ class GameState:
             self.round += 1
         return True
 
-    def add_player(self, my_player: Player):
-        self.move_queue.append(my_player)
+    def add_player(self, my_player: Player) -> bool:
+        if len(self.move_queue) <= 4:
+            self.move_queue.append(my_player)
+            return True
+        self.move_to_next_round = len(self.move_queue)
+        return False
 
 
 # нужен ли порядок
