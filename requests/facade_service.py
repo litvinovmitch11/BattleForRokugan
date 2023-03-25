@@ -1,11 +1,11 @@
-import basic_pb2 as pb2
-import basic_pb2_grpc as pb2_grpc
+import facade_pb2 as pb2
+import facade_pb2_grpc as pb2_grpc
 import facade
 
 
-class BasicService(pb2_grpc.BasicServicer):
+class FacadeService(pb2_grpc.FacadeServicer):
 
-    def __init__(self, fd: facade.Facade, *args, **kwargs):
+    def __init__(self, fd: facade.GameFacade, *args, **kwargs):
         self.facade = fd
 
     def Echo(self, request, context):

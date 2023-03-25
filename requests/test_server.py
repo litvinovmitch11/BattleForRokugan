@@ -3,7 +3,7 @@
 
 from concurrent import futures
 import grpc
-import basic_pb2_grpc as pb2_grpc
+import facade_pb2_grpc as pb2_grpc
 import facade
 import facade_service
 
@@ -12,8 +12,8 @@ def serve():
     port = '5050'
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     bd = facade.Board()
-    fd = facade.Facade(bd)
-    pb2_grpc.add_BasicServicer_to_server(facade_service.BasicService(fd), server)
+    fd = facade.GameFacade(bd)
+    pb2_grpc.add_FacadeServicer_to_server(facade_service.FacadeService(fd), server)
     server.add_insecure_port('[::]:' + port)
     server.start()
     print("Server started, listening on " + port)

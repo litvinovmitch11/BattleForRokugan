@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package starter;
+
+service Starter{
+
+  rpc GetUniqueId(Empty) returns(PlayerId){}
+  rpc AddPlayer(PlayerId) returns (Key){}
+
+}
+
+message Empty {}
+
+message PlayerId {
+  int32 player_id = 1;
+}
+
+message Key {
+  bool key = 1;
+}

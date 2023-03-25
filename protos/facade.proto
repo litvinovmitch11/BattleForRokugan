@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package basic;
+package facade;
 
-service Basic{
+service Facade{
 
   rpc Echo(Message) returns (Message){}
   rpc PutControlToken(PlayerProvinceId) returns (Key){}
