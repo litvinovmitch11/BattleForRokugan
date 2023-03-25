@@ -1,7 +1,7 @@
 import pygame
 import sys
 from map import Map
-from cntrl_token import control_token
+from tokens import control_token, battle_token
 def run():
     pygame.init()
 
