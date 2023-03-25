@@ -78,8 +78,11 @@ class StarterFacade:
         return False
 
     def set_caste(self, player_id: int, my_caste: Caste) -> bool:
+        if my_caste not in self.get_free_caste():
+            return False
+        self.board.set_control_token_to_capital(my_caste, self.board.players[player_id].control_tokens[0])
         self.board.players[player_id].set_clan(my_caste)
-        return False
+        return True
 
     @staticmethod
     def get_possible_positions_control_token(my_board: Board) -> list[int]:
@@ -89,3 +92,10 @@ class StarterFacade:
     def get_free_caste(self) -> list[Caste]:
         # return free cast for this board
         return self.board.get_free_caste()
+
+    def put_control_token(self, player_id: int, control_token: ControlToken, province_id: int) -> bool:
+        if not self.board.state.correct_move(player_id):
+            return False
+        if not self.board.put_on_board_control_token(player_id, control_token, province_id):
+            return False
+        return self.board.state.make_move()
