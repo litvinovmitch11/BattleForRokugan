@@ -15,7 +15,7 @@ class GameFacade:
         return self.board.get_possible_position_to_put_battle_token()
 
     def put_control_token(self, player_id: int, my_control_token: ControlToken, province_id: int) -> bool:
-        if not self.board.state.correct_move(player_id):
+        if not self.board.state.this_player_move(player_id):
             return False
         return self.board.put_on_board_control_token(player_id, my_control_token, province_id)
         # check is can player put control token on this position
@@ -94,8 +94,11 @@ class StarterFacade:
         return self.board.get_free_caste()
 
     def put_control_token(self, player_id: int, control_token: ControlToken, province_id: int) -> bool:
-        if not self.board.state.correct_move(player_id):
+        if not self.board.state.this_player_move(player_id):
             return False
         if not self.board.put_on_board_control_token(player_id, control_token, province_id):
             return False
         return self.board.state.make_move()
+
+    def stop_adding_players(self) -> bool:
+        return self.board.state.stop_adding_players()

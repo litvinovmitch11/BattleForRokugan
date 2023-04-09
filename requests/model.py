@@ -122,33 +122,34 @@ class GameState:
     def __init__(self):
         self.id_move = 0  # 1st player start all time?
         self.move_queue = []  # player_ids
-        self.round = 0
-        self.move_to_next_round = 100
+        self.round = -1  # -1 -> adding player. 0 -> putting control_tokens. 1-5 -> round of game
+        self.move_to_next_round = 0
 
-    def correct_move(self, player_id: int) -> bool:
-        return self.move_queue[self.id_move % len(self.move_queue)] == player_id
+    def this_player_move(self, player_id: int) -> bool:
+        return self.move_queue[self.id_move] == player_id
 
-    def make_move(self) -> bool:  # !!! SHIT !!!
-        # return true, if next round
+    def make_move(self) -> bool:
         self.move_to_next_round -= 1
-        self.id_move += 1
+        self.id_move = (self.id_move + 1) % len(self.move_queue)
         if self.move_to_next_round == 0:
+            self.id_move = random.randrange(5)
             self.round += 1
         return True
 
-    def add_player(self, my_player: Player) -> bool:
-        if len(self.move_queue) <= 4:
-            self.move_queue.append(my_player)
+    def stop_adding_players(self) -> bool:
+        if self.round == -1 and 2 <= len(self.move_queue) <= 5:
+            self.round = 0
+            count_control_token = {2: 11, 3: 7, 4: 5, 5: 4}
+            self.move_to_next_round = len(self.move_queue) * count_control_token[len(self.move_queue)]
             return True
-        self.move_to_next_round = len(self.move_queue)
         return False
 
+    def add_player(self, my_player: Player) -> bool:
+        if len(self.move_queue) <= 4 and self.round == -1:
+            self.move_queue.append(my_player)
+            return True
+        return False
 
-# нужен ли порядок
-
-# Новый ход
-
-# раунд и чей ход.
 
 class Province:
 
@@ -278,10 +279,13 @@ class Board:
         return True
 
     def put_on_board_control_token(self, player_id: int, my_control_token: ControlToken, province_id: int) -> bool:
-        my_control_token.on_board = True
         for item in self.all_provinces[province_id].control_tokens:
             if item.caste == my_control_token.caste:
                 my_control_token.visible = True
+            else:
+                my_control_token.visible = False
+                return False
+        my_control_token.on_board = True
         return True
 
     def set_control_token_to_capital(self, my_caste: Caste, my_control_token: ControlToken):
