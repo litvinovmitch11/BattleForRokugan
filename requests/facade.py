@@ -14,13 +14,6 @@ class GameFacade:
         # same for all players
         return self.board.get_possible_position_to_put_battle_token()
 
-    def put_control_token(self, player_id: int, my_control_token: ControlToken, province_id: int) -> bool:
-        if not self.board.state.this_player_move(player_id):
-            return False
-        return self.board.put_on_board_control_token(player_id, my_control_token, province_id)
-        # check is can player put control token on this position
-        pass
-
     def put_battle_token(self, player_id: int, province_from_id: int, province_to_id: int) -> bool:
         # if from == to, token put like protecting
         pass
@@ -77,6 +70,13 @@ class StarterFacade:
             return True
         return False
 
+    def stop_adding_players(self) -> bool:
+        return self.board.state.stop_adding_players()
+
+    def get_free_caste(self) -> list[Caste]:
+        # return free cast for this board
+        return self.board.get_free_caste()
+
     def set_caste(self, player_id: int, my_caste: Caste) -> bool:
         if my_caste not in self.get_free_caste() or player_id not in board.players.keys():
             return False
@@ -89,16 +89,9 @@ class StarterFacade:
         # need in preparation phase. Return all province without an owner
         return my_board.get_possible_position_to_put_control_token()
 
-    def get_free_caste(self) -> list[Caste]:
-        # return free cast for this board
-        return self.board.get_free_caste()
-
     def put_control_token(self, player_id: int, control_token: ControlToken, province_id: int) -> bool:
-        if not self.board.state.this_player_move(player_id):
+        if not self.board.state.this_player_move(player_id) or self.board.state.round != 0:
             return False
         if not self.board.put_on_board_control_token(player_id, control_token, province_id):
             return False
         return self.board.state.make_move()
-
-    def stop_adding_players(self) -> bool:
-        return self.board.state.stop_adding_players()

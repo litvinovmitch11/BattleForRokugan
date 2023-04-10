@@ -124,6 +124,7 @@ class GameState:
         self.move_queue = []  # player_ids
         self.round = -1  # -1 -> adding player. 0 -> putting control_tokens. 1-5 -> round of game
         self.move_to_next_round = 0
+        self.phase = -1  # in range [1, 3]
 
     def this_player_move(self, player_id: int) -> bool:
         return self.move_queue[self.id_move] == player_id
@@ -132,8 +133,20 @@ class GameState:
         self.move_to_next_round -= 1
         self.id_move = (self.id_move + 1) % len(self.move_queue)
         if self.move_to_next_round == 0:
-            self.id_move = random.randrange(5)
-            self.round += 1
+            if self.round == 0:
+                # use card instead random in future
+                self.id_move = random.randrange(len(self.move_queue))
+                self.phase = 1
+                self.round = 1
+            else:
+                if self.phase == 1:
+                    self.phase = 2
+                    self.move_to_next_round = len(self.move_queue) * 5
+                else:
+                    # !!! do execution phase. IMPORTANT !!!
+                    self.phase = 1
+                    self.round += 1
+                    self.move_to_next_round = len(self.move_queue)
         return True
 
     def stop_adding_players(self) -> bool:
