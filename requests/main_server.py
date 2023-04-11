@@ -1,27 +1,23 @@
 from concurrent import futures
 import grpc
-import starter_pb2_grpc
-import facade_pb2_grpc
+import starter_pb2_grpc as pb2_grpc
 
 import facade
-import facade_service
 import starter_service
 
 
-def start_game_session(port='8888'):
-    # WARNINGWARNINGWARNINGWARNINGWARNINGWARNINGWARNING
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=5))
-    # WARNINGWARNINGWARNINGWARNINGWARNINGWARNINGWARNING
-    server.add_insecure_port('[::]:' + port)
-    server.start()
+def start_game_session(host='localhost', port='8888'):
+
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 
     bd = facade.Board()
     start_fd = facade.StarterFacade(bd)
-    fd = facade.GameFacade(bd)
 
-    starter_pb2_grpc.add_StarterServicer_to_server(starter_service.StarterService(start_fd), server)
-    facade_pb2_grpc.add_FacadeServicer_to_server(facade_service.FacadeService(fd), server)
+    pb2_grpc.add_StarterServicer_to_server(starter_service.StarterService(start_fd), server)
 
+    server.add_insecure_port(f'{host}:{port}')
+    server.start()
+    print("Server started, listening on " + port)
     server.wait_for_termination()
 
 

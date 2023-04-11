@@ -4,7 +4,7 @@ package starter;
 
 service Starter{
 
-  rpc GetUniqueId(Empty) returns(PlayerId){}
+  rpc GetUniqueId(Empty) returns (PlayerId){}
   rpc AddPlayer(PlayerId) returns (Key){}
 
 }
