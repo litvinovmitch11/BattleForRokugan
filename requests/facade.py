@@ -74,8 +74,9 @@ class StarterFacade:
         return self.board.get_free_caste()
 
     def set_caste(self, player_id: int, my_caste: Caste) -> bool:
-        if my_caste not in self.get_free_caste() or player_id not in self.board.players.keys() or not self.board.players[player_id].set_clan(
-                my_caste) or self.board.state.round != 0:
+        if my_caste not in self.get_free_caste() or player_id not in self.board.players.keys() or self.board.state.round != 0:
+            return False
+        if not self.board.players[player_id].set_clan(my_caste):
             return False
         self.board.set_control_token_to_capital(my_caste, self.board.players[player_id].control_tokens[0])
         return True
