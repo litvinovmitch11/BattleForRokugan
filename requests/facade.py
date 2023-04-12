@@ -108,6 +108,12 @@ if __name__ == "__main__":
     facade.swap_player_readiness_value(2)
     facade.set_caste(1, Caste.crane)
     facade.set_caste(2, Caste.lion)
+    for i in range(100):
+        if facade.put_control_token(1, 26 + i, i % 30):
+            print("OK, 1")
+        if facade.put_control_token(2, 82 + i, i % 30):
+            print("OK, 2")
+
     # print(*facade.get_possible_positions_control_token())
     # print(facade.round_count())
     # print(facade.round_count())

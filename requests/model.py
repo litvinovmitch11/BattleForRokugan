@@ -53,7 +53,7 @@ class BattleToken:
 class ControlToken:
     def __init__(self, caste: Caste, power: int, ind: int):
         self.visible = False
-        self.on_board = False
+        self.province_id = -1
         self.power = power
         self.caste = caste
         self.id = ind
@@ -324,8 +324,8 @@ class Board:
             else:
                 my_control_token.visible = False
                 return False
-        my_control_token.on_board = True
         self.all_provinces[province_id].control_tokens.append(my_control_token)
+        my_control_token.province_id = province_id
         return True
 
     def set_control_token_to_capital(self, my_caste: Caste, my_control_token: ControlToken):
