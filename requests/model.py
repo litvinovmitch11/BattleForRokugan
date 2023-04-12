@@ -312,8 +312,12 @@ class Board:
             self.can_put_army_token[ind_start][ind_finish] = 0
         return True
 
-    def put_on_board_control_token(self, control_token_id: int, province_id: int) -> bool:
+    def put_on_board_control_token(self, player_id: int, control_token_id: int, province_id: int) -> bool:
+        if control_token_id not in self.control_tokens.keys():
+            return False
         my_control_token = self.control_tokens[control_token_id]
+        if self.players[player_id].caste != my_control_token.caste:
+            return False
         for item in self.all_provinces[province_id].control_tokens:
             if item.caste == my_control_token.caste:
                 my_control_token.visible = True

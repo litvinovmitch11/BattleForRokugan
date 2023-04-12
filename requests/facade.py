@@ -87,7 +87,7 @@ class StarterFacade:
     def put_control_token(self, player_id: int, control_token_id: int, province_id: int) -> bool:
         if not self.board.state.this_player_move(player_id) or self.board.state.round != 0:
             return False
-        if not self.board.put_on_board_control_token(control_token_id, province_id):
+        if not self.board.put_on_board_control_token(player_id, control_token_id, province_id):
             return False
         return self.board.state.make_move()
 
