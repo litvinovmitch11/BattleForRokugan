@@ -12,6 +12,7 @@ service Starter{
   rpc GetPossiblePositionsControlToken(Empty) returns (ListTokens){}
   rpc PutControlToken(AddControlToken) returns (Key){}
   rpc RoundCount(Empty) returns (Round){}
+
 }
 
 message Empty {}
