@@ -68,7 +68,7 @@ if __name__ == '__main__':
             print(f'Add player with id {your_id}\nIs ok? {key}')
         elif (cmd == '3' or cmd == "swap_player_readiness_value") and your_id != -1:
             key = client.swap_player_readiness_value(your_id).key
-            print(f'Readiness player with id {your_id}: {key}')
+            print(f'Correct? {key}')
         elif cmd == '4' or cmd == "get_free_caste":
             free_caste = client.get_free_caste().caste
             print(f'Free caste: {free_caste}')
