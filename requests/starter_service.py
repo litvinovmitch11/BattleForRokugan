@@ -3,7 +3,6 @@ import starter_pb2_grpc as pb2_grpc
 from facade import StarterFacade
 
 from all_include import Caste
-from model import ControlToken
 
 
 class StarterService(pb2_grpc.StarterServicer):
@@ -39,19 +38,28 @@ class StarterService(pb2_grpc.StarterServicer):
 
     def GetPossiblePositionsControlToken(self, request, context):
         print("GetPossiblePositionsControlToken")
-        list_tokens = pb2.ListTokens()
-        list_tokens.token[:] = self.facade.get_possible_positions_control_token()
-        return list_tokens
+        list_pos_tokens = pb2.ListPositionsControlTokens(position=self.facade.get_possible_positions_control_token())
+        return list_pos_tokens
 
     def PutControlToken(self, request, context):
         print("PutControlToken")
-        token = ControlToken(Caste(request.ControlToken.caste), request.ControlToken.power)
-        token.visible = request.ControlToken.visible
-        token.on_board = request.ControlToken.on_board
-        result = {"key": self.facade.put_control_token(request.player_id, token, request.province_id)}
+        result = {"key": self.facade.put_control_token(request.player_id, request.token_id, request.province_id)}
         return pb2.Key(**result)
 
     def RoundCount(self, request, context):
         print("RoundCount")
         result = {"round": self.facade.round_count()}
         return pb2.Round(**result)
+
+    def GetAllControlToken(self, request, context):
+        print("GetAllControlToken")
+        list_tokens = pb2.ListControlTokens(
+            token=[
+                pb2.ControlToken(visible=token.visible,
+                                 province_id=token.province_id,
+                                 power=token.power,
+                                 caste=token.caste.value,
+                                 id=token.id)
+                for token in self.facade.get_all_control_token()]
+        )
+        return list_tokens

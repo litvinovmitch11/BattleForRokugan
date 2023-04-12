@@ -9,9 +9,10 @@ service Starter{
   rpc SwapPlayerReadinessValue(PlayerId) returns (Key){}
   rpc GetFreeCaste(Empty) returns (ListCaste){}
   rpc SetCaste(Caste) returns (Key){}
-  rpc GetPossiblePositionsControlToken(Empty) returns (ListTokens){}
-  rpc PutControlToken(AddControlToken) returns (Key){}
+  rpc GetPossiblePositionsControlToken(Empty) returns (ListPositionsControlTokens){}
+  rpc PutControlToken(Token) returns (Key){}
   rpc RoundCount(Empty) returns (Round){}
+  rpc GetAllControlToken(Empty) returns (ListControlTokens){}
 
 }
 
@@ -34,23 +35,28 @@ message Caste {
   string caste = 2;
 }
 
-message ListTokens {
-  repeated int32 token = 1;
+message ListPositionsControlTokens {
+  repeated int32 position = 1;
 }
 
-message ControlToken {
-  bool visible = 1;
-  bool on_board = 2;
-  int32 power = 3;
-  string caste = 4;
-}
-
-message AddControlToken {
+message Token {
   int32 player_id = 1;
-  ControlToken control_token = 2;
+  int32 token_id = 2;
   int32 province_id = 3;
 }
 
 message Round {
   int32 round = 1;
+}
+
+message ControlToken {
+  bool visible = 1;
+  int32 province_id = 2;
+  int32 power = 3;
+  string caste = 4;
+  int32 id = 5;
+}
+
+message ListControlTokens {
+  repeated ControlToken token = 1;
 }

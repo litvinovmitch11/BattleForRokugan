@@ -2,9 +2,6 @@ import grpc
 import starter_pb2 as pb2
 import starter_pb2_grpc as pb2_grpc
 
-from all_include import Caste
-from model import ControlToken
-
 
 class Client(object):
 
@@ -38,16 +35,17 @@ class Client(object):
         print("GetPossiblePositionsControlToken")
         return self.stub.GetPossiblePositionsControlToken(pb2.Empty())
 
-    def put_control_token(self, player_id, control_token, province_id):
+    def put_control_token(self, player_id, token_id, province_id):
         print("PutControlToken")
-        token = pb2.ControlToken(visible=control_token.visible, on_board=control_token.on_board,
-                                 power=control_token.power, caste=str(control_token.caste))
-        return self.stub.PutControlToken(
-            pb2.AddControlToken(player_id=player_id, control_token=token, province_id=province_id))
+        return self.stub.PutControlToken(pb2.Token(player_id=player_id, token_id=token_id, province_id=province_id))
 
     def round_count(self):
         print("RoundCount")
         return self.stub.RoundCount(pb2.Empty())
+
+    def get_all_control_token(self):
+        print("GetAllControlToken")
+        return self.stub.GetAllControlToken(pb2.Empty())
 
 
 if __name__ == '__main__':
@@ -77,23 +75,16 @@ if __name__ == '__main__':
             key = client.set_caste(your_id, your_caste).key
             print(f'Correct? {key}')
         elif cmd == '6' or cmd == "get_possible_positions_control_token":
-            list_token = client.get_possible_positions_control_token().token
+            list_token = client.get_possible_positions_control_token().position
             print(f'List of possible position control tokens: {list_token}')
         elif (cmd == '7' or cmd == "put_control_token") and your_id != -1:
-            print("Enter control token parameters and province id: ")
-            visible = bool(input("Visible: "))
-            on_board = bool(input("On_board: "))
-            power = int(input("Power: "))
-            your_caste = input("Caste: ")
-            your_province_id = int(input("Province id: "))
-
-            your_token = ControlToken(Caste(your_caste), power)
-            your_token.visible = visible
-            your_token.on_board = on_board
-
-            key = client.put_control_token(your_id, your_token, your_province_id).key
+            your_control_token_id = int(input("Enter control token id: "))
+            your_province_id = int(input("Enter province id: "))
+            key = client.put_control_token(your_id, your_control_token_id, your_province_id).key
             print(f'Is correct? {key}')
-        elif cmd == '8' or cmd == 'round_count':
+        elif cmd == '8' or cmd == "round_count":
             print(f'Current round is {client.round_count().round}')
-
+        elif cmd == '9' or cmd == "get_all_control_token":
+            all_control_tokens = client.get_all_control_token()
+            print(f'All control tokens for player with id {your_id}: {all_control_tokens.token}')
         cmd = input()
