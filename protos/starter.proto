@@ -4,9 +4,14 @@ package starter;
 
 service Starter{
 
-  rpc GetUniqueId(Empty) returns(PlayerId){}
+  rpc GetUniqueId(Empty) returns (PlayerId){}
   rpc AddPlayer(PlayerId) returns (Key){}
-
+  rpc SwapPlayerReadinessValue(PlayerId) returns (Key){}
+  rpc GetFreeCaste(Empty) returns (ListCaste){}
+  rpc SetCaste(Caste) returns (Key){}
+  rpc GetPossiblePositionsControlToken(Empty) returns (ListTokens){}
+  rpc PutControlToken(AddControlToken) returns (Key){}
+  rpc RoundCount(Empty) returns (Round){}
 }
 
 message Empty {}
@@ -17,4 +22,34 @@ message PlayerId {
 
 message Key {
   bool key = 1;
+}
+
+message ListCaste {
+  repeated string caste = 1;
+}
+
+message Caste {
+  int32 player_id = 1;
+  string caste = 2;
+}
+
+message ListTokens {
+  repeated int32 token = 1;
+}
+
+message ControlToken {
+  bool visible = 1;
+  bool on_board = 2;
+  int32 power = 3;
+  string caste = 4;
+}
+
+message AddControlToken {
+  int32 player_id = 1;
+  ControlToken control_token = 2;
+  int32 province_id = 3;
+}
+
+message Round {
+  int32 round = 1;
 }
