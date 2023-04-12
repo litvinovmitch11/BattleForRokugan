@@ -49,11 +49,12 @@ class BattleToken:
 
 
 class ControlToken:
-    def __init__(self, caste: Caste, power: int):
+    def __init__(self, caste: Caste, power: int, ind: int):
         self.visible = False
         self.on_board = False
         self.power = power
         self.caste = caste
+        self.id = ind
 
     def make_visible(self):
         self.visible = True
@@ -69,6 +70,8 @@ class Player:
         self.ready_to_play = False
 
     def set_clan(self, my_caste: Caste) -> bool:
+        if self.caste is not None:
+            return False
         self.caste = my_caste
         self.take_battle_token()
         self.take_control_token()
@@ -143,6 +146,7 @@ class GameState:
                 self.round = 1
             else:
                 if self.phase == 1:
+                    # Make active!
                     self.phase = 2
                     self.move_to_next_round = len(self.move_queue) * 5
                 else:

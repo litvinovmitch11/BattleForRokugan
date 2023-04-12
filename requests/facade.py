@@ -55,7 +55,7 @@ class StarterFacade:
 
     def __init__(self, my_board: Board):
         self.board = my_board
-        self.unique_id = 1
+        self.unique_id = -1
 
     def get_unique_id(self) -> int:
         self.unique_id += 1
@@ -71,19 +71,16 @@ class StarterFacade:
         return self.board.swap_player_readiness(player_id)
 
     def get_free_caste(self) -> list[Caste]:
-        # return free cast for this board
         return self.board.get_free_caste()
 
     def set_caste(self, player_id: int, my_caste: Caste) -> bool:
-        if my_caste not in self.get_free_caste() or player_id not in board.players.keys() or \
-                self.board.state.round != 0:
+        if my_caste not in self.get_free_caste() or player_id not in self.board.players.keys() or not self.board.players[player_id].set_clan(
+                my_caste) or self.board.state.round != 0:
             return False
-        self.board.players[player_id].set_clan(my_caste)
         self.board.set_control_token_to_capital(my_caste, self.board.players[player_id].control_tokens[0])
         return True
 
     def get_possible_positions_control_token(self) -> list[int]:
-        # need in preparation phase. Return all province without an owner
         return self.board.get_possible_position_to_put_control_token()
 
     def put_control_token(self, player_id: int, control_token: ControlToken, province_id: int) -> bool:
@@ -100,8 +97,7 @@ class StarterFacade:
 if __name__ == "__main__":
     board = Board()
     facade = StarterFacade(board)
-    print(facade.round_count())
-
+    # print(facade.round_count())
     facade.add_player(1)
     facade.add_player(2)
     facade.swap_player_readiness_value(1)
@@ -113,5 +109,4 @@ if __name__ == "__main__":
     for i in range(12):
         facade.put_control_token(1, facade.board.players[1].control_tokens[2 * i], 2 * i)
         facade.put_control_token(2, facade.board.players[2].control_tokens[2 * i + 1], 2 * i + 1)
-        print(*facade.get_possible_positions_control_token())
     print(facade.round_count())
