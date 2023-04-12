@@ -49,12 +49,11 @@ class BattleToken:
 
 
 class ControlToken:
-    def __init__(self, caste: Caste, power: int, ind: int):
+    def __init__(self, caste: Caste, power: int):
         self.visible = False
         self.on_board = False
         self.power = power
         self.caste = caste
-        self.id = ind
 
     def make_visible(self):
         self.visible = True
