@@ -22,6 +22,10 @@ def run():
         bg = pygame.Surface((WIN_WIDTH, WIN_HEIGHT))  # Создание видимой поверхности
         # будем использовать как фон
         mapp.output()
+        #test (success, check left-top corner)
+        CT1 = control_token(screen, "dragon", 0, 1)
+        CT1.output()
+
         pygame.display.flip()
 
         #screen.blit(bg, (0, 0))  # Каждую итерацию необходимо всё перерисовывать
