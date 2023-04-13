@@ -6,14 +6,17 @@ class GameFacade:
     def __init__(self, my_board: Board):
         self.board = my_board
 
-    def get_possible_positions_battle_token(self) -> list[tuple[int, int]]:
+    def get_possible_positions_battle_token(self) -> list[list[int]]:
         # attack from id_1 to id_2 (1 - if can, 0 - else). if id_1 == id_2 -> can protect
         # same for all players
         return self.board.get_possible_position_to_put_battle_token()
 
-    def put_battle_token(self, player_id: int, province_from_id: int, province_to_id: int) -> bool:
-        # if from == to, token put like protecting
-        pass
+    def put_battle_token(self, player_id: int, my_token_id: int, province_from_id: int, province_to_id: int) -> bool:
+        if not self.board.state.this_player_move(player_id) or not (1 <= self.board.state.round <= 5):
+            return False
+        if not self.board.put_on_board_battle_token(player_id, my_token_id, province_from_id, province_to_id):
+            return False
+        return self.board.state.make_move()
 
     def show_someone_reset(self, player_id: int) -> list[BattleToken]:
         # show players battle_token reset
@@ -26,10 +29,6 @@ class GameFacade:
         # all token have status. Some on board (face up/down), some free, some used.
         pass
 
-    def show_control_token(self, player_id: int) -> list[ControlToken]:
-        # all token have status. Some on board (face up/down), some free, (?some used?)
-        pass
-
     def round_count(self) -> int:
         # return 0 if preparing, 6 if ending game, 1-5 else
         return self.board.state.round
@@ -38,10 +37,16 @@ class GameFacade:
         # return player_id whose move
         return self.board.state.move_queue[self.board.state.id_move]
 
-    def show_battle_token_on_board(self, player_id: int, token_id: int) -> BattleToken:
+    def show_battle_token(self, player_id: int, my_token_id: int) -> BattleToken:
         # probably not int, maybe info about token or position
         # if token_id on board and player has the opportunity
-        pass
+        return self.board.show_battle_token(player_id, my_token_id)
+
+    def get_all_control_token(self) -> list[ControlToken]:
+        return self.board.get_all_control_token()
+
+    def get_all_battle_token(self) -> list[BattleToken]:
+        return self.board.get_all_battle_token()
 
     def use_card(self, card_id: int):  # -> bool :
         pass

@@ -283,13 +283,8 @@ class Board:
                 ans.append(province.ind)
         return ans
 
-    def get_possible_position_to_put_battle_token(self) -> list[tuple[int, int]]:  # (from, to)
-        ans = []
-        for i in range(len(self.can_put_army_token)):
-            for j in range(len(self.can_put_army_token[i])):
-                if self.can_put_army_token[i][j] == 1:
-                    ans.append((i, j))
-        return ans
+    def get_possible_position_to_put_battle_token(self) -> list[list[int]]:  # (from, to)
+        return self.can_put_army_token
 
     def get_possible_position_to_put_control_token(self) -> list[int]:
         ans = []
@@ -298,12 +293,16 @@ class Board:
                 ans.append(province.ind)
         return ans
 
-    def put_on_board_battle_token(self, player_id: int, my_battle_token: BattleToken, ind_start: int,
+    def put_on_board_battle_token(self, player_id: int, battle_token_id: int, ind_start: int,
                                   ind_finish: int) -> bool:
         if self.can_put_army_token[ind_start][ind_finish] == 0:
             return False
-        # тут ещё надо удалить из актива и поставить на доску
+        my_battle_token = self.battle_tokens[battle_token_id]
+
+        self.players[player_id].active.remove(my_battle_token)
         my_battle_token.on_board = True
+        my_battle_token.in_active = False
+
         if ind_start == ind_finish:
             self.all_provinces[ind_start].protection_battle_token.append(my_battle_token)
         else:
@@ -344,6 +343,13 @@ class Board:
             count_control_token = {2: 11, 3: 7, 4: 5, 5: 4}
             self.state.move_to_next_round = len(self.state.move_queue) * count_control_token[len(self.state.move_queue)]
         return True
+
+    def show_battle_token(self, player_id: int, my_token_id: int) -> BattleToken:
+        # does he have the right?
+        return self.battle_tokens[my_token_id]
+
+    def get_all_battle_token(self) -> list[BattleToken]:
+        return list(self.battle_tokens.values())
 
     def get_all_control_token(self) -> list[ControlToken]:
         return list(self.control_tokens.values())
