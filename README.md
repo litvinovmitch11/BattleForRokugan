@@ -1,6 +1,6 @@
 # Board game "Battle for Rokugan"
 
-## installed packages:  
+## installed packages:
 Package      Version  
 grpcio       1.51.3  
 grpcio-tools 1.51.3  
