@@ -1,5 +1,6 @@
 from pygame import *
 from main_client import *
+from pygame_menu import *
 import grpc
 init()
 
@@ -31,13 +32,21 @@ class Menu:
                 draw.rect(surf, (0, 100, 0), option_rect)
             surf.blit(option, option_rect)
 client = Client()
-menu = Menu()
-menu.append_option('Add Player', client.add_player(client.get_unique_id()))
-menu.append_option('Get Unique Id', client.get_unique_id())
-menu.append_option('Get Ready', client.swap_player_readiness_value(client.get_unique_id()))
+menu = pygame_menu.Menu('Welcome', 1280, 720,
+                       theme=pygame_menu.themes.THEME_BLUE)
+#menu = Menu()
+#menu.append_option('Add Player', client.add_player(client.get_unique_id()))
+#menu.append_option('Get Unique Id', client.get_unique_id())
+#menu.append_option('Get Ready', client.swap_player_readiness_value(client.get_unique_id()))
+menu.add.text_input('Name :', default='Battle For Rokugan')
+menu.add.button('Add Player', client.add_player(client.get_unique_id()))
+menu.add.button('Get Unique Id', client.get_unique_id())
+menu.add.button('Get Ready', client.swap_player_readiness_value(client.get_unique_id()))
+menu.add.button('Quit', pygame_menu.events.EXIT)
 
+menu.mainloop(surface)
 
-menu.append_option('Quit', quit)
+#menu.append_option('Quit', quit)
 
 
 
