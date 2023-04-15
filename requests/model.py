@@ -40,7 +40,7 @@ class BattleToken:
         self.caste = caste
         self.power = power
         self.type = token_type
-        self.on_board = False
+        self.on_board = (-1, -1)
         self.in_reset = False
         self.in_active = False
         self.visible = token_type == TokenType.blessing
@@ -115,7 +115,7 @@ class Player:
                 break
         while len(self.active) < 6:
             for token in self.battle_tokens:
-                if not token.in_active and not token.on_board and not token.in_reset:
+                if not token.in_active and token.on_board == (-1, -1) and not token.in_reset:
                     self.active.append(token)
                     token.in_active = True
                     break
@@ -300,7 +300,7 @@ class Board:
         my_battle_token = self.battle_tokens[battle_token_id]
 
         self.players[player_id].active.remove(my_battle_token)
-        my_battle_token.on_board = True
+        my_battle_token.on_board = (ind_start, ind_finish)
         my_battle_token.in_active = False
 
         if ind_start == ind_finish:
@@ -353,3 +353,7 @@ class Board:
 
     def get_all_control_token(self) -> list[ControlToken]:
         return list(self.control_tokens.values())
+
+    def execution_phase(self):
+        # pass
+        pass

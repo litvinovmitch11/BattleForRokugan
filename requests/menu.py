@@ -32,7 +32,7 @@ class Menu:
 if __name__ == '__main__':
     pg.init()
 
-    size = (800, 600)
+    size = (1280, 720)
     screen = pg.display.set_mode(size)
     ARIAL_50 = pg.font.SysFont('arial', 50)
     client = Client()
@@ -42,14 +42,15 @@ if __name__ == '__main__':
     # menu.append_option('Add Player', client.add_player(client.get_unique_id()))
     # menu.append_option('Get Unique Id', client.get_unique_id())
     # menu.append_option('Get Ready', client.swap_player_readiness_value(client.get_unique_id()))
+
     menu.add.text_input('Name :', default='Battle For Rokugan')
-    menu.add.button('Add Player', client.add_player(client.get_unique_id()))
-    menu.add.button('Get Unique Id', client.get_unique_id())
-    menu.add.button('Get Ready', client.swap_player_readiness_value(client.get_unique_id()))
+    your_id = client.get_unique_id().player_id
+    menu.add.button('Add Player', client.add_player(your_id))
+    menu.add.button('Get Unique Id', your_id)
+    menu.add.button('Get Ready', client.swap_player_readiness_value(your_id))
     menu.add.button('Quit', pygame_menu.events.EXIT)
 
     menu.mainloop(pg.surface)
-
     # menu.append_option('Quit', quit)
 
     running = True
