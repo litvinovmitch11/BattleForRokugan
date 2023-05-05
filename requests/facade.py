@@ -56,6 +56,9 @@ class GameFacade:
         # card will include not soon
         pass
 
+    def do_execution_phase(self) -> bool:
+        return self.board.execution_phase()
+
 
 class StarterFacade:
 

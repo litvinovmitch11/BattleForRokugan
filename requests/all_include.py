@@ -9,6 +9,7 @@ class Caste(enum.Enum):
     unicorn = "unicorn"
     dragon = "dragon"
     phoenix = "phoenix"
+    none = "none"
 
 
 class TokenType(enum.Enum):

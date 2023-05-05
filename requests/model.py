@@ -168,11 +168,10 @@ class Province:
 
     def __init__(self, ind: int):
         self.capital = False
-        self.coastal = False  # прибержная
-        self.mainland = False  # материковая
+        self.mainland = False  # материковая. False - если прибрежная
         self.shadow = False
         self.caste = None
-        self.owning_caste = None
+        self.owning_caste = Caste.none
 
         self.battle_inside = []
         self.battle_outside = []
@@ -181,17 +180,18 @@ class Province:
 
         self.ind = ind
         self.glory_points = 0
+        self.control_power = 0
 
         self.set_correct_field_value(ind)
 
     def set_correct_field_value(self, ind):
         if ind in [27, 25, 23, 18, 16, 14, 5]:
             self.capital = True
+            self.control_power = 2
         if ind in [3, 4]:
             self.shadow = True
-        if ind in [0, 1, 2, 3, 5, 9, 11, 12, 13, 14, 15, 29]:
-            self.coastal = True
-        else:
+            self.control_power = 1
+        if ind not in [0, 1, 2, 3, 5, 9, 11, 12, 13, 14, 15, 29]:
             self.mainland = True
         if ind in [5, 6, 7, 8]:
             self.caste = Caste.crab
@@ -214,14 +214,61 @@ class Province:
         elif not self.shadow:
             self.glory_points = 3
 
-    def set_control_token(self, my_control_token: ControlToken):
-        self.control_tokens.append(my_control_token)
-
-    def set_battle_token(self, my_battle_token: BattleToken, inside: bool):
-        if inside:
-            self.battle_inside.append(my_battle_token)
+    def remove_fake_tokens(self):
+        if self.ind == 30:
+            for token in self.battle_inside + self.protection_battle_token:
+                token.on_board = -1
+                if token.type != TokenType.empty:
+                    token.in_reset = True
+            for token in self.battle_outside:
+                if token.type != TokenType.fleet:
+                    token.on_board = -1
+                    if token.type != TokenType.empty:
+                        token.in_reset = True
         else:
-            self.battle_outside.append(my_battle_token)
+            for token in self.battle_inside + self.battle_outside:
+                if token.type in [TokenType.diplomacy, TokenType.fleet, TokenType.blessing]:
+                    token.on_board = -1
+                    token.in_reset = True
+                if token.type == TokenType.empty:
+                    token.on_board = -1
+            for token in self.protection_battle_token:
+                if (token.type == TokenType.fleet and self.mainland) or (token.type == TokenType.blessing):
+                    token.on_board = -1
+                    token.in_reset = True
+                if token.type == TokenType.empty:
+                    token.on_board = -1
+
+    def get_winner(self) -> Caste:
+        # suppose all tokens are correct. NO, smth can be token.on_board == -1
+        points = dict()
+        for caste in Caste:
+            points[caste] = 0
+        points[self.owning_caste] = self.control_power
+        for control_token in self.control_tokens:
+            if control_token.visible:
+                points[control_token.caste] += control_token.power
+        for battle_token in self.protection_battle_token:
+            if battle_token.on_board != -1:
+                points[battle_token.caste] += battle_token.power
+        for battle_token in self.battle_inside:
+            if battle_token.on_board != -1:
+                points[battle_token.caste] += battle_token.power
+        max_power = 0
+        winner = [Caste.none]
+        for caste in Caste:
+            if points[caste] > max_power:
+                max_power = points[caste]
+                winner = [caste]
+            elif points[caste] == max_power:
+                winner.append(caste)
+        if len(winner) == 1:
+            return winner[0]
+        if Caste.crane in winner:
+            return Caste.crane
+        if self.owning_caste in winner:
+            return self.owning_caste
+        return Caste.none
 
 
 class Board:
@@ -261,11 +308,6 @@ class Board:
         for battle_token in self.players[player_id].battle_tokens:
             self.battle_tokens[battle_token.id] = battle_token
         return True
-
-    def make_all_battle_token_visible(self):
-        for player in self.players.values():
-            for my_battle_token in player.battle_tokens:
-                my_battle_token.make_visible()
 
     def get_all_provinces_without_control_token(self) -> list[int]:
         ans = []
@@ -375,8 +417,15 @@ class Board:
         return list(self.control_tokens.values())
 
     def execution_phase(self):
+        self.make_all_battle_tokens_on_board_visible()
+
         # pass
         pass
+
+    def make_all_battle_tokens_on_board_visible(self):
+        for token in self.battle_tokens:
+            if token.on_board:
+                token.make_visible()
 
     def used_card(self, player_id: int, card_id: int) -> bool:
         # need redone
