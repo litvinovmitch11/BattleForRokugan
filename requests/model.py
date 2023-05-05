@@ -163,6 +163,13 @@ class GameState:
         else:
             self.make_move()
 
+    def next_round(self):
+        self.round += 1
+        # if round == 6 cringe
+        self.phase = 1
+        self.move_to_next_round = len(self.move_queue)
+        # for used/unused cards
+
 
 class Province:
 
@@ -170,7 +177,7 @@ class Province:
         self.capital = False
         self.mainland = False  # материковая. False - если прибрежная
         self.shadow = False
-        self.caste = None
+        self.caste = Caste.none
         self.owning_caste = Caste.none
 
         self.battle_inside = []
@@ -270,6 +277,17 @@ class Province:
             return self.owning_caste
         return Caste.none
 
+    def set_boost_to_winner(self, caste: Caste, control_token: ControlToken):
+        if self.owning_caste == Caste.none or self.owning_caste != caste:
+            self.control_tokens.clear()
+            self.owning_caste = caste
+            control_token.province_id = self.ind
+            self.control_tokens.append(control_token)
+        elif caste == self.owning_caste:
+            control_token.make_visible()
+            control_token.province_id = self.ind
+            self.control_tokens.append(control_token)
+
 
 class Board:
     def __init__(self):
@@ -328,6 +346,8 @@ class Board:
 
     def put_on_board_battle_token(self, player_id: int, battle_token_id: int, ind_start: int,
                                   ind_finish: int) -> bool:
+        if self.state.move_to_next_round <= 0 or self.state.phase != 2:
+            return False
         if not (min(ind_finish, ind_start) >= 0 and max(ind_finish, ind_start) <= 30) \
                 or self.can_put_army_token[ind_start][ind_finish] == 0 \
                 or battle_token_id not in self.battle_tokens.keys():
@@ -348,14 +368,8 @@ class Board:
             self.can_put_army_token[ind_start][ind_finish] = 0
         self.state.make_move()
         if self.state.move_to_next_round == 0:
+            self.state.phase = 3
             # !!! do execution phase. IMPORTANT !!!
-            self.can_put_army_token = have_land_way
-
-            self.state.round += 1
-            # if round == 6 cringe
-            self.state.phase = 1
-            self.state.move_to_next_round = len(self.state.move_queue)
-            # for used/unused cards
         return True
 
     def put_on_board_control_token(self, player_id: int, control_token_id: int, province_id: int) -> bool:
@@ -418,9 +432,27 @@ class Board:
 
     def execution_phase(self):
         self.make_all_battle_tokens_on_board_visible()
+        for province in self.all_provinces:
+            province.remove_fake_tokens()
+        # use pogrom token
+        # use diplomacy token
+        for province in self.all_provinces:
+            winner = province.get_winner()
+            used = False
+            if winner != Caste.none:
+                for player in self.players.values():
+                    if used:
+                        break
+                    if player.caste == winner:  # find winner
+                        for token in player.control_tokens:
+                            if token.province_id == -1:  # find free c_t
+                                province.set_boost_to_winner(winner, token)  # set correct_value
+                                used = True
+                                break
 
-        # pass
-        pass
+        # take region cards
+        self.state.next_round()
+        self.can_put_army_token = have_land_way
 
     def make_all_battle_tokens_on_board_visible(self):
         for token in self.battle_tokens:
@@ -442,3 +474,41 @@ class Board:
             self.state.phase = 2
             self.state.move_to_next_round = len(self.state.move_queue) * 5
         return True
+
+    def get_winner(self) -> list[int]:
+        points = dict()
+        for caste in Caste:
+            points[caste] = 0
+        ans = []
+        for province in self.all_provinces:
+            if province.owning_caste != Caste.none:
+                points[province.owning_caste] += province.glory_points
+        for token in self.control_tokens:
+            if token.province_id != -1 and token.visible:
+                points[token.caste] += 1
+        # point for secret goal
+        for caste in Caste:
+            if caste == Caste.none:
+                continue
+            region = []
+            for province in self.all_provinces:
+                if province.caste == caste:
+                    region.append(province)
+
+            one_owning = True
+            for i in range(len(region)):
+                province = region[i]
+                if province.owning_caste != region[0].owning_caste:
+                    one_owning = False
+            if one_owning:
+                points[region[0].owning_caste] += 5
+
+        max_point = 0
+        for caste in Caste:
+            max_point = max(max_point, points[caste])
+        for caste in Caste:
+            if points[caste] == max_point:
+                for player in self.players:
+                    if player.caste == caste:
+                        ans.append(player.player_id)
+        return ans

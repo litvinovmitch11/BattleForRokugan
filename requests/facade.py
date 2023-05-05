@@ -59,6 +59,12 @@ class GameFacade:
     def do_execution_phase(self) -> bool:
         return self.board.execution_phase()
 
+    def get_winner(self) -> list[int]:  # return player_id. Empty list if game not finished
+        if self.board.state.round == 6:
+            return self.board.get_winner()
+        else:
+            return []
+
 
 class StarterFacade:
 
