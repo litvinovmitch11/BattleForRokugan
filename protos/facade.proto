@@ -4,17 +4,90 @@ package facade;
 
 service Facade{
 
-  rpc Echo(Message) returns (Message){}
-  rpc RoundCount(Empty) returns (Count){}
+  rpc GetPossiblePositionsBattleToken(Empty) returns (Map){}
+  rpc PutBattleToken(Attack) returns (Key){}
+  rpc ShowSomeoneReset(Player) returns (ListBattleTokens){}
+  rpc ShowActive(Player) returns (ListBattleTokens){}
+  rpc RoundCount(Empty) returns (Round){}
+  rpc WhoseMove(Empty) returns (Player){}
+  rpc ShowBattleToken(Token) returns (BattleToken){}
+  rpc GetAllControlToken(Empty) returns (ListControlTokens){}
+  rpc GetAllBattleToken(Empty) returns (ListBattleTokens){}
+  rpc UseCard(Card) returns (Key){}
+  rpc UnusedCard(Player) returns (Key){}
+  rpc GetAllMyCards(Player) returns (Empty){} // not soon
+  rpc DoExecutionPhase(Empty) returns (Key){}
+  rpc GetWinner(Empty) returns (Players){}
 
 }
 
 message Empty {}
 
-message Message {
-  string message = 1;
+message List {
+  repeated int32 cell = 1;
 }
 
-message Count {
-  int32 count = 1;
+message Map {
+  repeated List line = 1;
+}
+
+message Attack {
+  int32 player_id = 1;
+  int32 my_token_id = 2;
+  int32 province_from_id = 3;
+  int32 province_to_id = 4;
+}
+
+message Key {
+  bool key = 1;
+}
+
+message Player {
+  int32 player_id = 1;
+}
+
+message BattleToken {
+  string caste = 1;
+  int32 power = 2;
+  string type = 3;
+  int32 on_board_first = 4;
+  int32 on_board_second = 5;
+  bool in_reset = 6;
+  bool in_active = 7;
+  bool visible = 8;
+  int32 id = 9;
+}
+
+message ListBattleTokens {
+  repeated BattleToken token = 1;
+}
+
+message Round {
+  int32 round = 1;
+}
+
+message Token {
+  int32 player_id = 1;
+  int32 token_id = 2;
+}
+
+message ControlToken {
+  bool visible = 1;
+  int32 province_id = 2;
+  int32 power = 3;
+  string caste = 4;
+  int32 id = 5;
+}
+
+message ListControlTokens {
+  repeated ControlToken token = 1;
+}
+
+message Card {
+  int32 player_id = 1;
+  int32 card_id = 2;
+}
+
+message Players {
+  repeated Player player = 1;
 }

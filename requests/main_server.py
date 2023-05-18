@@ -1,9 +1,11 @@
 from concurrent import futures
 import grpc
-import starter_pb2_grpc as pb2_grpc
+import starter_pb2_grpc
+import facade_pb2_grpc
 
 import facade
 import starter_service
+import facade_service
 
 
 def start_game_session(host='localhost', port='8888'):
@@ -12,8 +14,10 @@ def start_game_session(host='localhost', port='8888'):
 
     bd = facade.Board()
     start_fd = facade.StarterFacade(bd)
+    game_fd = facade.GameFacade(bd)
 
-    pb2_grpc.add_StarterServicer_to_server(starter_service.StarterService(start_fd), server)
+    starter_pb2_grpc.add_StarterServicer_to_server(starter_service.StarterService(start_fd), server)
+    facade_pb2_grpc.add_FacadeServicer_to_server(facade_service.FacadeService(game_fd), server)
 
     server.add_insecure_port(f'{host}:{port}')
     server.start()
