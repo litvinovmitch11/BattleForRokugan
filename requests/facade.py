@@ -65,26 +65,6 @@ class GameFacade:
         else:
             return []
 
-
-class StarterFacade:
-
-    def __init__(self, my_board: Board):
-        self.board = my_board
-        self.unique_id = -1
-
-    def get_unique_id(self) -> int:
-        self.unique_id += 1
-        return self.unique_id
-
-    def add_player(self, player_id: int) -> bool:
-        if player_id not in self.board.players.keys() and len(self.board.players) <= 4:
-            self.board.add_player(Player(player_id))
-            return True
-        return False
-
-    def swap_player_readiness_value(self, player_id: int) -> bool:
-        return self.board.swap_player_readiness(player_id)
-
     def get_free_caste(self) -> list[Caste]:
         return self.board.get_free_caste()
 
@@ -104,18 +84,39 @@ class StarterFacade:
             return False
         return self.board.put_on_board_control_token(player_id, control_token_id, province_id)
 
-    def round_count(self) -> int:
-        return self.board.state.round
 
-    def get_all_control_token(self) -> list[ControlToken]:
-        return self.board.get_all_control_token()
+class StarterFacade:  # update logic! After this facade must make board
+
+    def __init__(self):
+        self.players = dict()  # player_id -> his readiness
+        self.unique_id = -1
+
+    def get_unique_id(self) -> int:
+        self.unique_id += 1
+        return self.unique_id
+
+    def add_player(self, player_id: int) -> bool:
+        if player_id not in self.players and len(self.players) <= 4:
+            self.players[player_id] = False
+            return True
+        return False
+
+    def swap_player_readiness_value(self, player_id: int) -> bool:
+        if player_id not in self.players:
+            return False
+        self.players[player_id] = not self.players[players]
+        return True
+
+    def should_start_game(self) -> bool:
+        all_ready = True
+        for player_id in self.players:
+            all_ready &= self.players[player_id]
+        return len(self.players) > 1 and all_ready
 
 
 if __name__ == "__main__":
-    board = Board()
-    facade = StarterFacade(board)
+    facade = StarterFacade()
     players = []
-
     for i in range(3):
         players.append(facade.get_unique_id())
         facade.add_player(players[i])
@@ -123,6 +124,14 @@ if __name__ == "__main__":
         facade.add_player(id_player)
     for id_player in players:
         facade.swap_player_readiness_value(id_player)
+    board = Board()
+
+    for ind in facade.players:
+        player = Player(ind)
+        board.add_player(player)
+
+    facade = GameFacade(board)
+
     for id_player in players:
         facade.set_caste(id_player, facade.get_free_caste()[0])
     while facade.round_count() != 1:
@@ -135,7 +144,6 @@ if __name__ == "__main__":
                     break
             if was:
                 break
-    facade = GameFacade(board)
     for i in range(10):
         for id_player in players:
             facade.unused_card(id_player)

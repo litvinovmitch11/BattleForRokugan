@@ -2,12 +2,15 @@ from pygame import *
 
 init()
 
+
 def foo():
-    print ("Jopa")
+    print("Jopa")
+
 
 size = (800, 600)
 screen = display.set_mode(size)
 ARIAL_50 = font.SysFont('arial', 50)
+
 
 class Menu:
     def __init__(self):
@@ -19,7 +22,7 @@ class Menu:
         self._option_surfaces.append(ARIAL_50.render(option, True, (255, 255, 255)))
         self._callbacks.append(callback)
 
-    def switch (self, direction):
+    def switch(self, direction):
         self._current_option_index = max(0, min(self._current_option_index + direction, len(self._option_surfaces) - 1))
 
     def select(self):
@@ -33,11 +36,11 @@ class Menu:
                 draw.rect(surf, (0, 100, 0), option_rect)
             surf.blit(option, option_rect)
 
+
 menu = Menu()
 menu.append_option('Hello world!', lambda: print('Hello world!'))
 menu.append_option('You', foo)
 menu.append_option('Quit', quit)
-
 
 running = True
 while running:
@@ -51,7 +54,7 @@ while running:
                 menu.switch(1)
             elif e.key == K_SPACE:
                 menu.select()
-        screen.fill((0,0,0))
+        screen.fill((0, 0, 0))
 
         menu.draw(screen, 100, 100, 75)
 
