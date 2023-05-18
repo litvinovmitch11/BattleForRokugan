@@ -69,7 +69,6 @@ class Player:
         self.control_tokens = []
         self.active = []
         self.player_id = player_id
-        self.ready_to_play = False
 
     def set_clan(self, my_caste: Caste) -> bool:
         if self.caste is not None:
@@ -137,10 +136,9 @@ class GameState:
     def __init__(self):
         self.id_move = 0  # 1st player start all time?
         self.move_queue = []  # player_ids
-        self.round = -1  # -1 -> adding player. 0 -> putting control_tokens/choose caste 1-5 -> round of game
+        self.round = -1  # -1 -> waiting for start. 0 -> putting control_tokens/choose caste 1-5 -> round of game
         self.move_to_next_round = 0
         self.phase = -1  # in range [1, 3]
-        self.cnt_ready = 0
 
     def this_player_move(self, player_id: int) -> bool:
         return self.move_queue[self.id_move] == player_id
@@ -151,10 +149,8 @@ class GameState:
         return True
 
     def add_player(self, my_player: Player) -> bool:
-        if len(self.move_queue) <= 4 and self.round == -1:
-            self.move_queue.append(my_player.player_id)
-            return True
-        return False
+        self.move_queue.append(my_player.player_id)
+        return True
 
     def used_card(self, was_used: bool):
         if was_used:
@@ -395,27 +391,13 @@ class Board:
             self.state.move_to_next_round = len(self.state.move_queue)
             for player in self.players.values():
                 player.make_active()
-            # try use card
+            # try to use card
         return True
 
     def set_control_token_to_capital(self, my_caste: Caste, my_control_token: ControlToken):
         for province in self.all_provinces:
             if province.capital and province.caste == my_caste:
                 province.control_tokens.append(my_control_token)
-
-    def swap_player_readiness(self, player_id: int) -> bool:
-        if player_id not in self.players:
-            return False
-        if not self.players[player_id].ready_to_play:
-            self.state.cnt_ready += 1
-        else:
-            self.state.cnt_ready -= 1
-        self.players[player_id].ready_to_play = not self.players[player_id].ready_to_play
-        if self.state.cnt_ready == len(self.state.move_queue) > 1 and self.state.round == -1:
-            self.state.round = 0
-            count_control_token = {2: 11, 3: 7, 4: 5, 5: 4}
-            self.state.move_to_next_round = len(self.state.move_queue) * count_control_token[len(self.state.move_queue)]
-        return True
 
     def show_battle_token(self, player_id: int, my_token_id: int) -> BattleToken:
         # does he have the right?
@@ -453,13 +435,15 @@ class Board:
         # take region cards
         self.state.next_round()
         self.can_put_army_token = have_land_way
+        for player in self.players.values():
+            player.make_active()
 
     def make_all_battle_tokens_on_board_visible(self):
-        for token in self.battle_tokens:
+        for token in self.battle_tokens.values():
             if token.on_board:
                 token.make_visible()
 
-    def used_card(self, player_id: int, card_id: int) -> bool:
+    def used_card(self, player_id: int) -> bool:
         # need redone
         if not self.state.this_player_move(player_id) or self.state.phase != 1:
             return False
@@ -483,7 +467,7 @@ class Board:
         for province in self.all_provinces:
             if province.owning_caste != Caste.none:
                 points[province.owning_caste] += province.glory_points
-        for token in self.control_tokens:
+        for token in self.control_tokens.values():
             if token.province_id != -1 and token.visible:
                 points[token.caste] += 1
         # point for secret goal
@@ -508,7 +492,12 @@ class Board:
             max_point = max(max_point, points[caste])
         for caste in Caste:
             if points[caste] == max_point:
-                for player in self.players:
+                for player in self.players.values():
                     if player.caste == caste:
                         ans.append(player.player_id)
         return ans
+
+    def start_game(self):
+        self.state.round = 0
+        count_control_token = {2: 11, 3: 7, 4: 5, 5: 4}
+        self.state.move_to_next_round = len(self.state.move_queue) * count_control_token[len(self.state.move_queue)]

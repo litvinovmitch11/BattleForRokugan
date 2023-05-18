@@ -46,8 +46,8 @@ class GameFacade:
     def get_all_battle_token(self) -> list[BattleToken]:
         return self.board.get_all_battle_token()
 
-    def use_card(self, player_id, card_id: int) -> bool:
-        return self.board.used_card(player_id, card_id)
+    def use_card(self, player_id) -> bool:
+        return self.board.used_card(player_id)
 
     def unused_card(self, player_id: int) -> bool:
         return self.board.unused_card(player_id)
@@ -69,7 +69,8 @@ class GameFacade:
         return self.board.get_free_caste()
 
     def set_caste(self, player_id: int, my_caste: Caste) -> bool:
-        if my_caste not in self.get_free_caste() or player_id not in self.board.players.keys() or self.board.state.round != 0:
+        if my_caste not in self.get_free_caste() or player_id not in self.board.players.keys() or \
+                self.board.state.round != 0:
             return False
         if not self.board.set_caste_to_player(player_id, my_caste):
             return False
@@ -104,58 +105,11 @@ class StarterFacade:  # update logic! After this facade must make board
     def swap_player_readiness_value(self, player_id: int) -> bool:
         if player_id not in self.players:
             return False
-        self.players[player_id] = not self.players[players]
+        self.players[player_id] = not self.players[player_id]
         return True
 
     def should_start_game(self) -> bool:
-        all_ready = True
+        everyone_ready = True
         for player_id in self.players:
-            all_ready &= self.players[player_id]
-        return len(self.players) > 1 and all_ready
-
-
-if __name__ == "__main__":
-    facade = StarterFacade()
-    players = []
-    for i in range(3):
-        players.append(facade.get_unique_id())
-        facade.add_player(players[i])
-    for id_player in players:
-        facade.add_player(id_player)
-    for id_player in players:
-        facade.swap_player_readiness_value(id_player)
-    board = Board()
-
-    for ind in facade.players:
-        player = Player(ind)
-        board.add_player(player)
-
-    facade = GameFacade(board)
-
-    for id_player in players:
-        facade.set_caste(id_player, facade.get_free_caste()[0])
-    while facade.round_count() != 1:
-        was = False
-        for i in range(1000):
-            for id_player in players:
-                if facade.put_control_token(id_player, i, i % 30):
-                    # print("OK", str(player_id), i)
-                    was = True
-                    break
-            if was:
-                break
-    for i in range(10):
-        for id_player in players:
-            facade.unused_card(id_player)
-    print(facade.round_count(), facade.board.state.phase)
-    while facade.board.state.phase == 2:
-        was = False
-        for i in range(1000):
-            for id_player in players:
-                if facade.put_battle_token(id_player, i, i % 30, i % 30):
-                    print("OK", str(id_player), i)
-                    was = True
-                    break
-            if was:
-                break
-    print(facade.round_count(), facade.board.state.phase)
+            everyone_ready &= self.players[player_id]
+        return len(self.players) > 1 and everyone_ready
