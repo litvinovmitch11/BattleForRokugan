@@ -30,7 +30,6 @@ if __name__ == "__main__":
             if was:
                 break
     # print(facade.round_count(), facade.board.state.phase)
-    p = random.randint(0, 29)
 
     for q in range(5):
         print(facade.round_count(), facade.board.state.phase)
@@ -38,11 +37,13 @@ if __name__ == "__main__":
             for id_player in players:
                 facade.unused_card(id_player)
         while facade.board.state.phase == 2:
+            f = random.randint(0, 29)
+            t = random.randint(0, 29)
             was = False
             for id_player in players:
                 for battle_token in facade.board.players[id_player].active:
                     ind = battle_token.id
-                    if facade.put_battle_token(id_player, ind, p, p):
+                    if facade.put_battle_token(id_player, ind, f, t):
                         print("OK", str(id_player), ind)
                         was = True
                         break
