@@ -1,62 +1,34 @@
-from pygame import *
+import pygame_menu
+from pygame_menu.examples import create_example_window
+from typing import Tuple, Any
 
-init()
+surface = create_example_window('Example - Simple', (600, 400))
 
+def start_the_game() -> None:
+    """
+    Function that starts a game. This is raised by the menu button,
+    here menu can be disabled, etc.
+    """
+    global user_name
+    print(f'{user_name.get_value()}, Do the job here!')
 
-def foo():
-    print("Jopa")
+def create_lobby() -> None:
 
+    global lobby_id
+    print(f'{lobby_id.get_value()}, Do the job here!')
+    pass
+menu = pygame_menu.Menu(
+    height=300,
+    theme=pygame_menu.themes.THEME_BLUE,
+    title='Welcome',
+    width=400
+)
 
-size = (800, 600)
-screen = display.set_mode(size)
-ARIAL_50 = font.SysFont('arial', 50)
+user_name = menu.add.text_input('Name: ', default='John Doe', maxchar=10)
+lobby_id = menu.add.text_input('Lobby ID: ', default='1', maxchar=10)
+menu.add.button('Create lobby', create_lobby)
+#menu.add.button('Play', start_the_game)
+menu.add.button('Quit', pygame_menu.events.EXIT)
 
-
-class Menu:
-    def __init__(self):
-        self._option_surfaces = []
-        self._callbacks = []
-        self._current_option_index = 0
-
-    def append_option(self, option, callback):
-        self._option_surfaces.append(ARIAL_50.render(option, True, (255, 255, 255)))
-        self._callbacks.append(callback)
-
-    def switch(self, direction):
-        self._current_option_index = max(0, min(self._current_option_index + direction, len(self._option_surfaces) - 1))
-
-    def select(self):
-        self._callbacks[self._current_option_index]()
-
-    def draw(self, surf, x, y, option_y_padding):
-        for i, option in enumerate(self._option_surfaces):
-            option_rect = option.get_rect()
-            option_rect.topleft = (x, y + i * option_y_padding)
-            if i == self._current_option_index:
-                draw.rect(surf, (0, 100, 0), option_rect)
-            surf.blit(option, option_rect)
-
-
-menu = Menu()
-menu.append_option('Hello world!', lambda: print('Hello world!'))
-menu.append_option('You', foo)
-menu.append_option('Quit', quit)
-
-running = True
-while running:
-    for e in event.get():
-        if e.type == QUIT:
-            running = False
-        elif e.type == KEYDOWN:
-            if e.key == K_w:
-                menu.switch(-1)
-            elif e.key == K_s:
-                menu.switch(1)
-            elif e.key == K_SPACE:
-                menu.select()
-        screen.fill((0, 0, 0))
-
-        menu.draw(screen, 100, 100, 75)
-
-        display.flip()
-quit()
+if __name__ == '__main__':
+    menu.mainloop(surface)
