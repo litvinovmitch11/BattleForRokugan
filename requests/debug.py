@@ -7,12 +7,8 @@ if __name__ == "__main__":
     for i in facade.players:
         facade.swap_player_readiness_value(i)
 
-    board = Board()
-    players = []
-    for ind in facade.players:
-        player = Player(ind)
-        players.append(ind)
-        board.add_player(player)
+    players = facade.get_players_ids()
+    board = Board(players)
     board.start_game()
 
     facade = GameFacade(board)

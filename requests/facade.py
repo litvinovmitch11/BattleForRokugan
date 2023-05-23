@@ -113,3 +113,6 @@ class StarterFacade:  # update logic! After this facade must make board
         for player_id in self.players:
             everyone_ready &= self.players[player_id]
         return len(self.players) > 1 and everyone_ready
+
+    def get_players_ids(self) -> list[int]:
+        return [*self.players.keys()]

@@ -286,7 +286,7 @@ class Province:
 
 
 class Board:
-    def __init__(self):
+    def __init__(self, players_ids: list[int]):
         self.players = dict()  # id -> Class Player
         self.state = GameState()
 
@@ -298,6 +298,9 @@ class Board:
 
         for i in range(30):
             self.all_provinces.append(Province(i))
+
+        for ind in players_ids:
+            self.add_player(Player(ind))
 
     def add_player(self, my_player: Player):
         self.players[my_player.player_id] = my_player
