@@ -3,8 +3,8 @@ from model import *
 
 class GameFacade:
 
-    def __init__(self, my_board: Board):
-        self.board = my_board
+    def __init__(self, players_ids: list[int]):
+        self.board = Board(players_ids)
 
     def get_possible_positions_battle_token(self) -> list[list[int]]:
         # attack from id_1 to id_2 (1 - if can, 0 - else). if id_1 == id_2 -> can protect
