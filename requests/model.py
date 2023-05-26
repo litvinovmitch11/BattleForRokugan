@@ -136,7 +136,7 @@ class GameState:
     def __init__(self):
         self.id_move = 0  # 1st player start all time?
         self.move_queue = []  # player_ids
-        self.round = -1  # -1 -> waiting for start. 0 -> putting control_tokens/choose caste 1-5 -> round of game
+        self.round = 0  # 0 -> putting control_tokens/choose caste 1-5 -> round of game
         self.move_to_next_round = 0
         self.phase = -1  # in range [1, 3]
 
@@ -301,6 +301,8 @@ class Board:
 
         for ind in players_ids:
             self.add_player(Player(ind))
+
+        self.start_game()
 
     def add_player(self, my_player: Player):
         self.players[my_player.player_id] = my_player

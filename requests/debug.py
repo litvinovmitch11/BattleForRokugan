@@ -8,11 +8,7 @@ if __name__ == "__main__":
         facade.swap_player_readiness_value(i)
 
     players = facade.get_players_ids()
-    board = Board(players)
-    board.start_game()
-
-    facade = GameFacade(board)
-
+    facade = GameFacade(players)
     for id_player in players:
         facade.set_caste(id_player, facade.get_free_caste()[0])
     while facade.round_count() != 1:
@@ -46,4 +42,4 @@ if __name__ == "__main__":
                 if was:
                     break
         facade.do_execution_phase()
-        print(facade.get_winner())
+    print(facade.get_winner())
