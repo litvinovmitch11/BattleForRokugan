@@ -1,65 +1,47 @@
 import starter_pb2 as pb2
 import starter_pb2_grpc as pb2_grpc
 from facade import StarterFacade
-
-from all_include import Caste
+from facade import GameFacade
 
 
 class StarterService(pb2_grpc.StarterServicer):
 
-    def __init__(self, fd: StarterFacade, *args, **kwargs):
-        self.facade = fd
+    def __init__(self, games, *args, **kwargs):
+        self.games = games
+        self.ind = -1
+
+    def CreateNewGameSession(self, request, context):
+        print("CreateNewGameSession")
+        self.ind += 1
+        self.games[self.ind] = StarterFacade()
+        result = {"game_id": self.ind}
+        return pb2.Empty(**result)
 
     def GetUniqueId(self, request, context):
         print("GetUniqueId")
-        result = {"player_id": self.facade.get_unique_id()}
+        result = {"player_id": self.games[request.game_id].get_unique_id()}
         return pb2.PlayerId(**result)
 
     def AddPlayer(self, request, context):
         print("AddPlayer")
-        result = {"key": self.facade.add_player(request.player_id)}
+        result = {"key": self.games[request.game_id].add_player(request.player_id)}
         return pb2.Key(**result)
 
     def SwapPlayerReadinessValue(self, request, context):
         print("SwapPlayerReadinessValue")
-        result = {"key": self.facade.swap_player_readiness_value(request.player_id)}
+        result = {"key": self.games[request.game_id].swap_player_readiness_value(request.player_id)}
         return pb2.Key(**result)
 
-    def GetFreeCaste(self, request, context):
-        print("GetFreeCaste")
-        list_caste = pb2.ListCaste()
-        list_caste.caste[:] = [caste.value for caste in self.facade.get_free_caste()]
-        return list_caste
+    def GetPlayersIds(self, request, context):
+        print("GetPlayersIds")
+        list_int = pb2.ListInt()
+        list_int.int[:] = self.games[request.game_id].get_players_ids()
+        return list_int
 
-    def SetCaste(self, request, context):
-        print("SetCaste")
-        result = {"key": self.facade.set_caste(request.player_id, Caste(request.caste))}
+    def ShouldStartGame(self, request, context):
+        print("ShouldStartGame")
+        key = self.games[request.game_id].should_start_game()
+        if key:
+            self.games[request.game_id] = GameFacade(self.games[request.game_id].get_players_ids())
+        result = {"key": key}
         return pb2.Key(**result)
-
-    def GetPossiblePositionsControlToken(self, request, context):
-        print("GetPossiblePositionsControlToken")
-        list_pos_tokens = pb2.ListPositionsControlTokens(position=self.facade.get_possible_positions_control_token())
-        return list_pos_tokens
-
-    def PutControlToken(self, request, context):
-        print("PutControlToken")
-        result = {"key": self.facade.put_control_token(request.player_id, request.token_id, request.province_id)}
-        return pb2.Key(**result)
-
-    def RoundCount(self, request, context):
-        print("RoundCount")
-        result = {"round": self.facade.round_count()}
-        return pb2.Round(**result)
-
-    def GetAllControlToken(self, request, context):
-        print("GetAllControlToken")
-        list_tokens = pb2.ListControlTokens(
-            token=[
-                pb2.ControlToken(visible=token.visible,
-                                 province_id=token.province_id,
-                                 power=token.power,
-                                 caste=token.caste.value,
-                                 id=token.id)
-                for token in self.facade.get_all_control_token()]
-        )
-        return list_tokens

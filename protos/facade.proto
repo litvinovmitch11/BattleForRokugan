@@ -10,7 +10,7 @@ service Facade{
   rpc ShowActive(Player) returns (ListBattleTokens){}
   rpc RoundCount(Empty) returns (Round){}
   rpc WhoseMove(Empty) returns (Player){}
-  rpc ShowBattleToken(Token) returns (BattleToken){}
+  rpc ShowBattleToken(ShowToken) returns (BattleToken){}
   rpc GetAllControlToken(Empty) returns (ListControlTokens){}
   rpc GetAllBattleToken(Empty) returns (ListBattleTokens){}
   rpc UseCard(Card) returns (Key){}
@@ -18,76 +18,118 @@ service Facade{
   rpc GetAllMyCards(Player) returns (Empty){} // not soon
   rpc DoExecutionPhase(Empty) returns (Key){}
   rpc GetWinner(Empty) returns (Players){}
+  rpc GetFreeCaste(Empty) returns (ListCaste){}
+  rpc SetCaste(Caste) returns (Key){}
+  rpc GetPossiblePositionsControlToken(Empty) returns (ListPositionsControlTokens){}
+  rpc PutControlToken(Token) returns (Key){}
 
 }
 
-message Empty {}
+message Empty {
+  int32 game_id = 1;
+}
 
 message List {
-  repeated int32 cell = 1;
+  int32 game_id = 1;
+  repeated int32 cell = 2;
 }
 
 message Map {
-  repeated List line = 1;
+  int32 game_id = 1;
+  repeated List line = 2;
 }
 
 message Attack {
-  int32 player_id = 1;
-  int32 my_token_id = 2;
-  int32 province_from_id = 3;
-  int32 province_to_id = 4;
+  int32 game_id = 1;
+  int32 player_id = 2;
+  int32 my_token_id = 3;
+  int32 province_from_id = 4;
+  int32 province_to_id = 5;
 }
 
 message Key {
-  bool key = 1;
+  int32 game_id = 1;
+  bool key = 2;
 }
 
 message Player {
-  int32 player_id = 1;
+  int32 game_id = 1;
+  int32 player_id = 2;
 }
 
 message BattleToken {
-  string caste = 1;
-  int32 power = 2;
-  string type = 3;
-  int32 on_board_first = 4;
-  int32 on_board_second = 5;
-  bool in_reset = 6;
-  bool in_active = 7;
-  bool visible = 8;
-  int32 id = 9;
+  int32 game_id = 1;
+  string caste = 2;
+  int32 power = 3;
+  string type = 4;
+  int32 on_board_first = 5;
+  int32 on_board_second = 6;
+  bool in_reset = 7;
+  bool in_active = 8;
+  bool visible = 9;
+  int32 id = 10;
 }
 
 message ListBattleTokens {
-  repeated BattleToken token = 1;
+  int32 game_id = 1;
+  repeated BattleToken token = 2;
 }
 
 message Round {
-  int32 round = 1;
+  int32 game_id = 1;
+  int32 round = 2;
 }
 
-message Token {
-  int32 player_id = 1;
-  int32 token_id = 2;
+message ShowToken {
+  int32 game_id = 1;
+  int32 player_id = 2;
+  int32 token_id = 3;
 }
 
 message ControlToken {
-  bool visible = 1;
-  int32 province_id = 2;
-  int32 power = 3;
-  string caste = 4;
-  int32 id = 5;
+  int32 game_id = 1;
+  bool visible = 2;
+  int32 province_id = 3;
+  int32 power = 4;
+  string caste = 5;
+  int32 id = 6;
 }
 
 message ListControlTokens {
-  repeated ControlToken token = 1;
+  int32 game_id = 1;
+  repeated ControlToken token = 2;
 }
 
 message Card {
-  int32 player_id = 1;
-  int32 card_id = 2;
+  int32 game_id = 1;
+  int32 player_id = 2;
+  int32 card_id = 3;
 }
 
 message Players {
-  repeated Player player = 1;
+  int32 game_id = 1;
+  repeated Player player = 2;
+}
+
+message ListCaste {
+  int32 game_id = 1;
+  repeated string caste = 2;
+}
+
+message Caste {
+  int32 game_id = 1;
+  int32 player_id = 2;
+  string caste = 3;
+}
+
+message ListPositionsControlTokens {
+  int32 game_id = 1;
+  repeated int32 position = 2;
+}
+
+message Token {
+  int32 game_id = 1;
+  int32 player_id = 2;
+  int32 token_id = 3;
+  int32 province_id = 4;
 }

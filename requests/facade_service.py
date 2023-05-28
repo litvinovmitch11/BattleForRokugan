@@ -1,17 +1,18 @@
 import facade_pb2 as pb2
 import facade_pb2_grpc as pb2_grpc
-from facade import GameFacade
+
+from all_include import Caste
 
 
 class FacadeService(pb2_grpc.FacadeServicer):
 
-    def __init__(self, fd: GameFacade, *args, **kwargs):
-        self.facade = fd
+    def __init__(self, games, *args, **kwargs):
+        self.games = games
 
     def GetPossiblePositionsBattleToken(self, request, context):
         print("GetPossiblePositionsBattleToken")
         position = pb2.Map()
-        for line in self.facade.get_possible_positions_battle_token():
+        for line in self.games[request.game_id].get_possible_positions_battle_token():
             lst = pb2.List()
             lst.cell[:] = line
             position.line.append(lst)
@@ -19,8 +20,9 @@ class FacadeService(pb2_grpc.FacadeServicer):
 
     def PutBattleToken(self, request, context):
         print("PutBattleToken")
-        result = {"key": self.facade.put_battle_token(request.player_id, request.my_token_id, request.province_from_id,
-                                                      request.province_to_id)}
+        result = {"key": self.games[request.game_id].put_battle_token(request.player_id, request.my_token_id,
+                                                                      request.province_from_id,
+                                                                      request.province_to_id)}
         return pb2.Key(**result)
 
     def ShowSomeoneReset(self, request, context):
@@ -36,7 +38,7 @@ class FacadeService(pb2_grpc.FacadeServicer):
                                 in_active=token.in_active,
                                 visible=token.visible,
                                 id=token.id)
-                for token in self.facade.show_someone_reset(request.player_id)]
+                for token in self.games[request.game_id].show_someone_reset(request.player_id)]
         )
         return list_tokens
 
@@ -53,23 +55,23 @@ class FacadeService(pb2_grpc.FacadeServicer):
                                 in_active=token.in_active,
                                 visible=token.visible,
                                 id=token.id)
-                for token in self.facade.show_active(request.player_id)]
+                for token in self.games[request.game_id].show_active(request.player_id)]
         )
         return list_tokens
 
     def RoundCount(self, request, context):
         print("RoundCount")
-        result = {"round": self.facade.round_count()}
+        result = {"round": self.games[request.game_id].round_count()}
         return pb2.Round(**result)
 
     def WhoseMove(self, request, context):
         print("WhoseMove")
-        result = {"player_id": self.facade.whose_move()}
+        result = {"player_id": self.games[request.game_id].whose_move()}
         return pb2.Player(**result)
 
     def ShowBattleToken(self, request, context):
         print("ShowBattleToken")
-        token = self.facade.show_battle_token(request.player_id, request.my_token_id)
+        token = self.games[request.game_id].show_battle_token(request.player_id, request.my_token_id)
         result = {"caste": token.visible,
                   "power": token.power,
                   "type": token.type,
@@ -90,7 +92,7 @@ class FacadeService(pb2_grpc.FacadeServicer):
                                  power=token.power,
                                  caste=token.caste.value,
                                  id=token.id)
-                for token in self.facade.get_all_control_token()]
+                for token in self.games[request.game_id].get_all_control_token()]
         )
         return list_tokens
 
@@ -107,18 +109,18 @@ class FacadeService(pb2_grpc.FacadeServicer):
                                 in_active=token.in_active,
                                 visible=token.visible,
                                 id=token.id)
-                for token in self.facade.get_all_battle_token()]
+                for token in self.games[request.game_id].get_all_battle_token()]
         )
         return list_tokens
 
     def UseCard(self, request, context):
         print("UseCard")
-        result = {"key": self.facade.use_card(request.player_id, request.card_id)}
+        result = {"key": self.games[request.game_id].use_card(request.player_id, request.card_id)}
         return pb2.Key(**result)
 
     def UnusedCard(self, request, context):
         print("UnusedCard")
-        result = {"key": self.facade.unused_card(request.player_id)}
+        result = {"key": self.games[request.game_id].unused_card(request.player_id)}
         return pb2.Key(**result)
 
     def GetAllMyCards(self, request, context):  # Not soon
@@ -127,10 +129,33 @@ class FacadeService(pb2_grpc.FacadeServicer):
 
     def DoExecutionPhase(self, request, context):
         print("DoExecutionPhase")
-        self.facade.do_execution_phase()
+        self.games[request.game_id].do_execution_phase()
         return pb2.Empty()
 
     def GetWinner(self, request, context):
         print("GetWinner")
-        self.facade.get_winner()
+        self.games[request.game_id].get_winner()
         return pb2.Empty()
+
+    def GetFreeCaste(self, request, context):
+        print("GetFreeCaste")
+        list_caste = pb2.ListCaste()
+        list_caste.caste[:] = [caste.value for caste in self.games[request.game_id].get_free_caste()]
+        return list_caste
+
+    def SetCaste(self, request, context):
+        print("SetCaste")
+        result = {"key": self.games[request.game_id].set_caste(request.player_id, Caste(request.caste))}
+        return pb2.Key(**result)
+
+    def GetPossiblePositionsControlToken(self, request, context):
+        print("GetPossiblePositionsControlToken")
+        list_pos_tokens = pb2.ListPositionsControlTokens(
+            position=self.games[request.game_id].get_possible_positions_control_token())
+        return list_pos_tokens
+
+    def PutControlToken(self, request, context):
+        print("PutControlToken")
+        result = {"key": self.games[request.game_id].put_control_token(request.player_id, request.token_id,
+                                                                       request.province_id)}
+        return pb2.Key(**result)
