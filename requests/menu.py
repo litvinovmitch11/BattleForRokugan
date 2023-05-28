@@ -1,24 +1,31 @@
 import pygame_menu
 from pygame_menu.examples import create_example_window
-from typing import Tuple, Any
+from main_client import Client
 
 surface = create_example_window('Example - Simple', (600, 400))
 
 
-def start_the_game() -> None:
-    """
-    Function that starts a game. This is raised by the menu button,
-    here menu can be disabled, etc.
-    """
-    global user_name
-    print(f'{user_name.get_value()}, Do the job here!')
+class ClientMenu:
+    def __init__(self, host="localhost", port="8888"):
+        self.client = Client(host=host, port=port)
+        self.game_id = -1
+        self.id = -1
+
+    def create_lobby(self):
+        self.game_id = self.client.create_new_game_session().game_id
+        print(f"Your game id: {self.game_id}")
+
+    def set_game(self, game_id):
+        self.game_id = game_id
+        print(f"Your game id: {self.game_id}")
+
+    def start_game(self):
+        self.id = self.client.get_unique_id().player_id
+        self.client.add_player(self.id, self.game_id)
+        self.client.swap_player_readiness_value(self.id, self.game_id)
 
 
-def create_lobby() -> None:
-    global lobby_id
-    print(f'{lobby_id.get_value()}, Do the job here!')
-    pass
-
+client = ClientMenu(host="localhost", port="8888")
 
 menu = pygame_menu.Menu(
     height=300,
@@ -27,10 +34,10 @@ menu = pygame_menu.Menu(
     width=400
 )
 
-user_name = menu.add.text_input('Name: ', default='John Doe', maxchar=10)
-lobby_id = menu.add.text_input('Lobby ID: ', default='1', maxchar=10)
-menu.add.button('Create lobby', create_lobby)
-# menu.add.button('Play', start_the_game)
+menu.add.button('Create lobby', client.create_lobby)
+# lobby_id = int(menu.add.text_input('Lobby ID: ', default=0, maxchar=10).get_value())
+# menu.add.button('Set lobby', client.set_game(lobby_id))
+menu.add.button('Start Game', client.start_game)
 menu.add.button('Quit', pygame_menu.events.EXIT)
 
 if __name__ == '__main__':
