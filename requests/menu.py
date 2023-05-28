@@ -2,7 +2,10 @@ import pygame_menu
 import start_game
 from pygame_menu.examples import create_example_window
 
+from main_client import Client
+
 surface = create_example_window('Battle for Rokugan', (600, 400))
+client = Client(host="localhost", port="8888")
 
 
 def start_the_game() -> None:
@@ -12,17 +15,26 @@ def start_the_game() -> None:
     """
     global user_name
     global lobby_id
-    print(f'{lobby_id.get_value()}, Do the job here!')
-    print(f'{user_name.get_value()}, Do the job here!')
+    global client
+
+    user_name.get_value()
+    client_id = client.get_unique_id().player_id
+    client.add_player(client_id, int(lobby_id.get_value()))
+    print(f"My lobby number {int(lobby_id.get_value())}")
     start_game.run()
 
 
 def create_lobby() -> None:
+    global user_name
     global lobby_id
-    print(f'{lobby_id.get_value()}, Do the job here!')
-    start_game.run()
+    global client
 
-    pass
+    lobby_id = client.create_new_game_session().game_id
+    user_name.get_value()
+    client_id = client.get_unique_id().player_id
+    client.add_player(client_id, lobby_id)
+    print(f"My lobby number {lobby_id}")
+    start_game.run()
 
 
 menu = pygame_menu.Menu(
