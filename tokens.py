@@ -1,5 +1,7 @@
 import pygame
-class battle_token():
+
+
+class battle_token:
     def __init__(self, screen, caste, status, typee, power):
         self.Token_Width = 30
         self.Token_Height = 30
@@ -8,7 +10,7 @@ class battle_token():
         self.typee = typee
         self.power = power
         if caste == "crab":
-            if status == 0: #close
+            if status == 0:  # close
                 self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
             else:
                 if typee == "fleet":
@@ -112,16 +114,18 @@ class battle_token():
     def output(self):
 
         self.screen.blit(self.image, self.rect)
-class control_token():
+
+
+class control_token:
     def __init__(self, screen, caste, status, province):
         self.Token_Width = 16
         self.Token_Height = 16
         self.caste = caste
         self.status = status
         if caste == "crab":
-            if status == 0: #close
+            if status == 0:  # close
                 self.image = pygame.image.load(
-                'BattleForRokugan_content/crab_close1.png')
+                    'BattleForRokugan_content/crab_close1.png')
             else:
                 self.image = pygame.image.load('BattleForRokugan_content/crab_open1.png')
         elif caste == "crane":
@@ -155,9 +159,9 @@ class control_token():
             else:
                 self.image = pygame.image.load('BattleForRokugan_content/phoenix_open1.png')
         self.screen = screen
-        x = [100, ...] # эта и ниже - покоординатная отрисовка токена
+        x = [100, ...]  # эта и ниже - покоординатная отрисовка токена
         y = [100, ...]
-        self.rect = pygame.Rect(x[province-1], y[province-1], self.Token_Width, self.Token_Height)
+        self.rect = pygame.Rect(x[province - 1], y[province - 1], self.Token_Width, self.Token_Height)
         self.screen_rect = screen.get_rect()
 
     def output(self):

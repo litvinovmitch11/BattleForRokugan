@@ -1,7 +1,6 @@
 import pygame_menu
 import start_game
 from pygame_menu.examples import create_example_window
-from typing import Tuple, Any
 
 surface = create_example_window('Battle for Rokugan', (600, 400))
 

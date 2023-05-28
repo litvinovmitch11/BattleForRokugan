@@ -243,7 +243,7 @@ class Province:
                     token.on_board = -1
 
     def get_winner(self) -> Caste:
-        # suppose all tokens are correct. NO, smth can be token.on_board == -1
+        # suppose all tokens.py are correct. NO, smth can be token.on_board == -1
         points = dict()
         for caste in Caste:
             points[caste] = 0
