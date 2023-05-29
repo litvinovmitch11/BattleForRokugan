@@ -1,4 +1,6 @@
 import pygame
+
+
 class Map:
     def __init__(self, screen):
         self.screen = screen
@@ -9,5 +11,6 @@ class Map:
         self.rect_centerx = self.screen_rect.centerx
         self.rect.bottom = self.screen_rect.bottom
         self.rect = pygame.Rect(250, 0, 600, 600)
+
     def output(self):
         self.screen.blit(self.image, self.rect)

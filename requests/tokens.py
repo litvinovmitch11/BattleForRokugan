@@ -199,7 +199,7 @@ class battle_token:
         self.screen.blit(self.image, self.rect)
 
 
-class control_token():
+class control_token:
     def __init__(self, screen, caste, status, province):
         self.Token_Width = 16
         self.Token_Height = 16
