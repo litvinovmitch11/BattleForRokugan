@@ -36,11 +36,12 @@ def run():
         # будем использовать как фон
         mapp.output()
 
-        #test (success, check left-top corner)
-
-        #test of c t 1
-        CT1 = control_token(screen, "dragon", 1, 1)
+        CT1 = control_token(screen, "dragon", 1, 8)
         CT1.output()
+        CT2 = control_token(screen, "unicorn", 1, 6)
+        CT2.output()
+        CT3 = control_token(screen, "crab", 0, 3)
+        CT3.output()
 
         pygame.display.flip()
 
