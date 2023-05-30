@@ -96,167 +96,38 @@ pos = [
      -1, (320, 50)]  # water
     ]
 
+bt_in_province = []
+ct_in_province = []
 
 class battle_token:
-    def __init__(self, screen, caste, status, typee, power, prov_from, prov_to):
+    def __init__(self, screen, caste, visible, typee, power, prov_from, prov_to):
         self.Token_Width = -5
         self.Token_Height = -5
         self.caste = caste
-        self.status = status
+        self.visible = visible
         self.typee = typee
         self.power = power
-        if caste == "crab":
-            if status == 0:  # close
-                self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-            else:
-                if typee == "fleet":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "infantry":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "sugendzya":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "piece":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "pogrom":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-        elif caste == "crane":
-            if status == 0:  # close
-                self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-            else:
-                if typee == "fleet":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "infantry":
-                    if power == 1:
-                        self.image = pygame.image.load('BattleForRokugan_content/crane_trooper_1.png')
-                elif typee == "sugendzya":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "piece":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "pogrom":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-        elif caste == "lion":
-            if status == 0:  # close
-                self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-            else:
-                if typee == "fleet":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "infantry":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "sugendzya":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "piece":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "pogrom":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-        elif caste == "scorpion":
-            if status == 0:  # close
-                self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-            else:
-                if typee == "fleet":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "infantry":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "sugendzya":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "piece":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "pogrom":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-        elif caste == "unicorn":
-            if status == 0:  # close
-                self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-            else:
-                if typee == "fleet":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "infantry":
-                    if power == 1:
-                        self.image = pygame.image.load('BattleForRokugan_content/unic_infantry_1.png')
-                elif typee == "sugendzya":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "piece":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "pogrom":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-        elif caste == "dragon":
-            if status == 0:  # close
-                self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-            else:
-                if typee == "fleet":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "infantry":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "sugendzya":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "piece":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "pogrom":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-        elif caste == "phoenix":
-            if status == 0:  # close
-                self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-            else:
-                if typee == "fleet":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "infantry":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "sugendzya":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "piece":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
-                elif typee == "pogrom":
-                    self.image = pygame.image.load('BattleForRokugan_content/??.jpg')
+        if visible == "open":
+            self.image = pygame.image.load(f'BattleForRokugan_content/{caste}_{typee}_{power}.png')
+        else:
+            self.image = pygame.image.load(f'BattleForRokugan_content/{caste}_bt_close.png')
         self.screen = screen
         self.rect = pygame.Rect((pos[prov_from][prov_to])[0], (pos[prov_from][prov_to])[1], self.Token_Width,
                                 self.Token_Height)
         self.screen_rect = screen.get_rect()
 
     def output(self):
-
+        bt_in_province.append(self)
         self.screen.blit(self.image, self.rect)
 
 
 class control_token():
-    def __init__(self, screen, caste, status, province):
+    def __init__(self, screen, caste, visible, province):
         self.Token_Width = 16
         self.Token_Height = 16
         self.caste = caste
-        self.status = status
-        if caste == "crab":
-            if status == 0:  # close
-                self.image = pygame.image.load(
-                    'BattleForRokugan_content/crab_close1.png')
-            else:
-                self.image = pygame.image.load('BattleForRokugan_content/crab_open1.png')
-        elif caste == "crane":
-            if status == 0:  # close
-                self.image = pygame.image.load('BattleForRokugan_content/crane_close1.png')
-            else:
-                self.image = pygame.image.load('BattleForRokugan_content/crane_open1.png')
-        elif caste == "lion":
-            if status == 0:  # close
-                self.image = pygame.image.load('BattleForRokugan_content/lion_close1.png')
-            else:
-                self.image = pygame.image.load('BattleForRokugan_content/lion_open1.png')
-        elif caste == "scorpion":
-            if status == 0:  # close
-                self.image = pygame.image.load('BattleForRokugan_content/scorp_close1.png')
-            else:
-                self.image = pygame.image.load('BattleForRokugan_content/scorp_open1.png')
-        elif caste == "unicorn":
-            if status == 0:  # close
-                self.image = pygame.image.load('BattleForRokugan_content/unic_close1.png')
-            else:
-                self.image = pygame.image.load('BattleForRokugan_content/unic_open1.png')
-        elif caste == "dragon":
-            if status == 0:  # close
-                self.image = pygame.image.load('BattleForRokugan_content/drago_close1.png')
-            else:
-                self.image = pygame.image.load('BattleForRokugan_content/drago_open1.png')
-        elif caste == "phoenix":
-            if status == 0:  # close
-                self.image = pygame.image.load('BattleForRokugan_content/phoenix_close1.png')
-            else:
-                self.image = pygame.image.load('BattleForRokugan_content/phoenix_open1.png')
+        self.status = visible
+        self.image = pygame.image.load(f'BattleForRokugan_content/{caste}_{visible}1.png')
         self.screen = screen
         self.rect = pygame.Rect((pos[province][province])[0], (pos[province][province])[1], self.Token_Width,
                                 self.Token_Height)
