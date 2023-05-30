@@ -58,25 +58,34 @@ class Game:
 
 
 if __name__ == '__main__':
-    gm = Game(1)
     client = Client()
-    client.create_new_game_session()
+
+    ind = client.create_new_game_session().game_id
+    gm = Game(ind)
+    # gm = Game(Pupa)
+    for i in range(1):  # while Starter Facade
+        ind = client.get_unique_id().player_id
+        if client.add_player(gm.ind, ind).key:
+            gm.add_player(ind, "Kam" + str(ind))
+        client.swap_player_readiness_value(gm.ind, ind)
+    players = client.get_players_ids(gm.ind).int
+    print(players)
     while True:
-        control_tokens = client.get_all_control_token()
+        control_tokens = []  # client.get_all_control_token()
         for token in control_tokens:
             if token.id not in gm.control_tokens:
                 gm.control_tokens[token.id] = ControlToken(token.id, token.province_id, token.visible, token.caste)
             else:
                 gm.control_tokens[token.id].change_all_val(token.id, token.province_id, token.visible, token.caste)
-        battle_tokens = client.get_all_battle_token()
+        battle_tokens = []  # client.get_all_battle_token()
         for token in battle_tokens:
             if token.id not in gm.control_tokens:
-                gm.control_tokens[token.id] = ControlToken(token.id, token.province_id, token.visible, token.caste)
+                gm.battle_tokens[token.id] = ControlToken(token.id, token.province_id, token.visible, token.caste)
             else:
-                gm.control_tokens[token.id].change_all_val(token.id, token.province_id, token.visible, token.caste)
-        gm.round = client.round_count().round
+                gm.battle_tokens[token.id].change_all_val(token.id, token.province_id, token.visible, token.caste)
+        # gm.round = client.round_count().round
 
         break
 
-    jopa = client.get_unique_id()
+    jopa = client.get_unique_id().player_id
     print(jopa)
