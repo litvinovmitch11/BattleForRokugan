@@ -1,0 +1,82 @@
+from all_include import *
+from main_client import Client
+
+
+class BattleToken:
+
+    def __init__(self, ind: int, prov_from: int, prov_to: int, visible: bool, caste: Caste):
+        self.ind = ind
+        self.prov_from = prov_from
+        self.prov_to = prov_to
+        self.visible = visible
+        self.caste = Caste
+
+    def change_all_val(self, ind: int, prov_from: int, prov_to: int, visible: bool, caste: Caste):
+        self.ind = ind
+        self.prov_from = prov_from
+        self.prov_to = prov_to
+        self.visible = visible
+        self.caste = Caste
+
+
+class ControlToken:
+
+    def __init__(self, ind: int, prov: int, visible: bool, caste: Caste):
+        self.ind = ind
+        self.prov = prov
+        self.visible = visible
+        self.caste = Caste
+
+    def change_all_val(self, ind: int, prov: int, visible: bool, caste: Caste):
+        self.ind = ind
+        self.prov = prov
+        self.visible = visible
+        self.caste = Caste
+
+
+class Player:  # info, for client
+
+    def __init__(self, ind: int, name: str):
+        self.caste = Caste.none
+        self.battle_tokens = dict()  # id -> Class BattleToken
+        self.control_tokens = dict()  # id -> Class ControlToken
+        self.ind = ind
+        self.name = name
+
+
+class Game:
+
+    def __init__(self, ind: int):
+        self.ind = ind
+        self.players = dict()  # id -> name of players
+        self.round = 0
+        self.battle_tokens = dict()  # id -> Class BattleToken
+        self.control_tokens = dict()  # id -> Class ControlTokens
+
+    def add_player(self, ind: int, name: str):
+        self.players[ind] = Player(ind, name)
+
+
+if __name__ == '__main__':
+    gm = Game(1)
+    client = Client()
+    client.create_new_game_session()
+    while True:
+        control_tokens = client.get_all_control_token()
+        for token in control_tokens:
+            if token.id not in gm.control_tokens:
+                gm.control_tokens[token.id] = ControlToken(token.id, token.province_id, token.visible, token.caste)
+            else:
+                gm.control_tokens[token.id].change_all_val(token.id, token.province_id, token.visible, token.caste)
+        battle_tokens = client.get_all_battle_token()
+        for token in battle_tokens:
+            if token.id not in gm.control_tokens:
+                gm.control_tokens[token.id] = ControlToken(token.id, token.province_id, token.visible, token.caste)
+            else:
+                gm.control_tokens[token.id].change_all_val(token.id, token.province_id, token.visible, token.caste)
+        gm.round = client.round_count().round
+
+        break
+
+    jopa = client.get_unique_id()
+    print(jopa)
