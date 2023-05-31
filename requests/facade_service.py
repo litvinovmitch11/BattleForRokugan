@@ -29,9 +29,9 @@ class FacadeService(pb2_grpc.FacadeServicer):
         print("ShowSomeoneReset")
         list_tokens = pb2.ListBattleTokens(
             token=[
-                pb2.BattleToken(caste=token.visible,
+                pb2.BattleToken(caste=token.caste.value,
                                 power=token.power,
-                                type=token.type,
+                                type=token.type.value,
                                 on_board_first=token.on_board[0],
                                 on_board_second=token.on_board[1],
                                 in_reset=token.in_reset,
@@ -46,9 +46,9 @@ class FacadeService(pb2_grpc.FacadeServicer):
         print("ShowActive")
         list_tokens = pb2.ListBattleTokens(
             token=[
-                pb2.BattleToken(caste=token.visible,
+                pb2.BattleToken(caste=token.caste.value,
                                 power=token.power,
-                                type=token.type,
+                                type=token.type.value,
                                 on_board_first=token.on_board[0],
                                 on_board_second=token.on_board[1],
                                 in_reset=token.in_reset,
@@ -72,9 +72,9 @@ class FacadeService(pb2_grpc.FacadeServicer):
     def ShowBattleToken(self, request, context):
         print("ShowBattleToken")
         token = self.games[request.game_id].show_battle_token(request.player_id, request.my_token_id)
-        result = {"caste": token.visible,
+        result = {"caste": token.caste.value,
                   "power": token.power,
-                  "type": token.type,
+                  "type": token.type.value,
                   "on_board_first": token.on_board[0],
                   "on_board_second": token.on_board[1],
                   "in_reset": token.in_reset,
@@ -100,9 +100,9 @@ class FacadeService(pb2_grpc.FacadeServicer):
         print("GetAllBattleToken")
         list_tokens = pb2.ListBattleTokens(
             token=[
-                pb2.BattleToken(caste=token.visible,
+                pb2.BattleToken(caste=token.caste.value,
                                 power=token.power,
-                                type=token.type,
+                                type=token.type.value,
                                 on_board_first=token.on_board[0],
                                 on_board_second=token.on_board[1],
                                 in_reset=token.in_reset,

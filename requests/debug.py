@@ -13,6 +13,7 @@ if __name__ == "__main__":
         facade.set_caste(id_player, facade.get_free_caste()[0])
     for token in facade.get_all_battle_token():
         print(token.id)
+
     while facade.round_count() != 1:
         was = False
         for i in range(1000):

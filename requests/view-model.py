@@ -36,7 +36,7 @@ class ControlToken:
 
 class Player:  # info, for client
 
-    def __init__(self, player_ind: int,  name: str):
+    def __init__(self, player_ind: int, name: str):
         self.caste = Caste.none
         self.battle_tokens = dict()  # id -> Class BattleToken
         self.control_tokens = dict()  # id -> Class ControlToken
@@ -75,22 +75,24 @@ if __name__ == '__main__':
     for i in players:
         print(client.get_free_caste(gm.ind).caste)
         client.set_caste(i, client.get_free_caste(gm.ind).caste[0], gm.ind)
-        tokens = client.get_all_control_token(gm.ind).token
-        for token in tokens:
-            print(token.id, token.caste)
     print(client.round_count(gm.ind).round)
+    tokens = client.get_all_battle_token(gm.ind).token
+    for token in tokens:
+        print(token.id)
+
     while client.round_count(gm.ind).round != 1:
         print(client.round_count(gm.ind).round)
         was = False
         for i in range(1000):
             for id_player in players:
-                if client.put_control_token(id_player, i, i % 30, gm.ind):
+                if client.put_control_token(id_player, i, i % 30, gm.ind).key:
                     print("OK", str(id_player), i)
                     was = True
                     break
             if was:
                 break
     print(client.round_count().round)
+
     while True:
         control_tokens = []  # client.get_all_control_token()
         for token in control_tokens:
