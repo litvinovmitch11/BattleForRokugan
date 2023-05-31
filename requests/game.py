@@ -6,7 +6,7 @@ from tokens import ControlToken, BattleToken
 import view_model
 
 
-def run_game():
+def run_game(client_id, name, game_id):
     pygame.init()
 
     WIN_WIDTH = 1540  # Ширина создаваемого окна
