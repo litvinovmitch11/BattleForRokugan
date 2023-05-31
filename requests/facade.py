@@ -31,6 +31,9 @@ class GameFacade:
         # return 0 if preparing, 6 if ending game, 1-5 else
         return self.board.state.round
 
+    def get_phase(self) -> int:
+        return self.board.state.phase
+
     def whose_move(self) -> int:
         # return player_id whose move
         return self.board.state.move_queue[self.board.state.id_move]

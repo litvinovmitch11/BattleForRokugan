@@ -91,21 +91,30 @@ if __name__ == '__main__':
                     break
             if was:
                 break
-    print(client.round_count().round)
+    print(client.round_count(gm.ind).round)
 
     while True:
-        control_tokens = []  # client.get_all_control_token()
+        control_tokens = client.get_all_control_token(gm.ind).token
         for token in control_tokens:
             if token.id not in gm.control_tokens:
                 gm.control_tokens[token.id] = ControlToken(token.id, token.province_id, token.visible, token.caste)
             else:
                 gm.control_tokens[token.id].change_all_val(token.id, token.province_id, token.visible, token.caste)
-        battle_tokens = []  # client.get_all_battle_token()
+        battle_tokens = client.get_all_battle_token(gm.ind).token
         for token in battle_tokens:
-            if token.id not in gm.control_tokens:
-                gm.battle_tokens[token.id] = ControlToken(token.id, token.province_id, token.visible, token.caste)
+            if token.id not in gm.battle_tokens:
+                gm.battle_tokens[token.id] = BattleToken(token.id, token.on_board_first, token.on_board_second,
+                                                          token.visible, token.caste)
             else:
-                gm.battle_tokens[token.id].change_all_val(token.id, token.province_id, token.visible, token.caste)
-        # gm.round = client.round_count().round
-
+                gm.battle_tokens[token.id].change_all_val(token.id, token.on_board_first, token.on_board_second,
+                                                          token.visible, token.caste)
+        gm.round = client.round_count(gm.ind).round
+        print(gm.round)
         break
+
+    for q in range(5):
+        print(client.round_count().round)
+        for i in range(10):
+            for id_player in players:
+                client.unused_card(id_player, gm.ind)
+
