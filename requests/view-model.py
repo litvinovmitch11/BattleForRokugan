@@ -4,15 +4,15 @@ from main_client import Client
 
 class BattleToken:
 
-    def __init__(self, ind: int, prov_from: int, prov_to: int, visible: bool, caste: Caste):
-        self.ind = ind
+    def __init__(self, bt_ind: int, prov_from: int, prov_to: int, visible: bool, caste: Caste):
+        self.ind = bt_ind
         self.prov_from = prov_from
         self.prov_to = prov_to
         self.visible = visible
         self.caste = Caste
 
-    def change_all_val(self, ind: int, prov_from: int, prov_to: int, visible: bool, caste: Caste):
-        self.ind = ind
+    def change_all_val(self, bt_ind: int, prov_from: int, prov_to: int, visible: bool, caste: Caste):
+        self.ind = bt_ind
         self.prov_from = prov_from
         self.prov_to = prov_to
         self.visible = visible
@@ -21,14 +21,14 @@ class BattleToken:
 
 class ControlToken:
 
-    def __init__(self, ind: int, prov: int, visible: bool, caste: Caste):
-        self.ind = ind
+    def __init__(self, t_ind: int, prov: int, visible: bool, caste: Caste):
+        self.ind = t_ind
         self.prov = prov
         self.visible = visible
         self.caste = Caste
 
-    def change_all_val(self, ind: int, prov: int, visible: bool, caste: Caste):
-        self.ind = ind
+    def change_all_val(self, t_ind: int, prov: int, visible: bool, caste: Caste):
+        self.ind = t_ind
         self.prov = prov
         self.visible = visible
         self.caste = Caste
@@ -36,47 +36,61 @@ class ControlToken:
 
 class Player:  # info, for client
 
-    def __init__(self, ind: int, name: str):
+    def __init__(self, player_ind: int,  name: str):
         self.caste = Caste.none
         self.battle_tokens = dict()  # id -> Class BattleToken
         self.control_tokens = dict()  # id -> Class ControlToken
-        self.ind = ind
+        self.my_ind = player_ind
         self.name = name
 
 
 class Game:
 
-    def __init__(self, ind: int):
-        self.ind = ind
-        self.players = dict()  # id -> name of players
+    def __init__(self, game_ind: int):
+        self.ind = game_ind
+        self.players = dict()  # id -> Class Player
         self.round = 0
         self.battle_tokens = dict()  # id -> Class BattleToken
         self.control_tokens = dict()  # id -> Class ControlTokens
 
-    def add_player(self, ind: int, name: str):
-        self.players[ind] = Player(ind, name)
+    def add_player(self, player_ind: int, name: str):
+        self.players[player_ind] = Player(player_ind, name)
 
 
 if __name__ == '__main__':
     client = Client()
 
     ind = client.create_new_game_session().game_id
-    gm = Game(0)
+    gm = Game(ind)
     # gm = Game(Pupa)
-    # players = []
-    for i in range(2):  # while Starter Facade
+    players = []
+    while not client.should_start_game(gm.ind).key:  # for i in range(3):  # while Starter Facade
         ind = client.get_unique_id(gm.ind).player_id
         if client.add_player(ind, gm.ind).key:
-            print("LOL\n")
             gm.add_player(ind, "Kam" + str(ind))
-        client.swap_player_readiness_value(ind, gm.ind)
-    players = client.get_players_ids(gm.ind).int
-    print(players, client.should_start_game(gm.ind).key)
-    for i in players:
-        print(client.get_free_caste().caste)
-        client.set_caste(i, client.get_free_caste().caste[0], gm.ind)
-    print(client.get_free_caste().caste[0])
 
+        client.swap_player_readiness_value(ind, gm.ind)
+        players = client.get_players_ids(gm.ind).int
+    print(players)
+    for i in players:
+        print(client.get_free_caste(gm.ind).caste)
+        client.set_caste(i, client.get_free_caste(gm.ind).caste[0], gm.ind)
+    print(client.round_count(gm.ind).round)
+    tokens = client.get_all_control_token(gm.ind).token
+    for token in tokens:
+        print(token.id)
+    while client.round_count(gm.ind).round != 1:
+        print(client.round_count(gm.ind).round)
+        was = False
+        for i in range(1000):
+            for id_player in players:
+                if client.put_control_token(id_player, i, i % 30, gm.ind):
+                    print("OK", str(id_player), i)
+                    was = True
+                    break
+            if was:
+                break
+    print(client.round_count().round)
     while True:
         control_tokens = []  # client.get_all_control_token()
         for token in control_tokens:
@@ -93,4 +107,3 @@ if __name__ == '__main__':
         # gm.round = client.round_count().round
 
         break
-
