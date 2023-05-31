@@ -75,10 +75,10 @@ if __name__ == '__main__':
     for i in players:
         print(client.get_free_caste(gm.ind).caste)
         client.set_caste(i, client.get_free_caste(gm.ind).caste[0], gm.ind)
+        tokens = client.get_all_control_token(gm.ind).token
+        for token in tokens:
+            print(token.id, token.caste)
     print(client.round_count(gm.ind).round)
-    tokens = client.get_all_control_token(gm.ind).token
-    for token in tokens:
-        print(token.id)
     while client.round_count(gm.ind).round != 1:
         print(client.round_count(gm.ind).round)
         was = False
