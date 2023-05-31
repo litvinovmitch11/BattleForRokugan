@@ -100,7 +100,7 @@ bt_in_province = []
 ct_in_province = []
 
 
-class battle_token:
+class BattleToken:
     def __init__(self, screen, caste, visible, typee, power, prov_from, prov_to):
         self.Token_Width = -5
         self.Token_Height = -5
@@ -122,7 +122,7 @@ class battle_token:
         self.screen.blit(self.image, self.rect)
 
 
-class control_token:
+class ControlToken:
     def __init__(self, screen, caste, visible, province):
         self.Token_Width = 16
         self.Token_Height = 16

@@ -2,10 +2,10 @@ import pygame
 import sys
 from pygame.locals import *
 import map
-from tokens import control_token, battle_token
+from tokens import ControlToken, BattleToken
 
 
-def run():
+def run_game():
     pygame.init()
 
     WIN_WIDTH = 1540  # Ширина создаваемого окна
