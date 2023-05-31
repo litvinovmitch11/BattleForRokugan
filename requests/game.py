@@ -19,17 +19,16 @@ def run_game(client_id, name, game_id):
     background_image = pygame.image.load('BattleForRokugan_content/bg.jpg')
     mapp = map.Map(screen)
     # abuility = map.PlayersAbuility(screen, "unicorn")
-
+    game = view_model.Game(game_id)
     f1 = pygame.font.Font(None, 36)
-    player_names_text = [f1.render('Камиль 1', True, (0, 77, 255)), f1.render('Камиль 2', True, (0, 77, 255)),
-                         f1.render('Камиль 3', True, (0, 77, 255))]
+    player_names_text = []
+    for player in game.players.name:
+        player_names_text.append(f1.render(player, True, (0,77,255)))
 
     now_moves1 = f1.render('Сейчас ходит:', True, (0, 77, 255))
     now_moves2 = f1.render('Камиль 1', True, (0, 77, 255))
 
     tokens_text = f1.render('Здесь список токенов (левый - имба)', True, (180, 0, 0))
-    game_id = 0
-    game = view_model.Game(game_id)
     round_text = f1.render(f'Раунд {game.round}', True, (0, 77, 255))
 
     while True:
