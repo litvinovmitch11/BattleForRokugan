@@ -17,7 +17,7 @@ def run():
     backgroung_color = (255, 255, 255)
     background_image = pygame.image.load('BattleForRokugan_content/bg.jpg')
     mapp = map.Map(screen)
-    abuility = map.PlayersAbuility(screen, "unicorn")
+    # abuility = map.PlayersAbuility(screen, "unicorn")
 
     f1 = pygame.font.Font(None, 36)
     round_text = f1.render('Раунд 1', True, (0, 77, 255))
@@ -28,7 +28,6 @@ def run():
     now_moves2 = f1.render('Камиль 1', True, (0, 77, 255))
 
     tokens_text = f1.render('Здесь список токенов (левый - имба)', True, (180, 0, 0))
-
 
     while True:
         pygame.event.pump()
@@ -43,11 +42,11 @@ def run():
             if event.type == pygame.QUIT:
                 sys.exit()
         mapp.output()
-        abuility.output()
+        # abuility.output()
         screen.blit(round_text, (10, 20))
         nameCnt = 0
         for name in player_names_text:
-            screen.blit(name, (10, 100 + nameCnt*30))
+            screen.blit(name, (10, 100 + nameCnt * 30))
             nameCnt += 1
         screen.blit(now_moves1, (10, 400))
         screen.blit(now_moves2, (10, 430))
@@ -55,22 +54,22 @@ def run():
         bt_in_province = []
         ct_in_province = []
 
-        CT1 = control_token(screen, "dragon", "open", 29)
-        ct_in_province.append(CT1)
-        CT1.output()
-        CT2 = control_token(screen, "unicorn", "open", 6)
-        ct_in_province.append(CT2)
-        CT2.output()
-        CT3 = control_token(screen, "crab", "close", 3)
-        ct_in_province.append(CT3)
-        CT3.output()
-
-        BT1 = battle_token(screen, "crane", "open", "infantry", 1, 30, 0)
-        bt_in_province.append(BT1)
-        BT1.output()
-        BT2 = battle_token(screen, "unicorn", "open", "infantry", 1, 0, 1)
-        bt_in_province.append(BT2)
-        BT2.output()
+        # CT1 = control_token(screen, "dragon", "open", 29)
+        # ct_in_province.append(CT1)
+        # CT1.output()
+        # CT2 = control_token(screen, "unicorn", "open", 6)
+        # ct_in_province.append(CT2)
+        # CT2.output()
+        # CT3 = control_token(screen, "crab", "close", 3)
+        # ct_in_province.append(CT3)
+        # CT3.output()
+        #
+        # BT1 = battle_token(screen, "crane", "open", "infantry", 1, 30, 0)
+        # bt_in_province.append(BT1)
+        # BT1.output()
+        # BT2 = battle_token(screen, "unicorn", "open", "infantry", 1, 0, 1)
+        # bt_in_province.append(BT2)
+        # BT2.output()
 
         pygame.display.flip()
 

@@ -119,6 +119,7 @@ class Client(object):
 
 if __name__ == '__main__':
     client = Client()
+    client.create_new_game_session()
 
     # Debug client...
     # cmd - number of command from starter facade (or command name)
