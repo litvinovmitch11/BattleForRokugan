@@ -60,13 +60,14 @@ class Player:  # info, for client
 
 class Game:
 
-    def __init__(self, game_ind: int):
+    def __init__(self, game_ind: int, player_ind: int):
         self.ind = game_ind
         self.players = dict()  # id -> Class Player
         self.round = 0
         self.battle_tokens = dict()  # id -> Class BattleToken
         self.control_tokens = dict()  # id -> Class ControlTokens
 
+        self.my_player_id = player_ind
         self.whose_move = -1  # WARNING
 
     def add_player(self, player_ind: int, name: str):
@@ -77,16 +78,18 @@ if __name__ == '__main__':
     client = Client()
 
     ind = client.create_new_game_session().game_id
-    gm = Game(ind)
+    gm = Game(ind, 0)
     # gm = Game(Pupa)
     players = []
     while not client.should_start_game(gm.ind).key:  # for i in range(3):  # while Starter Facade
         ind = client.get_unique_id(gm.ind).player_id
-        if client.add_player(ind, gm.ind).key:
-            gm.add_player(ind, "Kam" + str(ind))
-
+        client.add_player(ind, gm.ind)
         client.swap_player_readiness_value(ind, gm.ind)
         players = client.get_players_ids(gm.ind).int
+        for player_id in players:
+            if player_id not in gm.players:
+                gm.players[player_id] = Player(ind, "KAM" + str(ind))
+
     print(players)
     for i in players:
         my_caste = client.get_free_caste(gm.ind).caste[0]
@@ -134,7 +137,7 @@ if __name__ == '__main__':
         break
 
     for q in range(5):
-        print(client.round_count().round)
+        print(client.round_count(gm.ind).round)
         for i in range(10):
             for id_player in players:
                 client.unused_card(id_player, gm.ind)
@@ -144,5 +147,17 @@ if __name__ == '__main__':
             was = False
             for id_player in players:
                 active = []
-                # for token in gm.battle_tokens:
-                #     if token.caste == gm.players[id_player].caste:
+                for token in gm.battle_tokens.values():
+                    if token.caste == gm.players[id_player].caste and token.in_active:
+                        active.append(token)
+                # print(active)
+                for token in active:
+                    ind = token.ind
+                    if client.put_battle_token(id_player, ind, f, t, gm.ind).key:
+                        print("OK", id_player, ind)
+                        was = True
+                        break
+                if was:
+                    break
+        client.do_execution_phase(gm.ind)
+    print(client.get_winner(gm.ind))
