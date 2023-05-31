@@ -54,22 +54,22 @@ def run_game():
         bt_in_province = []
         ct_in_province = []
 
-        # CT1 = control_token(screen, "dragon", "open", 29)
-        # ct_in_province.append(CT1)
-        # CT1.output()
-        # CT2 = control_token(screen, "unicorn", "open", 6)
-        # ct_in_province.append(CT2)
-        # CT2.output()
-        # CT3 = control_token(screen, "crab", "close", 3)
-        # ct_in_province.append(CT3)
-        # CT3.output()
-        #
-        # BT1 = battle_token(screen, "crane", "open", "infantry", 1, 30, 0)
-        # bt_in_province.append(BT1)
-        # BT1.output()
-        # BT2 = battle_token(screen, "unicorn", "open", "infantry", 1, 0, 1)
-        # bt_in_province.append(BT2)
-        # BT2.output()
+        CT1 = ControlToken(screen, "dragon", "open", 29)
+        ct_in_province.append(CT1)
+        CT1.output()
+        CT2 = ControlToken(screen, "unicorn", "open", 6)
+        ct_in_province.append(CT2)
+        CT2.output()
+        CT3 = ControlToken(screen, "crab", "close", 3)
+        ct_in_province.append(CT3)
+        CT3.output()
+
+        BT1 = BattleToken(screen, "crane", "open", "infantry", 1, 30, 0)
+        bt_in_province.append(BT1)
+        BT1.output()
+        BT2 = BattleToken(screen, "unicorn", "open", "infantry", 1, 0, 1)
+        bt_in_province.append(BT2)
+        BT2.output()
 
         pygame.display.flip()
 
