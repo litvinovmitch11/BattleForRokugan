@@ -159,3 +159,8 @@ class FacadeService(pb2_grpc.FacadeServicer):
         result = {"key": self.games[request.game_id].put_control_token(request.player_id, request.token_id,
                                                                        request.province_id)}
         return pb2.Key(**result)
+
+    def GetPhase(self, request, context):
+        print("GetPhase")
+        result = {"round": self.games[request.game_id].get_phase()}
+        return pb2.Round(**result)

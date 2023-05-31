@@ -116,6 +116,10 @@ class Client(object):
         return self.game_stub.PutControlToken(
             facade_pb2.Token(game_id=game_id, player_id=player_id, token_id=token_id, province_id=province_id))
 
+    def get_phase(self, game_id=0):
+        print("GetPhase")
+        return self.game_stub.GetPhase(facade_pb2.Empty(game_id=game_id))
+
 
 if __name__ == '__main__':
     client = Client()
