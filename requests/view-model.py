@@ -62,16 +62,37 @@ class Game:
 
     def __init__(self, game_ind: int, player_ind: int):
         self.ind = game_ind
+        self.my_player_id = player_ind
+
         self.players = dict()  # id -> Class Player
         self.round = 0
         self.battle_tokens = dict()  # id -> Class BattleToken
         self.control_tokens = dict()  # id -> Class ControlTokens
-
-        self.my_player_id = player_ind
-        self.whose_move = -1  # WARNING
+        self.whose_move = -1  # id player, whose move we are waiting for
 
     def add_player(self, player_ind: int, name: str):
         self.players[player_ind] = Player(player_ind, name)
+
+    def update_battle_tokens(self, new_battle_tokens):
+        for bt in new_battle_tokens:
+            if bt.id not in self.battle_tokens:
+                self.battle_tokens[bt.id] = BattleToken(bt.id, bt.on_board_first, bt.on_board_second, bt.visible,
+                                                        bt.caste, bt.in_reset, bt.in_active, bt.type, bt.power)
+            else:
+                self.battle_tokens[bt.id].change_all_val(bt.id, bt.on_board_first, bt.on_board_second, bt.visible,
+                                                         bt.caste, bt.in_reset, bt.in_active, bt.type, bt.power)
+
+    def update_control_tokens(self, new_control_tokens):
+        for ct in new_control_tokens:
+            if ct.id not in self.control_tokens:
+                self.control_tokens[ct.id] = ControlToken(ct.id, ct.province_id, ct.visible, ct.caste)
+            else:
+                self.control_tokens[ct.id].change_all_val(ct.id, ct.province_id, ct.visible, ct.caste)
+
+    def update_players(self, new_players):
+        for player_ind in new_players:
+            if player_ind not in gm.players:
+                self.players[player_ind] = Player(ind, "KAM" + str(ind))
 
 
 if __name__ == '__main__':
@@ -85,10 +106,8 @@ if __name__ == '__main__':
         ind = client.get_unique_id(gm.ind).player_id
         client.add_player(ind, gm.ind)
         client.swap_player_readiness_value(ind, gm.ind)
-        players = client.get_players_ids(gm.ind).int
-        for player_id in players:
-            if player_id not in gm.players:
-                gm.players[player_id] = Player(ind, "KAM" + str(ind))
+        gm.update_players(client.get_players_ids(gm.ind).int)
+        players = list(gm.players.keys())
 
     print(players)
     for i in players:
@@ -97,50 +116,37 @@ if __name__ == '__main__':
             caste = Caste(my_caste)
             gm.players[i].set_caste(caste)
 
-    print(client.round_count(gm.ind).round)
-    tokens = client.get_all_battle_token(gm.ind).token
-    for token in tokens:
-        print(token.id)
+    # print(client.round_count(gm.ind).round)
+    # tokens = client.get_all_battle_token(gm.ind).token
+    # for token in tokens:
+    #     print(token.id)
 
     while client.round_count(gm.ind).round != 1:
-        print(client.round_count(gm.ind).round)
         was = False
         for i in range(1000):
             for id_player in players:
                 if client.put_control_token(id_player, i, i % 30, gm.ind).key:
-                    print("OK", str(id_player), i)
+                    # print("OK", str(id_player), i)
                     was = True
                     break
             if was:
                 break
-    print(client.round_count(gm.ind).round)
+    # print(client.round_count(gm.ind).round)
 
     while True:
-        control_tokens = client.get_all_control_token(gm.ind).token
-        for token in control_tokens:
-            if token.id not in gm.control_tokens:
-                gm.control_tokens[token.id] = ControlToken(token.id, token.province_id, token.visible, token.caste)
-            else:
-                gm.control_tokens[token.id].change_all_val(token.id, token.province_id, token.visible, token.caste)
-        battle_tokens = client.get_all_battle_token(gm.ind).token
-        for token in battle_tokens:
-            if token.id not in gm.battle_tokens:
-                gm.battle_tokens[token.id] = BattleToken(token.id, token.on_board_first, token.on_board_second,
-                                                         token.visible, token.caste, token.in_reset, token.in_active,
-                                                         token.type, token.power)
-            else:
-                gm.battle_tokens[token.id].change_all_val(token.id, token.on_board_first, token.on_board_second,
-                                                          token.visible, token.caste, token.in_reset, token.in_active,
-                                                          token.type, token.power)
+        gm.update_control_tokens(client.get_all_control_token(gm.ind).token)
+        gm.update_battle_tokens(client.get_all_battle_token(gm.ind).token)
         gm.round = client.round_count(gm.ind).round
-        print(gm.round)
+        gm.whose_move = client.whose_move(gm.ind).player_id
         break
 
     for q in range(5):
-        print(client.round_count(gm.ind).round)
-        for i in range(10):
+        print(client.round_count(gm.ind).round, client.get_phase(gm.ind).round)
+        for i in range(1):
             for id_player in players:
                 client.unused_card(id_player, gm.ind)
+        print(client.round_count(gm.ind).round, client.get_phase(gm.ind).round)
+
         while client.get_phase(gm.ind).round == 2:
             f = random.randint(0, 29)
             t = random.randint(0, 29)
@@ -150,8 +156,10 @@ if __name__ == '__main__':
                 for token in gm.battle_tokens.values():
                     if token.caste == gm.players[id_player].caste and token.in_active:
                         active.append(token)
+                        # print(token.caste, token.ind, id_player, gm.players[id_player].caste)
                 # print(active)
                 for token in active:
+                    # print(token.ind, token.caste, gm.players[id_player].caste, token.prov_from, token.prov_to)
                     ind = token.ind
                     if client.put_battle_token(id_player, ind, f, t, gm.ind).key:
                         print("OK", id_player, ind)
@@ -159,5 +167,7 @@ if __name__ == '__main__':
                         break
                 if was:
                     break
+            # gm.update_battle_tokens(client.get_all_battle_token(gm.ind).token)
         client.do_execution_phase(gm.ind)
-    print(client.get_winner(gm.ind))
+        # gm.update_battle_tokens(client.get_all_battle_token(gm.ind).token)
+    print(client.get_winner(gm.ind).player)

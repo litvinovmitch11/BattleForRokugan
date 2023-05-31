@@ -11,8 +11,6 @@ if __name__ == "__main__":
     facade = GameFacade(players)
     for id_player in players:
         facade.set_caste(id_player, facade.get_free_caste()[0])
-    for token in facade.get_all_battle_token():
-        print(token.id)
 
     while facade.round_count() != 1:
         was = False
@@ -36,6 +34,10 @@ if __name__ == "__main__":
             t = random.randint(0, 29)
             was = False
             for id_player in players:
+                active = []
+                for token in facade.board.battle_tokens.values():
+                    if token.caste == facade.board.players[id_player].caste and token.in_active:
+                        active.append(token)
                 for battle_token in facade.board.players[id_player].active:
                     ind = battle_token.id
                     if facade.put_battle_token(id_player, ind, f, t):
