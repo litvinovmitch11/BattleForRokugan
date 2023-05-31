@@ -3,9 +3,10 @@ import sys
 from pygame.locals import *
 import map
 from tokens import ControlToken, BattleToken
+import view_model
 
 
-def run_game():
+def run_game(client_id, name, game_id):
     pygame.init()
 
     WIN_WIDTH = 1540  # Ширина создаваемого окна
@@ -20,7 +21,6 @@ def run_game():
     # abuility = map.PlayersAbuility(screen, "unicorn")
 
     f1 = pygame.font.Font(None, 36)
-    round_text = f1.render('Раунд 1', True, (0, 77, 255))
     player_names_text = [f1.render('Камиль 1', True, (0, 77, 255)), f1.render('Камиль 2', True, (0, 77, 255)),
                          f1.render('Камиль 3', True, (0, 77, 255))]
 
@@ -28,6 +28,9 @@ def run_game():
     now_moves2 = f1.render('Камиль 1', True, (0, 77, 255))
 
     tokens_text = f1.render('Здесь список токенов (левый - имба)', True, (180, 0, 0))
+    game_id = 0
+    game = view_model.Game(game_id)
+    round_text = f1.render(f'Раунд {game.round}', True, (0, 77, 255))
 
     while True:
         pygame.event.pump()
@@ -42,6 +45,19 @@ def run_game():
             if event.type == pygame.QUIT:
                 sys.exit()
         mapp.output()
+
+        player_id = 1
+        name = "aboba"
+        pl = view_model.Player(1, "aboba")
+        for token in game.battle_tokens:
+            BattleToken(screen, token.caste, token.visible, token.typee, token.power, token.prov_from,
+                        token.prov_to).output()
+        for token in game.control_tokens:
+            ControlToken(screen, token.caste, token.visible, token.prov)
+        for token in pl.battle_tokens:
+            BattleToken(screen, token.caste, token.visible, token.typee, token.power, token.prov_from,
+                        token.prov_to).output()
+        #   view_model.BattleToken()
         # abuility.output()
         screen.blit(round_text, (10, 20))
         nameCnt = 0
