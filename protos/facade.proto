@@ -11,6 +11,7 @@ service Facade{
   rpc GetFreeCaste(Empty) returns (ListCaste){}
   rpc GetAllMyCards(Player) returns (Empty){} // not soon
   rpc GetPossiblePositionsControlToken(Empty) returns (ListPositionsControlTokens){}
+  rpc GetPhase(Empty) returns (Round){}
 
   rpc SetCaste(Caste) returns (Key){}
   rpc ShowSomeoneReset(Player) returns (ListBattleTokens){}
