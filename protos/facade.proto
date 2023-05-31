@@ -5,22 +5,24 @@ package facade;
 service Facade{
 
   rpc GetPossiblePositionsBattleToken(Empty) returns (Map){}
-  rpc PutBattleToken(Attack) returns (Key){}
+  rpc GetAllControlToken(Empty) returns (ListControlTokens){}
+  rpc GetAllBattleToken(Empty) returns (ListBattleTokens){}
+  rpc GetWinner(Empty) returns (Players){}
+  rpc GetFreeCaste(Empty) returns (ListCaste){}
+  rpc GetAllMyCards(Player) returns (Empty){} // not soon
+  rpc GetPossiblePositionsControlToken(Empty) returns (ListPositionsControlTokens){}
+
+  rpc SetCaste(Caste) returns (Key){}
   rpc ShowSomeoneReset(Player) returns (ListBattleTokens){}
+  rpc ShowBattleToken(ShowToken) returns (BattleToken){}
   rpc ShowActive(Player) returns (ListBattleTokens){}
   rpc RoundCount(Empty) returns (Round){}
   rpc WhoseMove(Empty) returns (Player){}
-  rpc ShowBattleToken(ShowToken) returns (BattleToken){}
-  rpc GetAllControlToken(Empty) returns (ListControlTokens){}
-  rpc GetAllBattleToken(Empty) returns (ListBattleTokens){}
   rpc UseCard(Card) returns (Key){}
   rpc UnusedCard(Player) returns (Key){}
-  rpc GetAllMyCards(Player) returns (Empty){} // not soon
   rpc DoExecutionPhase(Empty) returns (Key){}
-  rpc GetWinner(Empty) returns (Players){}
-  rpc GetFreeCaste(Empty) returns (ListCaste){}
-  rpc SetCaste(Caste) returns (Key){}
-  rpc GetPossiblePositionsControlToken(Empty) returns (ListPositionsControlTokens){}
+
+  rpc PutBattleToken(Attack) returns (Key){}
   rpc PutControlToken(Token) returns (Key){}
 
 }

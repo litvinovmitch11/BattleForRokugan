@@ -94,10 +94,11 @@ pos = [
     [(1000, 250), (1000, 70), (870, 100), (1130, 500), -1, (1090, 450), -1, -1, -1, (950, 340), -1, (820, 220),
      (740, 200), (685, 200), (620, 150), (520, 160), -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
      -1, (320, 50)]  # water
-    ]
+]
 
 bt_in_province = []
 ct_in_province = []
+
 
 class battle_token:
     def __init__(self, screen, caste, visible, typee, power, prov_from, prov_to):
@@ -121,7 +122,7 @@ class battle_token:
         self.screen.blit(self.image, self.rect)
 
 
-class control_token():
+class control_token:
     def __init__(self, screen, caste, visible, province):
         self.Token_Width = 16
         self.Token_Height = 16
@@ -134,5 +135,4 @@ class control_token():
         self.screen_rect = screen.get_rect()
 
     def output(self):
-
         self.screen.blit(self.image, self.rect)

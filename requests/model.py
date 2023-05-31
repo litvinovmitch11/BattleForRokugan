@@ -315,7 +315,7 @@ class Board:
             for player in self.players.values():
                 if player.caste == watching_caste:
                     used_caste = True
-            if not used_caste:
+            if not used_caste and watching_caste != Caste.none:
                 free_castes.append(watching_caste)
         return free_castes
 

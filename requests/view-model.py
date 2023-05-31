@@ -61,16 +61,22 @@ if __name__ == '__main__':
     client = Client()
 
     ind = client.create_new_game_session().game_id
-    gm = Game(ind)
+    gm = Game(0)
     # gm = Game(Pupa)
-    for i in range(3):  # while Starter Facade
+    # players = []
+    for i in range(2):  # while Starter Facade
         ind = client.get_unique_id(gm.ind).player_id
         if client.add_player(ind, gm.ind).key:
             print("LOL\n")
             gm.add_player(ind, "Kam" + str(ind))
         client.swap_player_readiness_value(ind, gm.ind)
     players = client.get_players_ids(gm.ind).int
-    print(players)
+    print(players, client.should_start_game(gm.ind).key)
+    for i in players:
+        print(client.get_free_caste().caste)
+        client.set_caste(i, client.get_free_caste().caste[0], gm.ind)
+    print(client.get_free_caste().caste[0])
+
     while True:
         control_tokens = []  # client.get_all_control_token()
         for token in control_tokens:
@@ -88,5 +94,3 @@ if __name__ == '__main__':
 
         break
 
-    raduga = client.get_unique_id().player_id
-    print(raduga)
