@@ -120,18 +120,16 @@ if __name__ == '__main__':
     # tokens = client.get_all_battle_token(gm.ind).token
     # for token in tokens:
     #     print(token.id)
-
+    gm.update_control_tokens(client.get_all_control_token(gm.ind).token)
     while client.round_count(gm.ind).round != 1:
         was = False
-        for i in range(1000):
-            for id_player in players:
-                if client.put_control_token(id_player, i, i % 30, gm.ind).key:
-                    # print("OK", str(id_player), i)
+        for id_player in players:
+            for token in gm.control_tokens.values():
+                if client.put_control_token(id_player, token.ind, random.randint(0, 29), gm.ind).key:
+                    print("OK", str(id_player), token.ind)
                     was = True
                     break
-            if was:
-                break
-    # print(client.round_count(gm.ind).round)
+    print(client.round_count(gm.ind).round)
 
     while True:
         gm.update_control_tokens(client.get_all_control_token(gm.ind).token)
@@ -145,7 +143,7 @@ if __name__ == '__main__':
         for i in range(1):
             for id_player in players:
                 client.unused_card(id_player, gm.ind)
-        print(client.round_count(gm.ind).round, client.get_phase(gm.ind).round)
+        # print(client.round_count(gm.ind).round, client.get_phase(gm.ind).round)
 
         while client.get_phase(gm.ind).round == 2:
             f = random.randint(0, 29)
@@ -163,11 +161,12 @@ if __name__ == '__main__':
                     ind = token.ind
                     if client.put_battle_token(id_player, ind, f, t, gm.ind).key:
                         print("OK", id_player, ind)
+                        # print(active)
                         was = True
                         break
                 if was:
                     break
-            # gm.update_battle_tokens(client.get_all_battle_token(gm.ind).token)
+            gm.update_battle_tokens(client.get_all_battle_token(gm.ind).token)
         client.do_execution_phase(gm.ind)
         # gm.update_battle_tokens(client.get_all_battle_token(gm.ind).token)
     print(client.get_winner(gm.ind).player)
