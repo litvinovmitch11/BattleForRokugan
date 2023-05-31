@@ -126,10 +126,10 @@ if __name__ == '__main__':
         for id_player in players:
             for token in gm.control_tokens.values():
                 if client.put_control_token(id_player, token.ind, random.randint(0, 29), gm.ind).key:
-                    print("OK", str(id_player), token.ind)
+                    # print("OK", str(id_player), token.ind)
                     was = True
                     break
-    print(client.round_count(gm.ind).round)
+    # print(client.round_count(gm.ind).round)
 
     while True:
         gm.update_control_tokens(client.get_all_control_token(gm.ind).token)
@@ -146,6 +146,7 @@ if __name__ == '__main__':
         # print(client.round_count(gm.ind).round, client.get_phase(gm.ind).round)
 
         while client.get_phase(gm.ind).round == 2:
+            gm.update_battle_tokens(client.get_all_battle_token(gm.ind).token)
             f = random.randint(0, 29)
             t = random.randint(0, 29)
             was = False
