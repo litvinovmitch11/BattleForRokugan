@@ -9,26 +9,28 @@ client3 = Client()
 game_id = client1.create_new_game_session().game_id
 
 client1_id = client1.get_unique_id().player_id
-client1.add_player(player_id=client1_id, game_id=game_id)
+client1.add_player(player_id=client1_id, name="Pupa", game_id=game_id)
 game1 = Game(game_id, client1_id)
 
 client2_id = client2.get_unique_id().player_id
-client2.add_player(player_id=client2_id, game_id=game_id)
+client2.add_player(player_id=client2_id, name="Lupa", game_id=game_id)
 game2 = Game(game_id, client2_id)
 
 client3_id = client3.get_unique_id().player_id
-client3.add_player(player_id=client3_id, game_id=game_id)
+client3.add_player(player_id=client3_id, name="Aboba", game_id=game_id)
 game3 = Game(game_id, client3_id)
 
 client1.swap_player_readiness_value(player_id=client1_id, game_id=game_id)
 client2.swap_player_readiness_value(player_id=client2_id, game_id=game_id)
 client3.swap_player_readiness_value(player_id=client3_id, game_id=game_id)
 
-game1.update_players(client1.get_players_ids(game1.ind).int)
-game2.update_players(client2.get_players_ids(game2.ind).int)
-game3.update_players(client3.get_players_ids(game3.ind).int)
+game1.update_players(client1.get_players(game1.ind).name)
+game2.update_players(client2.get_players(game2.ind).name)
+game3.update_players(client3.get_players(game3.ind).name)
 
 client1.should_start_game(game_id=game_id)
+# client2.should_start_game(game_id=game_id)
+# client3.should_start_game(game_id=game_id)
 
 caste1 = client1.get_free_caste(game1.ind).caste[0]
 if client1.set_caste(game1.my_player_id, caste1, game1.ind):

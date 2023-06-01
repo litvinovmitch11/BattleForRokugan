@@ -42,6 +42,6 @@ class StarterService(pb2_grpc.StarterServicer):
         print("ShouldStartGame")
         key = self.games[request.game_id].should_start_game()
         if key:
-            self.games[request.game_id] = GameFacade(self.games[request.game_id].get_players_ids())
+            self.games[request.game_id] = GameFacade(self.games[request.game_id].get_players())
         result = {"key": key}
         return pb2.Key(**result)
