@@ -1,6 +1,4 @@
 import grpc
-import starter_pb2
-import starter_pb2_grpc
 import facade_pb2
 import facade_pb2_grpc
 
@@ -11,35 +9,28 @@ class Client(object):
         self.host = host
         self.port = port
         self.channel = grpc.insecure_channel(f'{self.host}:{self.port}')
-        self.starter_stub = starter_pb2_grpc.StarterStub(self.channel)
         self.game_stub = facade_pb2_grpc.FacadeStub(self.channel)
 
-    # ------------- Starter part -------------
     def create_new_game_session(self, game_id=0):
         print("CreateNewGameSession")
-        return self.starter_stub.CreateNewGameSession(starter_pb2.Empty(game_id=game_id))
+        return self.game_stub.CreateNewGameSession(facade_pb2.Empty(game_id=game_id))
 
     def get_unique_id(self, game_id=0):
         print("GetUniqueId")
-        return self.starter_stub.GetUniqueId(starter_pb2.Empty(game_id=game_id))
+        return self.game_stub.GetUniqueId(facade_pb2.Empty(game_id=game_id))
 
     def add_player(self, player_id, name, game_id=0):
         print("AddPlayer")
-        return self.starter_stub.AddPlayer(starter_pb2.Name(game_id=game_id, player_id=player_id, name=name))
+        return self.game_stub.AddPlayer(facade_pb2.Name(game_id=game_id, player_id=player_id, name=name))
 
     def swap_player_readiness_value(self, player_id, game_id=0):
         print("SwapPlayerReadinessValue")
-        return self.starter_stub.SwapPlayerReadinessValue(starter_pb2.PlayerId(game_id=game_id, player_id=player_id))
-
-    def should_start_game(self, game_id=0):
-        print("ShouldStartGame")
-        return self.starter_stub.ShouldStartGame(starter_pb2.Empty(game_id=game_id))
+        return self.game_stub.SwapPlayerReadinessValue(facade_pb2.PlayerId(game_id=game_id, player_id=player_id))
 
     def get_players(self, game_id=0):
         print("GetPlayers")
-        return self.starter_stub.GetPlayers(starter_pb2.Empty(game_id=game_id))
+        return self.game_stub.GetPlayers(facade_pb2.Empty(game_id=game_id))
 
-    # ------------- Game part -------------
     def get_possible_positions_battle_token(self, game_id=0):
         print("GetPossiblePositionsBattleToken")
         return self.game_stub.GetPossiblePositionsBattleToken(facade_pb2.Empty(game_id=game_id))

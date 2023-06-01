@@ -4,6 +4,12 @@ package facade;
 
 service Facade{
 
+  rpc CreateNewGameSession(Empty) returns (Empty){}
+  rpc GetUniqueId(Empty) returns (PlayerId){}
+  rpc AddPlayer(Name) returns (Key){}
+  rpc SwapPlayerReadinessValue(PlayerId) returns (Key){}
+  rpc GetPlayers(Empty) returns (ListName){}
+
   rpc GetPossiblePositionsBattleToken(Empty) returns (Map){}
   rpc GetAllControlToken(Empty) returns (ListControlTokens){}
   rpc GetAllBattleToken(Empty) returns (ListBattleTokens){}
@@ -30,6 +36,22 @@ service Facade{
 
 message Empty {
   int32 game_id = 1;
+}
+
+message PlayerId {
+  int32 game_id = 1;
+  int32 player_id = 2;
+}
+
+message Name {
+  int32 game_id = 1;
+  int32 player_id = 2;
+  string name = 3;
+}
+
+message ListName {
+  int32 game_id = 1;
+  repeated Name name = 2;
 }
 
 message List {

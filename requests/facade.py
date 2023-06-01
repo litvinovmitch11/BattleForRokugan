@@ -10,13 +10,43 @@ class GameFacade:
         self.names = dict()  # player_id -> his name
         self.unique_id = -1
 
+    def get_unique_id(self) -> int:
+        self.unique_id += 1
+        return self.unique_id
+
+    def add_player(self, player_id: int, name: str) -> bool:
+        if player_id not in self.players and len(self.players) <= 4:
+            self.players[player_id] = False
+            self.names[player_id] = name
+            return True
+        return False
+
+    def swap_player_readiness_value(self, player_id: int) -> bool:  # return True if should start game
+        if player_id not in self.players:
+            return False
+        self.players[player_id] = not self.players[player_id]
+        everyone_ready = True
+        for player_id in self.players:
+            everyone_ready &= self.players[player_id]
+        if len(self.players) > 1 and everyone_ready:
+            self.board = Board(self.get_players())
+            return True
+        return False
+
+    def get_players(self) -> list[(int, str)]:
+        ans = []
+        for player_id in self.players:
+            ans.append((player_id, self.names[player_id]))
+        return ans
+
     def get_possible_positions_battle_token(self) -> list[list[int]]:
         # attack from id_1 to id_2 (1 - if can, 0 - else). if id_1 == id_2 -> can protect
         # same for all players
         return self.board and self.board.get_possible_position_to_put_battle_token()
 
     def put_battle_token(self, player_id: int, my_token_id: int, province_from_id: int, province_to_id: int) -> bool:
-        if self.board is None or not self.board.state.this_player_move(player_id) or not (1 <= self.board.state.round <= 5):
+        if self.board is None or not self.board.state.this_player_move(player_id) or not (
+                1 <= self.board.state.round <= 5):
             return False
         return self.board.put_on_board_battle_token(player_id, my_token_id, province_from_id, province_to_id)
 
@@ -93,32 +123,3 @@ class GameFacade:
         if self.board is None or not self.board.state.this_player_move(player_id) or self.board.state.round != 0:
             return False
         return self.board.put_on_board_control_token(player_id, control_token_id, province_id)
-
-    def get_unique_id(self) -> int:
-        self.unique_id += 1
-        return self.unique_id
-
-    def add_player(self, player_id: int, name: str) -> bool:
-        if player_id not in self.players and len(self.players) <= 4:
-            self.players[player_id] = False
-            self.names[player_id] = name
-            return True
-        return False
-
-    def swap_player_readiness_value(self, player_id: int) -> bool:  # return True if should start game
-        if player_id not in self.players:
-            return False
-        self.players[player_id] = not self.players[player_id]
-        everyone_ready = True
-        for player_id in self.players:
-            everyone_ready &= self.players[player_id]
-        if len(self.players) > 1 and everyone_ready:
-            self.board = Board(self.get_players())
-            return True
-        return False
-
-    def get_players(self) -> list[(int, str)]:
-        ans = []
-        for player_id in self.players:
-            ans.append((player_id, self.names[player_id]))
-        return ans
