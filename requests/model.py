@@ -63,12 +63,13 @@ class ControlToken:
 
 
 class Player:
-    def __init__(self, player_id: int):
+    def __init__(self, values: (int, str)):
         self.caste = None
         self.battle_tokens = []
         self.control_tokens = []
         self.active = []
-        self.player_id = player_id
+        self.player_id = values[0]
+        self.name = values[1]
 
     def set_clan(self, my_caste: Caste) -> bool:
         if self.caste is not None:
@@ -286,7 +287,7 @@ class Province:
 
 
 class Board:
-    def __init__(self, players_ids: list[int]):
+    def __init__(self, players: list[(int, str)]):
         self.players = dict()  # id -> Class Player
         self.state = GameState()
 
@@ -299,7 +300,7 @@ class Board:
         for i in range(30):
             self.all_provinces.append(Province(i))
 
-        for ind in players_ids:
+        for ind in players:
             self.add_player(Player(ind))
 
         self.start_game()

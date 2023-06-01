@@ -3,8 +3,8 @@ from model import *
 
 class GameFacade:
 
-    def __init__(self, players_ids: list[int]):
-        self.board = Board(players_ids)
+    def __init__(self, players: list[(int, str)]):
+        self.board = Board(players)
 
     def get_possible_positions_battle_token(self) -> list[list[int]]:
         # attack from id_1 to id_2 (1 - if can, 0 - else). if id_1 == id_2 -> can protect
@@ -93,15 +93,17 @@ class StarterFacade:  # update logic! After this facade must make board
 
     def __init__(self):
         self.players = dict()  # player_id -> his readiness
+        self.names = dict()  # player_id -> his name
         self.unique_id = -1
 
     def get_unique_id(self) -> int:
         self.unique_id += 1
         return self.unique_id
 
-    def add_player(self, player_id: int) -> bool:
+    def add_player(self, player_id: int, name: str) -> bool:
         if player_id not in self.players and len(self.players) <= 4:
             self.players[player_id] = False
+            self.names[player_id] = name
             return True
         return False
 
@@ -117,5 +119,8 @@ class StarterFacade:  # update logic! After this facade must make board
             everyone_ready &= self.players[player_id]
         return len(self.players) > 1 and everyone_ready
 
-    def get_players_ids(self) -> list[int]:
-        return [*self.players.keys()]
+    def get_players(self) -> list[(int, str)]:
+        ans = []
+        for player_id in self.players:
+            ans.append((player_id, self.names[player_id]))
+        return ans
