@@ -19,7 +19,7 @@ def run_game(client_id, name, game_id):
     background_image = pygame.image.load('BattleForRokugan_content/bg.jpg')
     mapp = map.Map(screen)
     # abuility = map.PlayersAbuility(screen, "unicorn")
-    game = view_model.Game(game_id)
+    game = view_model.Game(game_id, client_id)
     pl = view_model.Player(client_id, name)
     f1 = pygame.font.Font(None, 36)
     player_names_text = []
@@ -54,7 +54,7 @@ def run_game(client_id, name, game_id):
         for token in pl.battle_tokens:
             BattleToken(screen, token.caste, token.visible, token.typee, token.power, token.prov_from,
                         token.prov_to).output()
-        #abuility.output()
+        map.PlayersAbuility(screen, pl.caste).output()
         screen.blit(round_text, (10, 20))
         nameCnt = 0
         for name in player_names_text:
