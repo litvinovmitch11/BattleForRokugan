@@ -32,6 +32,7 @@ def run_game(client_id, name, game_id):
 
     tokens_text = f1.render('Здесь список токенов (левый - имба)', True, (180, 0, 0))
     round_text = f1.render(f'Раунд {game.round}', True, (0, 77, 255))
+    count_of_players = f1.render(f'Игроков: {game.players.len()}', True, (0, 77, 255))
 
     while True:
         pygame.event.pump()
@@ -55,6 +56,8 @@ def run_game(client_id, name, game_id):
             BattleToken(screen, token.caste, token.visible, token.typee, token.power, token.prov_from,
                         token.prov_to).output()
         map.PlayersAbuility(screen, pl.caste).output()
+        screen.blit(count_of_players, (10, 200))
+
         screen.blit(round_text, (10, 20))
         nameCnt = 0
         for name in player_names_text:
