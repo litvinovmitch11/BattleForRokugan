@@ -24,7 +24,7 @@ class Menu:
     def start_game(self):
         self.user_name_val = self.user_name.get_value()
         self.client_id = self.client.get_unique_id().player_id
-        self.client.add_player(self.client_id, self.lobby_id_val)
+        self.client.add_player(self.client_id, self.user_name_val, self.lobby_id_val)
         print(f"My lobby number {self.lobby_id_val}")
         run_game(self.client_id, self.user_name_val, self.lobby_id_val)
 
