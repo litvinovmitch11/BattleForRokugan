@@ -91,8 +91,8 @@ class Game:
 
     def update_players(self, new_players):
         for player_ind in new_players:
-            if player_ind not in gm.players:
-                self.players[player_ind] = Player(ind, "KAM" + str(ind))
+            if player_ind not in self.players:
+                self.players[player_ind] = Player(self.ind, "KAM" + str(self.ind))
 
 
 if __name__ == '__main__':
