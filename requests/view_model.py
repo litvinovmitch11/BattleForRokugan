@@ -60,10 +60,10 @@ class Player:  # info, for client
 
 class Game:
 
-    def __init__(self, game_ind: int, player_ind: int):
+    def __init__(self, game_ind: int, player_ind: int, host="localhost", port="8888"):
         self.ind = game_ind
         self.my_player_id = player_ind
-
+        self.client = Client(host=host, port=port)
         self.players = dict()  # id -> Class Player
         self.round = 0
         self.battle_tokens = dict()  # id -> Class BattleToken
@@ -91,8 +91,13 @@ class Game:
 
     def update_players(self, new_players):
         for player_ind in new_players:
-            if player_ind not in self.players:
-                self.players[player_ind] = Player(self.ind, "KAM" + str(self.ind))
+            if player_ind.player_id not in self.players:
+                self.players[player_ind.player_id] = Player(player_ind.player_id, player_ind.name)
+
+    def update(self):
+        self.update_players(self.client.get_players(game_id=self.ind).name)
+        for item in self.players:
+            print(self.players[item].my_ind, self.players[item].name)
 
 
 if __name__ == '__main__':
@@ -106,7 +111,7 @@ if __name__ == '__main__':
         ind = client.get_unique_id(gm.ind).player_id
         client.add_player(ind, gm.ind)
         client.swap_player_readiness_value(ind, gm.ind)
-        gm.update_players(client.get_players_ids(gm.ind).int)
+        gm.update_players(client.get_players(gm.ind).int)
         players = list(gm.players.keys())
 
     print(players)

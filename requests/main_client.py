@@ -25,7 +25,7 @@ class Client(object):
 
     def add_player(self, player_id, name, game_id=0):
         print("AddPlayer")
-        return self.starter_stub.AddPlayer(starter_pb2.PlayerId(game_id=game_id, player_id=player_id, name=name))
+        return self.starter_stub.AddPlayer(starter_pb2.Name(game_id=game_id, player_id=player_id, name=name))
 
     def swap_player_readiness_value(self, player_id, game_id=0):
         print("SwapPlayerReadinessValue")
