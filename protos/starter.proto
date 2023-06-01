@@ -6,10 +6,10 @@ service Starter{
 
   rpc CreateNewGameSession(Empty) returns (Empty){}
   rpc GetUniqueId(Empty) returns (PlayerId){}
-  rpc AddPlayer(PlayerId) returns (Key){}
+  rpc AddPlayer(Name) returns (Key){}
   rpc SwapPlayerReadinessValue(PlayerId) returns (Key){}
   rpc ShouldStartGame(Empty) returns (Key){}
-  rpc GetPlayersIds(Empty) returns (ListInt){}
+  rpc GetPlayers(Empty) returns (ListName){}
 
 }
 
@@ -27,7 +27,13 @@ message Key {
   bool key = 2;
 }
 
-message ListInt {
+message Name {
   int32 game_id = 1;
-  repeated int32 int = 2;
+  int32 player_id = 2;
+  string name = 3;
+}
+
+message ListName {
+  int32 game_id = 1;
+  repeated Name name = 2;
 }

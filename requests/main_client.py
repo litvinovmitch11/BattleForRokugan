@@ -23,9 +23,9 @@ class Client(object):
         print("GetUniqueId")
         return self.starter_stub.GetUniqueId(starter_pb2.Empty(game_id=game_id))
 
-    def add_player(self, player_id, game_id=0):
+    def add_player(self, player_id, name, game_id=0):
         print("AddPlayer")
-        return self.starter_stub.AddPlayer(starter_pb2.PlayerId(game_id=game_id, player_id=player_id))
+        return self.starter_stub.AddPlayer(starter_pb2.PlayerId(game_id=game_id, player_id=player_id, name=name))
 
     def swap_player_readiness_value(self, player_id, game_id=0):
         print("SwapPlayerReadinessValue")
@@ -35,9 +35,9 @@ class Client(object):
         print("ShouldStartGame")
         return self.starter_stub.ShouldStartGame(starter_pb2.Empty(game_id=game_id))
 
-    def get_players_ids(self, game_id=0):
-        print("GetPlayersIds")
-        return self.starter_stub.GetPlayersIds(starter_pb2.Empty(game_id=game_id))
+    def get_players(self, game_id=0):
+        print("GetPlayers")
+        return self.starter_stub.GetPlayers(starter_pb2.Empty(game_id=game_id))
 
     # ------------- Game part -------------
     def get_possible_positions_battle_token(self, game_id=0):
@@ -129,36 +129,36 @@ if __name__ == '__main__':
     # cmd - number of command from starter facade (or command name)
     # If you want to break client write -1
 
-    your_id = -1
-    cmd = input()
-    while cmd != '-1':
-        if cmd == '1' or cmd == 'get_unique_id':
-            your_id = client.get_unique_id().player_id
-            print(f'Your id: {your_id}')
-        elif (cmd == '2' or cmd == 'add_player') and your_id != -1:
-            key = client.add_player(your_id).key
-            print(f'Add player with id {your_id}\nIs ok? {key}')
-        elif (cmd == '3' or cmd == "swap_player_readiness_value") and your_id != -1:
-            key = client.swap_player_readiness_value(your_id).key
-            print(f'Correct? {key}')
-        elif cmd == '4' or cmd == "get_free_caste":
-            free_caste = client.get_free_caste().caste
-            print(f'Free caste: {free_caste}')
-        elif (cmd == '5' or cmd == 'set_caste') and your_id != -1:
-            your_caste = input("Enter caste: ")
-            key = client.set_caste(your_id, your_caste).key
-            print(f'Correct? {key}')
-        elif cmd == '6' or cmd == "get_possible_positions_control_token":
-            list_token = client.get_possible_positions_control_token().position
-            print(f'List of possible position control tokens: {list_token}')
-        elif (cmd == '7' or cmd == "put_control_token") and your_id != -1:
-            your_control_token_id = int(input("Enter control token id: "))
-            your_province_id = int(input("Enter province id: "))
-            key = client.put_control_token(your_id, your_control_token_id, your_province_id).key
-            print(f'Is correct? {key}')
-        elif cmd == '8' or cmd == "round_count_starter":
-            print(f'Current round is {client.round_count().round}')
-        elif cmd == '9' or cmd == "get_all_control_token_starter":
-            all_control_tokens = client.get_all_control_token()
-            print(f'All control tokens for player with id {your_id}: {all_control_tokens.token}')
-        cmd = input()
+    # your_id = -1
+    # cmd = input()
+    # while cmd != '-1':
+    #     if cmd == '1' or cmd == 'get_unique_id':
+    #         your_id = client.get_unique_id().player_id
+    #         print(f'Your id: {your_id}')
+    #     elif (cmd == '2' or cmd == 'add_player') and your_id != -1:
+    #         key = client.add_player(your_id).key
+    #         print(f'Add player with id {your_id}\nIs ok? {key}')
+    #     elif (cmd == '3' or cmd == "swap_player_readiness_value") and your_id != -1:
+    #         key = client.swap_player_readiness_value(your_id).key
+    #         print(f'Correct? {key}')
+    #     elif cmd == '4' or cmd == "get_free_caste":
+    #         free_caste = client.get_free_caste().caste
+    #         print(f'Free caste: {free_caste}')
+    #     elif (cmd == '5' or cmd == 'set_caste') and your_id != -1:
+    #         your_caste = input("Enter caste: ")
+    #         key = client.set_caste(your_id, your_caste).key
+    #         print(f'Correct? {key}')
+    #     elif cmd == '6' or cmd == "get_possible_positions_control_token":
+    #         list_token = client.get_possible_positions_control_token().position
+    #         print(f'List of possible position control tokens: {list_token}')
+    #     elif (cmd == '7' or cmd == "put_control_token") and your_id != -1:
+    #         your_control_token_id = int(input("Enter control token id: "))
+    #         your_province_id = int(input("Enter province id: "))
+    #         key = client.put_control_token(your_id, your_control_token_id, your_province_id).key
+    #         print(f'Is correct? {key}')
+    #     elif cmd == '8' or cmd == "round_count_starter":
+    #         print(f'Current round is {client.round_count().round}')
+    #     elif cmd == '9' or cmd == "get_all_control_token_starter":
+    #         all_control_tokens = client.get_all_control_token()
+    #         print(f'All control tokens for player with id {your_id}: {all_control_tokens.token}')
+    #     cmd = input()

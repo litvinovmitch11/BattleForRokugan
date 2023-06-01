@@ -24,7 +24,7 @@ class StarterService(pb2_grpc.StarterServicer):
 
     def AddPlayer(self, request, context):
         print("AddPlayer")
-        result = {"key": self.games[request.game_id].add_player(request.player_id)}
+        result = {"key": self.games[request.game_id].add_player(request.player_id, request.name)}
         return pb2.Key(**result)
 
     def SwapPlayerReadinessValue(self, request, context):
@@ -32,10 +32,10 @@ class StarterService(pb2_grpc.StarterServicer):
         result = {"key": self.games[request.game_id].swap_player_readiness_value(request.player_id)}
         return pb2.Key(**result)
 
-    def GetPlayersIds(self, request, context):
+    def GetPlayers(self, request, context):
         print("GetPlayersIds")
-        list_int = pb2.ListInt()
-        list_int.int[:] = self.games[request.game_id].get_players_ids()
+        list_int = pb2.ListName(
+            name=[pb2.Name(player_id=item[0], name=item[1]) for item in self.games[request.game_id].get_players()])
         return list_int
 
     def ShouldStartGame(self, request, context):
