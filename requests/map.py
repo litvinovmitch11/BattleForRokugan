@@ -20,20 +20,7 @@ class PlayersAbuility:
     def __init__(self, screen, caste):
         self.screen = screen
         self.caste = caste
-        if caste == "unicorn":
-            self.image = pygame.image.load('BattleForRokugan_content/unic-shirm.png')
-        elif caste == "crab":
-            self.image = pygame.image.load('BattleForRokugan_content/??')
-        elif caste == "crane":
-            self.image = pygame.image.load('BattleForRokugan_content/??')
-        elif caste == "lion":
-            self.image = pygame.image.load('BattleForRokugan_content/??')
-        elif caste == "scorpion":
-            self.image = pygame.image.load('BattleForRokugan_content/??')
-        elif caste == "dragon":
-            self.image = pygame.image.load('BattleForRokugan_content/??')
-        elif caste == "phoenix":
-            self.image = pygame.image.load('BattleForRokugan_content/??')
+        self.image = pygame.image.load(f'BattleForRokugan_content/{caste}_shirm.png')
         self.rect = pygame.Rect(1000, 700, 200, 200)
 
     def output(self):

@@ -19,17 +19,20 @@ def run_game(client_id, name, game_id):
     background_image = pygame.image.load('BattleForRokugan_content/bg.jpg')
     mapp = map.Map(screen)
     # abuility = map.PlayersAbuility(screen, "unicorn")
-    game = view_model.Game(game_id)
+    game = view_model.Game(game_id, client_id)
+    pl = view_model.Player(client_id, name)
     f1 = pygame.font.Font(None, 36)
     player_names_text = []
-    for player in game.players.name:
-        player_names_text.append(f1.render(player, True, (0,77,255)))
+    #game.add_player(client_id, name)
+    for player in game.players.values():
+        player_names_text.append(f1.render(player.name, True, (0, 77, 255)))
 
     now_moves1 = f1.render('Сейчас ходит:', True, (0, 77, 255))
     now_moves2 = f1.render('Камиль 1', True, (0, 77, 255))
 
     tokens_text = f1.render('Здесь список токенов (левый - имба)', True, (180, 0, 0))
     round_text = f1.render(f'Раунд {game.round}', True, (0, 77, 255))
+    count_of_players = f1.render(f'Игроков: {game.players.len()}', True, (0, 77, 255))
 
     while True:
         pygame.event.pump()
@@ -44,10 +47,6 @@ def run_game(client_id, name, game_id):
             if event.type == pygame.QUIT:
                 sys.exit()
         mapp.output()
-
-        player_id = 1
-        name = "aboba"
-        pl = view_model.Player(1, "aboba")
         for token in game.battle_tokens:
             BattleToken(screen, token.caste, token.visible, token.typee, token.power, token.prov_from,
                         token.prov_to).output()
@@ -56,8 +55,9 @@ def run_game(client_id, name, game_id):
         for token in pl.battle_tokens:
             BattleToken(screen, token.caste, token.visible, token.typee, token.power, token.prov_from,
                         token.prov_to).output()
-        #   view_model.BattleToken()
-        # abuility.output()
+        map.PlayersAbuility(screen, pl.caste).output()
+        screen.blit(count_of_players, (10, 200))
+
         screen.blit(round_text, (10, 20))
         nameCnt = 0
         for name in player_names_text:
@@ -79,9 +79,21 @@ def run_game(client_id, name, game_id):
         ct_in_province.append(CT3)
         CT3.output()
 
-        BT1 = BattleToken(screen, "crane", "open", "infantry", 1, 30, 0)
+
+        BT1 = BattleToken(screen, "crane", "open", "infantry", 1, 31, 0)
+        BT3 = BattleToken(screen, "crane", "open", "infantry", 1, 31, 1)
+        BT4 = BattleToken(screen, "crane", "open", "infantry", 1, 31, 2)
+        BT5 = BattleToken(screen, "crane", "open", "infantry", 1, 31, 3)
+        BT6 = BattleToken(screen, "crane", "open", "infantry", 1, 31, 4)
+        BT7 = BattleToken(screen, "crane", "open", "infantry", 1, 31, 5)
         bt_in_province.append(BT1)
         BT1.output()
+        BT3.output()
+        BT4.output()
+        BT5.output()
+        BT6.output()
+        BT7.output()
+
         BT2 = BattleToken(screen, "unicorn", "open", "infantry", 1, 0, 1)
         bt_in_province.append(BT2)
         BT2.output()
