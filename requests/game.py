@@ -5,7 +5,6 @@ import map
 from tokens import ControlToken, BattleToken
 import view_model
 
-
 def run_game(client_id, name, game_id):
     pygame.init()
 
@@ -34,7 +33,13 @@ def run_game(client_id, name, game_id):
     round_text = f1.render(f'Раунд {game.round}', True, (0, 77, 255))
     count_of_players = f1.render(f'Игроков: {len(game.players)}', True, (0, 77, 255))
 
-    while True:
+    clock = pygame.time.Clock()
+    input_box1 = map.InputBox(100, 100, 140, 32)
+    input_box2 = map.InputBox(100, 300, 140, 32)
+    input_boxes = [input_box1, input_box2]
+    done = False
+
+    while not done:
         pygame.event.pump()
         event = pygame.event.wait()
         screen.blit(background_image, (0, 0))
@@ -45,7 +50,15 @@ def run_game(client_id, name, game_id):
             pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                done = True
                 sys.exit()
+            for box in input_boxes:
+                box.handle_event(event)
+
+        for box in input_boxes:
+            box.update()
+        for box in input_boxes:
+            box.draw(screen)
         mapp.output()
         for token in game.battle_tokens:
             BattleToken(screen, token.caste, token.visible, token.typee, token.power, token.prov_from,
@@ -55,7 +68,8 @@ def run_game(client_id, name, game_id):
         for token in pl.battle_tokens:
             BattleToken(screen, token.caste, token.visible, token.typee, token.power, token.prov_from,
                         token.prov_to).output()
-        map.PlayersAbility(screen, pl.caste).output()
+        map.PlayersAbility(screen, "crane").output()
+
         screen.blit(count_of_players, (10, 200))
 
         screen.blit(round_text, (10, 20))
@@ -86,20 +100,25 @@ def run_game(client_id, name, game_id):
         BT6 = BattleToken(screen, "crane", "open", "infantry", 1, 31, 4)
         BT7 = BattleToken(screen, "crane", "open", "infantry", 1, 31, 5)
         bt_in_province.append(BT1)
+        BT1.image = pygame.transform.scale(
+            BT1.image, (BT1.image.get_width() * 2, BT1.image.get_height() * 2))
+        BT6.image = pygame.transform.scale(
+            BT6.image, (BT6.image.get_width() * 2, BT6.image.get_height() * 2))
         BT1.output()
-        BT3.output()
-        BT4.output()
-        BT5.output()
         BT6.output()
-        BT7.output()
+
 
         BT2 = BattleToken(screen, "unicorn", "open", "infantry", 1, 0, 1)
         bt_in_province.append(BT2)
-        BT2.output()
+
+        test_button = map.Button(screen, (50,205,50), 20, 500, 200, 30, 100, "aboba", (255,255,255))
+        test_button.create_button()
+
+
 
         pygame.display.flip()
 
         # screen.blit(bg, (0, 0))  # Каждую итерацию необходимо всё перерисовывать
         pygame.display.update()  # обновление и вывод всех изменений на экран
-
+        clock.tick(200)
 # run()
