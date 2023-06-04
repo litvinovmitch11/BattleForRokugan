@@ -98,7 +98,7 @@ class GameFacade:
 
     def get_winner(self) -> list[int]:  # return player_id. Empty list if game not finished
         if self.board and self.board.state.round == 6:
-            return self.board.get_winner()
+            return self.board.get_game_winner()
         else:
             return []
 
