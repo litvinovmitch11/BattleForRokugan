@@ -23,7 +23,7 @@ def run_game(client_id, name, game_id):
     pl = view_model.Player(client_id, name)
     f1 = pygame.font.Font(None, 36)
     player_names_text = []
-    #game.add_player(client_id, name)
+    # game.add_player(client_id, name)
     for player in game.players.values():
         player_names_text.append(f1.render(player.name, True, (0, 77, 255)))
 
@@ -32,7 +32,7 @@ def run_game(client_id, name, game_id):
 
     tokens_text = f1.render('Здесь список токенов (левый - имба)', True, (180, 0, 0))
     round_text = f1.render(f'Раунд {game.round}', True, (0, 77, 255))
-    count_of_players = f1.render(f'Игроков: {game.players.len()}', True, (0, 77, 255))
+    count_of_players = f1.render(f'Игроков: {len(game.players)}', True, (0, 77, 255))
 
     while True:
         pygame.event.pump()
@@ -55,7 +55,7 @@ def run_game(client_id, name, game_id):
         for token in pl.battle_tokens:
             BattleToken(screen, token.caste, token.visible, token.typee, token.power, token.prov_from,
                         token.prov_to).output()
-        map.PlayersAbuility(screen, pl.caste).output()
+        map.PlayersAbility(screen, pl.caste).output()
         screen.blit(count_of_players, (10, 200))
 
         screen.blit(round_text, (10, 20))
@@ -78,7 +78,6 @@ def run_game(client_id, name, game_id):
         CT3 = ControlToken(screen, "crab", "close", 3)
         ct_in_province.append(CT3)
         CT3.output()
-
 
         BT1 = BattleToken(screen, "crane", "open", "infantry", 1, 31, 0)
         BT3 = BattleToken(screen, "crane", "open", "infantry", 1, 31, 1)
