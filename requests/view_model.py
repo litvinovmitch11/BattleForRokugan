@@ -35,7 +35,7 @@ class ViewModelSystem(ViewModel):
         self.whose_move = None
 
     def update(self):
-        self.round = self.client.round_count(game_id=self.game_id).round
+        self.round = self.client.get_round(game_id=self.game_id).round
         self.players = self.client.get_players(game_id=self.game_id).name
         self.players_count = len(self.players)
         self.whose_move = self.client.whose_move(game_id=self.game_id).player_id
@@ -47,7 +47,7 @@ class ViewModelHand(ViewModel):
         self.active = None
 
     def update(self):
-        self.active = self.client.show_active(player_id=self.player_id, game_id=self.game_id).token
+        self.active = self.client.get_player_active(player_id=self.player_id, game_id=self.game_id).token
 
 
 class ViewModelBoard(ViewModel):

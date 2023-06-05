@@ -3,36 +3,38 @@ syntax = "proto3";
 package facade;
 
 service Facade{
-
-  rpc CreateNewGameSession(Empty) returns (Empty){}
+  rpc CreateNewGameSession(SuperEmpty) returns (Empty){}
   rpc GetUniqueId(Empty) returns (PlayerId){}
   rpc AddPlayer(Name) returns (Key){}
-  rpc SwapPlayerReadinessValue(PlayerId) returns (Key){}
-  rpc GetPlayers(Empty) returns (ListName){}
-
-  rpc GetPossiblePositionsBattleToken(Empty) returns (Map){}
-  rpc GetAllControlToken(Empty) returns (ListControlTokens){}
-  rpc GetAllBattleToken(Empty) returns (ListBattleTokens){}
-  rpc GetWinner(Empty) returns (Players){}
-  rpc GetFreeCaste(Empty) returns (ListCaste){}
-  rpc GetAllMyCards(Player) returns (Empty){} // not soon
-  rpc GetPossiblePositionsControlToken(Empty) returns (ListPositionsControlTokens){}
-  rpc GetPhase(Empty) returns (Round){}
-
-  rpc SetCaste(Caste) returns (Key){}
-  rpc ShowSomeoneReset(Player) returns (ListBattleTokens){}
-  rpc ShowBattleToken(ShowToken) returns (BattleToken){}
-  rpc ShowActive(Player) returns (ListBattleTokens){}
-  rpc RoundCount(Empty) returns (Round){}
   rpc WhoseMove(Empty) returns (Player){}
-  rpc UseCard(Card) returns (Key){}
-  rpc UnusedCard(Player) returns (Key){}
+
+  rpc GetFreeCaste(Empty) returns (ListCaste){}
+
+  rpc GetPlayers(Empty) returns (ListName){}
+  rpc GetPossiblePositionsBattleToken(Empty) returns (Map){}
+  rpc GetAllBattleToken(Empty) returns (ListBattleTokens){}
+  rpc GetAllControlToken(Empty) returns (ListControlTokens){}
+  rpc GetPossiblePositionsControlToken(Empty) returns (ListPositionsControlTokens){}
+
+  rpc GetPhase(Empty) returns (Round){}
+  rpc GetRound(Empty) returns (Round){}
+  rpc GetAllCards(Empty) returns (Empty){} // not soon
+  rpc GetSomeoneReset(Player) returns (ListBattleTokens){}
+  rpc GetPlayerActive(Player) returns (ListBattleTokens){}
+
   rpc DoExecutionPhase(Empty) returns (Key){}
 
+  rpc SwapPlayerReadinessValue(PlayerId) returns (Key){}
+  rpc SetCaste(Caste) returns (Key){}
+  rpc UseCard(Card) returns (Key){}
+  rpc UnusedCard(Player) returns (Key){}
   rpc PutBattleToken(Attack) returns (Key){}
   rpc PutControlToken(Token) returns (Key){}
 
+  rpc GetWinner(Empty) returns (Players){}
 }
+
+message SuperEmpty {}
 
 message Empty {
   int32 game_id = 1;
@@ -47,6 +49,7 @@ message Name {
   int32 game_id = 1;
   int32 player_id = 2;
   string name = 3;
+  bool readiness = 4;
 }
 
 message ListName {
@@ -103,12 +106,6 @@ message ListBattleTokens {
 message Round {
   int32 game_id = 1;
   int32 round = 2;
-}
-
-message ShowToken {
-  int32 game_id = 1;
-  int32 player_id = 2;
-  int32 token_id = 3;
 }
 
 message ControlToken {

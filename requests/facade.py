@@ -33,10 +33,10 @@ class GameFacade:
             return True
         return False
 
-    def get_players(self) -> list[(int, str)]:
+    def get_players(self) -> list[(int, str, bool)]:  # id, name, readiness value  !!! add readiness value !!!
         ans = []
         for player_id in self.players:
-            ans.append((player_id, self.names[player_id]))
+            ans.append((player_id, self.names[player_id], self.players[player_id]))
         return ans
 
     def get_possible_positions_battle_token(self) -> list[list[int]]:
@@ -50,18 +50,18 @@ class GameFacade:
             return False
         return self.board.put_on_board_battle_token(player_id, my_token_id, province_from_id, province_to_id)
 
-    def show_someone_reset(self, player_id: int) -> list[BattleToken]:
+    def get_someone_reset(self, player_id: int) -> list[BattleToken]:  # rename (was show)
         # show players battle_token reset
 
         # return False, if error, list[BattleToken] else
         return self.board and self.board.players[player_id].get_reset()
 
-    def show_active(self, player_id: int) -> list[BattleToken]:
+    def get_player_active(self, player_id: int) -> list[BattleToken]:  # rename (was show)
         return self.board and self.board.players[player_id].get_active()
         # all token have status. Some on board (face up/down), some free, some used.
         pass
 
-    def round_count(self) -> int:
+    def get_round(self) -> int:  # rename (was round_count)
         # return 0 if preparing, 6 if ending game, 1-5 else
         return self.board and self.board.state.round
 
@@ -71,11 +71,6 @@ class GameFacade:
     def whose_move(self) -> int:
         # return player_id whose move
         return self.board and self.board.state.move_queue[self.board.state.id_move]
-
-    def show_battle_token(self, player_id: int, my_token_id: int) -> BattleToken:
-        # probably not int, maybe info about token or position
-        # if token_id on board and player has the opportunity
-        return self.board and self.board.show_battle_token(player_id, my_token_id)
 
     def get_all_control_token(self) -> list[ControlToken]:
         return self.board and self.board.get_all_control_token()
@@ -89,7 +84,7 @@ class GameFacade:
     def unused_card(self, player_id: int) -> bool:
         return self.board and self.board.unused_card(player_id)
 
-    def get_all_my_cards(self, player_id: int):  # -> list[Card]:
+    def get_all_cards(self):  # -> list[Card]:  !!!! Теперь не принимаем player_id !!!!
         # card will include not soon
         pass
 

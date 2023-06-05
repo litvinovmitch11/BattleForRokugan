@@ -10,8 +10,8 @@ class Client:
         self.channel = grpc.insecure_channel(f'{self.host}:{self.port}')
         self.game_stub = facade_pb2_grpc.FacadeStub(self.channel)
 
-    def create_new_game_session(self, game_id):
-        return self.game_stub.CreateNewGameSession(facade_pb2.Empty(game_id=game_id))
+    def create_new_game_session(self):
+        return self.game_stub.CreateNewGameSession(facade_pb2.SuperEmpty())
 
     def get_unique_id(self, game_id):
         return self.game_stub.GetUniqueId(facade_pb2.Empty(game_id=game_id))
@@ -34,20 +34,17 @@ class Client:
                               province_from_id=province_from_id,
                               province_to_id=province_to_id))
 
-    def show_someone_reset(self, player_id, game_id):
-        return self.game_stub.ShowSomeoneReset(facade_pb2.Player(game_id=game_id, player_id=player_id))
+    def get_someone_reset(self, player_id, game_id):
+        return self.game_stub.GetSomeoneReset(facade_pb2.Player(game_id=game_id, player_id=player_id))
 
-    def show_active(self, player_id, game_id):
-        return self.game_stub.ShowActive(facade_pb2.Player(game_id=game_id, player_id=player_id))
+    def get_player_active(self, player_id, game_id):
+        return self.game_stub.GetPlayerActive(facade_pb2.Player(game_id=game_id, player_id=player_id))
 
-    def round_count(self, game_id):
-        return self.game_stub.RoundCount(facade_pb2.Empty(game_id=game_id))
+    def get_round(self, game_id):
+        return self.game_stub.GetRound(facade_pb2.Empty(game_id=game_id))
 
     def whose_move(self, game_id):
         return self.game_stub.WhoseMove(facade_pb2.Empty(game_id=game_id))
-
-    def show_battle_token(self, player_id, my_token_id, game_id):
-        return self.game_stub.ShowBattleToken(game_id=game_id, player_id=player_id, my_token_id=my_token_id)
 
     def get_all_control_token(self, game_id):
         return self.game_stub.GetAllControlToken(facade_pb2.Empty(game_id=game_id))
@@ -61,8 +58,8 @@ class Client:
     def unused_card(self, player_id, game_id):
         return self.game_stub.UnusedCard(facade_pb2.Player(game_id=game_id, player_id=player_id))
 
-    def get_all_my_cards(self, player_id, game_id):
-        return self.game_stub.GetAllMyCards(facade_pb2.Player(game_id=game_id, player_id=player_id))
+    def get_all_cards(self, game_id):
+        return self.game_stub.GetAllCards(facade_pb2.Player(game_id=game_id))
 
     def do_execution_phase(self, game_id):
         return self.game_stub.DoExecutionPhase(facade_pb2.Empty(game_id=game_id))
