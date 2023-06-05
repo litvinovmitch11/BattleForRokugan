@@ -32,7 +32,7 @@ class Menu:
         self.start_game()
 
     def create_lobby_and_start(self):
-        self.lobby_id_val = self.client.create_new_game_session(game_id=0).game_id
+        self.lobby_id_val = self.client.create_new_game_session().game_id
         self.start_game()
 
     def create_menu(self):
