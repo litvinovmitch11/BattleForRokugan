@@ -63,14 +63,20 @@ class GameFacade:
 
     def get_round(self) -> int:  # rename (was round_count)
         # return 0 if preparing, 6 if ending game, 1-5 else
-        return self.board and self.board.state.round
+        if self.board is None:
+            return 0
+        return self.board.state.round
 
     def get_phase(self) -> int:
-        return self.board and self.board.state.phase
+        if self.board is None:
+            return 0
+        return self.board.state.phase
 
     def whose_move(self) -> int:
+        if self.board is None:
+            return -1
         # return player_id whose move
-        return self.board and self.board.state.move_queue[self.board.state.id_move]
+        return self.board.state.move_queue[self.board.state.id_move]
 
     def get_all_control_token(self) -> list[ControlToken]:
         return self.board and self.board.get_all_control_token()
