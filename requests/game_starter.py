@@ -14,11 +14,11 @@ def draw(cl: Client, reg: Register):
     vmh = ViewModelHand(game_id=game_id, player_id=player_id, client_object=client)
     vmb = ViewModelBoard(game_id=game_id, player_id=player_id, client_object=client)
 
-    run_game(player_id, name, game_id, reg, vms, vmh, vmb)
+    run_game(player_id, name, game_id, reg, vms, vmh, vmb)  # Пока вот так вот рисуем...
 
 
-def send(reg: Register):
-    reg.run(1)
+def send(reg: Register, delay=1):
+    reg.run(delay)
 
 
 if __name__ == "__main__":
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     register = Register()
 
     t1 = Thread(target=draw, args=(client, register,))
-    t2 = Thread(target=send, args=(register,))
+    t2 = Thread(target=send, args=(register, 1,))
 
     t1.start()
     t2.start()

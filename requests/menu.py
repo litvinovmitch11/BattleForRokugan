@@ -1,4 +1,3 @@
-import pygame
 import pygame_menu
 from pygame_menu.examples import create_example_window
 from main_client import Client
@@ -23,8 +22,8 @@ class Menu:
 
     def start_game(self):
         self.user_name_val = self.user_name.get_value()
-        self.client_id = self.client.get_unique_id().player_id
-        self.client.add_player(self.client_id, self.user_name_val, self.lobby_id_val)
+        self.client_id = self.client.get_unique_id(game_id=self.lobby_id_val).player_id
+        self.client.add_player(player_id=self.client_id, name=self.user_name_val, game_id=self.lobby_id_val)
         print(f"My lobby number {self.lobby_id_val}")
         self.menu.disable()
 
@@ -33,7 +32,7 @@ class Menu:
         self.start_game()
 
     def create_lobby_and_start(self):
-        self.lobby_id_val = self.client.create_new_game_session().game_id
+        self.lobby_id_val = self.client.create_new_game_session(game_id=0).game_id
         self.start_game()
 
     def create_menu(self):
