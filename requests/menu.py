@@ -24,7 +24,6 @@ class Menu:
         self.user_name_val = self.user_name.get_value()
         self.client_id = self.client.get_unique_id(game_id=self.lobby_id_val).player_id
         self.client.add_player(player_id=self.client_id, name=self.user_name_val, game_id=self.lobby_id_val)
-        print(f"My lobby number {self.lobby_id_val}")
         self.menu.disable()
 
     def set_lobby_id_and_start(self):

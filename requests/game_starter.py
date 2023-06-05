@@ -17,7 +17,7 @@ def draw(cl: Client, reg: Register):
     run_game(player_id, name, game_id, reg, vms, vmh, vmb)  # Пока вот так вот рисуем...
 
 
-def send(reg: Register, delay=1):
+def send(reg: Register, delay=0.1):
     reg.run(delay)
 
 
