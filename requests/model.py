@@ -64,12 +64,15 @@ class ControlToken:
 
 class Player:
     def __init__(self, values: (int, str)):
-        self.caste = None
-        self.battle_tokens = []
-        self.control_tokens = []
-        self.active = []
-        self.player_id = values[0]
-        self.name = values[1]
+        self.caste = None  # class Caste
+        self.battle_tokens = []  # list BattleTokens
+        self.control_tokens = []  # list ControlTokens
+        self.active = []  # list BattleTokens
+        self.player_id = values[0]  # int
+        self.name = values[1]  # str
+
+        self.cards = dict()  # int: id card -> class Card
+        self.ready_to_play = False  # bool
 
     def set_clan(self, my_caste: Caste) -> bool:
         if self.caste is not None:
@@ -142,7 +145,7 @@ class GameState:
         self.move_queue = []  # player_ids
         self.round = 0  # 0 -> putting control_tokens/choose caste 1-5 -> round of game
         self.move_to_next_round = 0
-        self.phase = -1  # in range [1, 3]
+        self.phase = 0  # in range [1, 3]
 
     def this_player_move(self, player_id: int) -> bool:
         return self.move_queue[self.id_move] == player_id
@@ -301,7 +304,7 @@ class Province:
 
 
 class Board:
-    def __init__(self, players: list[(int, str)]):
+    def __init__(self):
         self.players = dict()  # id -> Class Player
         self.state = GameState()
 
@@ -314,14 +317,24 @@ class Board:
         for i in range(30):
             self.all_provinces.append(Province(i))
 
-        for ind in players:
-            self.add_player(Player(ind))
+    def add_player(self, values: (int, str)):
+        if 0 <= len(self.players) <= 4:
+            player = Player(values)
+            self.players[values[0]] = player
+            self.state.add_player(player)
 
-        self.start_game()
-
-    def add_player(self, my_player: Player):
-        self.players[my_player.player_id] = my_player
-        self.state.add_player(my_player)
+    def swap_player_readiness_value(self, player_id: int) -> bool:  # return should start game
+        if player_id not in self.players:
+            return False
+        player = self.players[player_id]
+        player.ready_to_play = not player.ready_to_play
+        all_ready = True
+        for id_player in self.players:
+            all_ready &= self.players[id_player]
+        if len(self.players) > 1 and all_ready:
+            self.start_game()
+            return True
+        return False
 
     def get_free_caste(self) -> list[Caste]:
         free_castes = []
@@ -335,12 +348,15 @@ class Board:
         return free_castes
 
     def set_caste_to_player(self, player_id: int, my_caste: Caste) -> bool:
+        if my_caste not in self.get_free_caste() or player_id not in self.players.keys() or self.state.round != 0:
+            return False
         if not self.players[player_id].set_clan(my_caste):
             return False
         for control_token in self.players[player_id].control_tokens:
             self.control_tokens[control_token.id] = control_token
         for battle_token in self.players[player_id].battle_tokens:
             self.battle_tokens[battle_token.id] = battle_token
+        self.set_control_token_to_capital(my_caste, self.players[player_id].control_tokens[0])
         return True
 
     def get_all_provinces_without_control_token(self) -> list[int]:
@@ -480,6 +496,8 @@ class Board:
         return True
 
     def get_game_winner(self) -> list[int]:
+        if self.state.round != 6:
+            return []
         points = dict()
         for caste in Caste:
             points[caste] = 0
@@ -521,3 +539,35 @@ class Board:
         self.state.round = 0
         count_control_token = {2: 11, 3: 7, 4: 5, 5: 4}
         self.state.move_to_next_round = len(self.state.move_queue) * count_control_token[len(self.state.move_queue)]
+
+
+class Card:
+
+    def __init__(self, card_id: int, owner: int):
+        self.ind = card_id
+        self.owner = owner
+
+    def apply(self, board: Board, player_id: int):
+        pass
+
+
+class CardMovingTowardsTheGoal(Card):  # двжиение к цели. Клан дракона
+
+    def __init__(self, card_id: int, owner: int):
+        super().__init__(card_id, owner)
+        self.caste = Caste.dragon
+
+    def apply(self, board: Board, player_id: int, prov_1=-1, prov_2=-1):
+        # super().apply(board, player_id)
+        player = board.players[player_id]
+        if not (min(prov_1, prov_2) >= 0 and max(prov_2, prov_1) <= 29 and
+                board.all_provinces[prov_1].owning_caste == player.caste and
+                board.all_provinces[prov_2].owning_caste == player.caste and prov_1 != prov_2):
+            return False
+        for prov in [prov_1, prov_2]:
+            for token in player.control_tokens:
+                if token.province_id == -1:
+                    token.province_id = prov
+                    token.visible = True
+                    break
+        return True
