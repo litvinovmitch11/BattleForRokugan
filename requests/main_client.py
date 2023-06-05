@@ -12,103 +12,103 @@ class Client(object):
         self.game_stub = facade_pb2_grpc.FacadeStub(self.channel)
 
     def create_new_game_session(self, game_id=0):
-        print("CreateNewGameSession")
+        # print("CreateNewGameSession")
         return self.game_stub.CreateNewGameSession(facade_pb2.Empty(game_id=game_id))
 
     def get_unique_id(self, game_id=0):
-        print("GetUniqueId")
+        # print("GetUniqueId")
         return self.game_stub.GetUniqueId(facade_pb2.Empty(game_id=game_id))
 
     def add_player(self, player_id, name, game_id=0):
-        print("AddPlayer")
+        # print("AddPlayer")
         return self.game_stub.AddPlayer(facade_pb2.Name(game_id=game_id, player_id=player_id, name=name))
 
     def swap_player_readiness_value(self, player_id, game_id=0):
-        print("SwapPlayerReadinessValue")
+        # print("SwapPlayerReadinessValue")
         return self.game_stub.SwapPlayerReadinessValue(facade_pb2.PlayerId(game_id=game_id, player_id=player_id))
 
     def get_players(self, game_id=0):
-        print("GetPlayers")
+        # print("GetPlayers")
         return self.game_stub.GetPlayers(facade_pb2.Empty(game_id=game_id))
 
     def get_possible_positions_battle_token(self, game_id=0):
-        print("GetPossiblePositionsBattleToken")
+        # print("GetPossiblePositionsBattleToken")
         return self.game_stub.GetPossiblePositionsBattleToken(facade_pb2.Empty(game_id=game_id))
 
     def put_battle_token(self, player_id, my_token_id, province_from_id, province_to_id, game_id=0):
-        print("PutBattleToken")
+        # print("PutBattleToken")
         return self.game_stub.PutBattleToken(
             facade_pb2.Attack(game_id=game_id, player_id=player_id, my_token_id=my_token_id,
                               province_from_id=province_from_id,
                               province_to_id=province_to_id))
 
     def show_someone_reset(self, player_id, game_id=0):
-        print("ShowSomeoneReset")
+        # print("ShowSomeoneReset")
         return self.game_stub.ShowSomeoneReset(facade_pb2.Player(game_id=game_id, player_id=player_id))
 
     def show_active(self, player_id, game_id=0):
-        print("ShowActive")
+        # print("ShowActive")
         return self.game_stub.ShowActive(facade_pb2.Player(game_id=game_id, player_id=player_id))
 
     def round_count(self, game_id=0):
-        print("RoundCountGame")
+        # print("RoundCountGame")
         return self.game_stub.RoundCount(facade_pb2.Empty(game_id=game_id))
 
     def whose_move(self, game_id=0):
-        print("WhoseMove")
+        # print("WhoseMove")
         return self.game_stub.WhoseMove(facade_pb2.Empty(game_id=game_id))
 
     def show_battle_token(self, player_id, my_token_id, game_id=0):
-        print("ShowBattleToken")
+        # print("ShowBattleToken")
         return self.game_stub.ShowBattleToken(game_id=game_id, player_id=player_id, my_token_id=my_token_id)
 
     def get_all_control_token(self, game_id=0):
-        print("GetAllControlToken")
+        # print("GetAllControlToken")
         return self.game_stub.GetAllControlToken(facade_pb2.Empty(game_id=game_id))
 
     def get_all_battle_token(self, game_id=0):
-        print("GetAllBattleToken")
+        # print("GetAllBattleToken")
         return self.game_stub.GetAllBattleToken(facade_pb2.Empty(game_id=game_id))
 
     def use_card(self, player_id, card_id, game_id=0):
-        print("UseCard")
+        # print("UseCard")
         return self.game_stub.UseCard(facade_pb2.Card(game_id=game_id, player_id=player_id, card_id=card_id))
 
     def unused_card(self, player_id, game_id=0):
-        print("UnusedCard")
+        # print("UnusedCard")
         return self.game_stub.UnusedCard(facade_pb2.Player(game_id=game_id, player_id=player_id))
 
     def get_all_my_cards(self, player_id, game_id=0):
-        print("GetAllMyCards")
+        # print("GetAllMyCards")
         return self.game_stub.GetAllMyCards(facade_pb2.Player(game_id=game_id, player_id=player_id))
 
     def do_execution_phase(self, game_id=0):
-        print("DoExecutionPhase")
+        # print("DoExecutionPhase")
         return self.game_stub.DoExecutionPhase(facade_pb2.Empty(game_id=game_id))
 
     def get_winner(self, game_id=0):
-        print("GetWinner")
+        # print("GetWinner")
         return self.game_stub.GetWinner(facade_pb2.Empty(game_id=game_id))
 
     def get_free_caste(self, game_id=0):
-        print("GetFreeCaste")
+        # print("GetFreeCaste")
         return self.game_stub.GetFreeCaste(facade_pb2.Empty(game_id=game_id))
 
     def set_caste(self, player_id, caste, game_id=0):
-        print("SetCaste")
+        # print("SetCaste")
         return self.game_stub.SetCaste(facade_pb2.Caste(game_id=game_id, player_id=player_id, caste=caste))
 
     def get_possible_positions_control_token(self, game_id=0):
-        print("GetPossiblePositionsControlToken")
+        # print("GetPossiblePositionsControlToken")
         return self.game_stub.GetPossiblePositionsControlToken(facade_pb2.Empty(game_id=game_id))
 
     def put_control_token(self, player_id, token_id, province_id, game_id=0):
-        print("PutControlToken")
+        # print("PutControlToken")
         return self.game_stub.PutControlToken(
             facade_pb2.Token(game_id=game_id, player_id=player_id, token_id=token_id, province_id=province_id))
 
     def get_phase(self, game_id=0):
-        print("GetPhase")
+        # print("GetPhase")
         return self.game_stub.GetPhase(facade_pb2.Empty(game_id=game_id))
 
 

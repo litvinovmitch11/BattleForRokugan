@@ -1,13 +1,13 @@
+import pygame
 import pygame_menu
-from game import run_game
 from pygame_menu.examples import create_example_window
 from main_client import Client
 
 
 class Menu:
-    def __init__(self, size=(600, 400), host="localhost", port="8888"):
+    def __init__(self, client_object: Client, size=(600, 400)):
         self.surface = create_example_window('Battle for Rokugan', size)
-        self.client = Client(host=host, port=port)
+        self.client = client_object
         self.client_id = -1
         self.user_name = None
         self.user_name_val = "Bob"
@@ -26,7 +26,7 @@ class Menu:
         self.client_id = self.client.get_unique_id().player_id
         self.client.add_player(self.client_id, self.user_name_val, self.lobby_id_val)
         print(f"My lobby number {self.lobby_id_val}")
-        run_game(self.client_id, self.user_name_val, self.lobby_id_val)
+        self.menu.disable()
 
     def set_lobby_id_and_start(self):
         self.lobby_id_val = int(self.lobby_id.get_value())
@@ -46,8 +46,5 @@ class Menu:
     def run_menu(self):
         self.menu.mainloop(self.surface)
 
-
-if __name__ == "__main__":
-    menu = Menu()
-    menu.create_menu()
-    menu.run_menu()
+    def get_params(self):
+        return self.lobby_id_val, self.client_id, self.user_name_val
