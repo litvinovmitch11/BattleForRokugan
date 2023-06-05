@@ -33,21 +33,25 @@ class ViewModelSystem(ViewModel):
         self.players = None
         self.players_count = None
         self.whose_move = None
+        self.phase = None
 
     def update(self):
         self.round = self.client.get_round(game_id=self.game_id).round
         self.players = self.client.get_players(game_id=self.game_id).name
         self.players_count = len(self.players)
         self.whose_move = self.client.whose_move(game_id=self.game_id).player_id
+        self.phase = self.client.get_phase(game_id=self.game_id).round
 
 
 class ViewModelHand(ViewModel):
     def __init__(self, game_id, player_id, client_object: Client):
         super().__init__(game_id, player_id, client_object)
         self.active = None
+        # self.cards = None
 
     def update(self):
         self.active = self.client.get_player_active(player_id=self.player_id, game_id=self.game_id).token
+        # self.cards = self.client.get_all_cards(game_id=self.game_id).card
 
 
 class ViewModelBoard(ViewModel):

@@ -9,7 +9,7 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
     pygame.init()
 
     win_width = 1540  # Ширина создаваемого окна
-    win_height = 890  # Высота (пока ровно под карту, потом буду менять)
+    win_height = 800  # Высота (пока ровно под карту, потом буду менять)
     display = (win_width, win_height)
 
     screen = pygame.display.set_mode(display, HWSURFACE | DOUBLEBUF | RESIZABLE)
@@ -32,7 +32,7 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
                 player_names_text.append(f1.render(player.name, True, (0, 77, 255)))
 
         now_moves1 = f1.render('Сейчас ходит:', True, (0, 77, 255))
-        now_moves2 = f1.render('Камиль 1', True, (0, 77, 255))
+        now_moves2 = f1.render(f'{vms.whose_move if vms.whose_move else 0}', True, (0, 77, 255))
 
         tokens_text = f1.render('Здесь список токенов (левый - имба)', True, (180, 0, 0))
         round_text = f1.render(f'Раунд {vms.round if vms.round else 0}', True, (0, 77, 255))
