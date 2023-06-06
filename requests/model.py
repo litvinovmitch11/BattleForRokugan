@@ -330,7 +330,7 @@ class Board:
         player.ready_to_play = not player.ready_to_play
         all_ready = True
         for id_player in self.players:
-            all_ready &= self.players[id_player]
+            all_ready &= self.players[id_player].ready_to_play
         if len(self.players) > 1 and all_ready:
             self.start_game()
             return True
