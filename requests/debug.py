@@ -4,18 +4,16 @@ if __name__ == "__main__":
     facade = GameFacade()
     for i in range(3):
         ind = facade.get_unique_id()
-        facade.add_player(ind, "KAm"+str(ind))
-    for i in facade.players:
-        facade.swap_player_readiness_value(i)
-
+        facade.add_player(ind, "KAm" + str(ind))
     p = facade.get_players()
     players = []
-    for el in p:
-        players.append(el[0])
+    for player in p:
+        facade.swap_player_readiness_value(player.player_id)
+        players.append(player.player_id)
     for id_player in players:
         facade.set_caste(id_player, facade.get_free_caste()[0])
 
-    while facade.round_count() != 1:
+    while facade.get_round() != 1:
         was = False
         for i in range(1000):
             for id_player in players:
@@ -28,7 +26,7 @@ if __name__ == "__main__":
     # print(facade.round_count(), facade.board.state.phase)
 
     for q in range(5):
-        print(facade.round_count(), facade.board.state.phase)
+        print(facade.get_round(), facade.board.state.phase)
         for i in range(10):
             for id_player in players:
                 facade.unused_card(id_player)
