@@ -1,0 +1,5 @@
+HOST = 'host'
+PORT = 'port'
+DBNAME = 'dbname'
+DBUSER = 'dbuser'
+DBPWD = 'dbpwd'

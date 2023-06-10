@@ -1,7 +1,9 @@
+from config import *
 from menu import Menu
 from view_model import *
 from game import run_game
 from threading import Thread
+from register import Login
 
 
 def draw(cl: Client, reg: Register):
@@ -22,11 +24,19 @@ def send(reg: Register, delay=0.1):
 
 
 if __name__ == "__main__":
-    client = Client()
+    login_form = Login('Login', 600, 400)
+    login_form.run_form()
+    my_login = login_form.get_login()
+
+    client = Client()  # host=HOST, port=PORT
     register = Register()
 
     t1 = Thread(target=draw, args=(client, register,))
-    t2 = Thread(target=send, args=(register, 1,))
+    t2 = Thread(target=send, args=(register, 1,), daemon=True)
 
     t1.start()
     t2.start()
+
+    t1.join()
+
+    print("LOLOLOLOLOLOLOL")
