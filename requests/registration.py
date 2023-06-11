@@ -1,7 +1,7 @@
 import sys
 from tkinter import *
 from tkinter import ttk
-from generate_pwd import login_user, add_user, get_result
+from registration_client import RegistrationClient
 
 
 class Form(Tk):
@@ -15,8 +15,9 @@ class Form(Tk):
 
 
 class Login(Form):
-    def __init__(self, title, width, height):
+    def __init__(self, client: RegistrationClient, title, width, height):
         super().__init__(title, width, height)
+        self.client = client
         self.login = 'guest'
 
         self.label_title = ttk.Label(self, text="Authorization", font=('Georgia', 40), padding=20)
@@ -36,20 +37,20 @@ class Login(Form):
                                  command=lambda: self.login_user(self.entry_login.get(), self.entry_pwd.get()))
         self.btn_in.pack()
 
-        self.btn_up = ttk.Button(self, text="Sign up", command=create_register_window)
+        self.btn_up = ttk.Button(self, text="Sign up", command=self.create_register_window)
         self.btn_up.pack()
 
         self.btn_guest = ttk.Button(self, text="Enter as guest", command=self.login_as_guest)
         self.btn_guest.pack()
 
-        self.btn_results = ttk.Button(self, text="Show results", command=create_results_window)
+        self.btn_results = ttk.Button(self, text="Show results", command=self.create_results_window)
         self.btn_results.pack()
 
     def login_as_guest(self):
         self.destroy()
 
     def login_user(self, login, password):
-        if login_user(login, password):
+        if self.client.login_user(login, password):
             self.login = login
             self.destroy()
 
@@ -60,10 +61,17 @@ class Login(Form):
         self.protocol('WM_DELETE_WINDOW', sys.exit)
         super().run_form()
 
+    def create_register_window(self):
+        Registration(self.client, 'Register', 400, 300)
+
+    def create_results_window(self):
+        Results(self.client, 'Results', 400, 300)
+
 
 class Registration(Form):
-    def __init__(self, title, width, height):
+    def __init__(self, client: RegistrationClient, title, width, height):
         super().__init__(title, width, height)
+        self.client = client
 
         self.label_title = ttk.Label(self, text="Registration", font=('Georgia', 25), padding=20)
         self.label_title.pack()
@@ -89,13 +97,14 @@ class Registration(Form):
         self.btn_up.pack()
 
     def add_user(self, login, pwd1, pwd2):
-        if add_user(login, pwd1, pwd2):
+        if pwd1 == pwd2 and self.client.add_user(login, pwd1):
             self.destroy()
 
 
 class Results(Form):
-    def __init__(self, title, width, height):
+    def __init__(self, client: RegistrationClient, title, width, height):
         super().__init__(title, width, height)
+        self.client = client
 
         self.label_title = ttk.Label(self, text="Results", font=('Georgia', 25), padding=10)
         self.label_title.pack()
@@ -110,19 +119,11 @@ class Results(Form):
         tree.column("#2", width=100)
         tree.column("#3", width=100)
 
-        for player in get_result():
-            tree.insert("", END, values=player)
+        for player in self.client.get_results().result:
+            tree.insert("", END, values=(player.login, player.games, player.wins))
 
         scroll = ttk.Scrollbar(self)
         scroll.configure(command=tree.yview)
         tree.configure(yscrollcommand=scroll.set)
         scroll.pack(side=RIGHT, fill=BOTH)
         tree.pack()
-
-
-def create_register_window():
-    Registration('Register', 400, 300)
-
-
-def create_results_window():
-    Results('Results', 400, 300)

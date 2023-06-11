@@ -1,9 +1,11 @@
 from config import HOST, PORT
+from facade_client import Client
+from registration_client import RegistrationClient
+from registration import Login
 from menu import Menu
-from view_model import *
+from view_model import Register, ViewModelSystem, ViewModelHand, ViewModelBoard
 from game import run_game
 from threading import Thread
-from register import Login
 
 
 def draw(cl: Client, reg: Register):
@@ -23,7 +25,16 @@ def send(reg: Register, delay=0.1):
     reg.run(delay)
 
 
-def game_run(host='localhost', port='8888'):
+def registration_window_run(host='localhost', port='8889'):
+    client = RegistrationClient(host=host, port=port)
+
+    login_form = Login(client, 'Login', 600, 400)
+    login_form.run_form()
+
+    return login_form.get_login()
+
+
+def game_window_run(host='localhost', port='8888'):
     result = []
 
     client = Client(host=host, port=port)
@@ -41,10 +52,8 @@ def game_run(host='localhost', port='8888'):
 
 
 if __name__ == "__main__":
-    login_form = Login('Login', 600, 400)
-    login_form.run_form()
-    my_login = login_form.get_login()
+    my_login = registration_window_run()
 
-    winner = game_run()  # host=HOST, port=PORT
+    winner = game_window_run()  # host=HOST, port=PORT
 
     print(f"Game over! My login: {my_login}... Winner: {winner}")

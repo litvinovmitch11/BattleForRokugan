@@ -1,6 +1,6 @@
 import pygame_menu
 from pygame_menu.examples import create_example_window
-from main_client import Client
+from facade_client import Client
 
 
 class Menu:
