@@ -1,3 +1,5 @@
+import hashlib
+import os
 from config import *
 import psycopg2
 
@@ -10,13 +12,15 @@ def check_pwd(salt, key, pwd):
     pass
 
 
-def add_user(login, password1, password2):
-    if login.strip() != '' and login.strip() != 'guest' and password1 == password2 and password1.strip() != '':
+def add_user(login, password):
+    login = login.strip()
+    password = password.strip()
+    if login != '' and login != 'guest' and password != '':
         with psycopg2.connect(dbname=DBNAME, user=DBUSER, password=DBPWD, host=HOST) as conn:
             with conn.cursor() as cursor:
                 cursor.execute(f"select * from client.players where client.players.login='{login}';")
                 if not cursor.rowcount:
-                    salt, key = encode_pwd(password1)
+                    salt, key = encode_pwd(password)
                     cursor.execute(f"insert into client.players values ('{login}', '{salt}', '{key}', 0, 0);")
                     return True
     return False

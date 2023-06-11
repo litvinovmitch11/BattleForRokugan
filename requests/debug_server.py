@@ -1,4 +1,4 @@
-from main_client import Client
+from facade_client import Client
 from view_model import Game
 from all_include import Caste
 
