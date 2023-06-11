@@ -4,12 +4,11 @@ from map import *
 from view_model import *
 from tokens import ControlToken, BattleToken
 
-
 def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh: ViewModelHand, vmb: ViewModelBoard):
     pygame.init()
 
     win_width = 1540  # Ширина создаваемого окна
-    win_height = 800  # Высота (пока ровно под карту, потом буду менять)
+    win_height = 900  # Высота (пока ровно под карту, потом буду менять)
     display = (win_width, win_height)
 
     screen = pygame.display.set_mode(display, HWSURFACE | DOUBLEBUF | RESIZABLE)
@@ -17,31 +16,30 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
     background_image = pygame.image.load('BattleForRokugan_content/bg.jpg')
 
     reg.add(vms)
+
+    input_box1 = InputBox(100, 100, 140, 32)
+    input_box2 = InputBox(100, 300, 140, 32)
+    input_boxes = [input_box1, input_box2]
+    # Надо добавить vmh и vmb в reg, когда начнется 1-й раунд. Сделать это один раз за игру надо
+
+    mapp = Map(screen)
+    # ability = map.PlayersAbility(screen, "unicorn")
+    # game = view_model.Game(game_id, client_id)
+    # pl = view_model.Player(client_id, name)
+    f1 = pygame.font.Font(None, 36)
+    player_names_text = []
+    # game.add_player(client_id, name)
+    if vms.players:
+        for player in vms.players:
+            player_names_text.append(f1.render(player.name, True, (0, 77, 255)))
+
+    now_moves1 = f1.render('Сейчас ходит:', True, (0, 77, 255))
+    now_moves2 = f1.render(f'{vms.whose_move if vms.whose_move else 0}', True, (0, 77, 255))
+    round_text = f1.render(f'Раунд {vms.round if vms.round else 0}', True, (0, 77, 255))
+    count_of_players = f1.render(f'Игроков: {vms.players_count if vms.players_count else 0}', True, (0, 77, 255))
+
+    clock = pygame.time.Clock()
     while True:
-        # Надо добавить vmh и vmb в reg, когда начнется 1-й раунд. Сделать это один раз за игру надо
-
-        mapp = Map(screen)
-        # ability = map.PlayersAbility(screen, "unicorn")
-        # game = view_model.Game(game_id, client_id)
-        # pl = view_model.Player(client_id, name)
-        f1 = pygame.font.Font(None, 36)
-        player_names_text = []
-        # game.add_player(client_id, name)
-        if vms.players:
-            for player in vms.players:
-                player_names_text.append(f1.render(player.name, True, (0, 77, 255)))
-
-        now_moves1 = f1.render('Сейчас ходит:', True, (0, 77, 255))
-        now_moves2 = f1.render(f'{vms.whose_move if vms.whose_move else 0}', True, (0, 77, 255))
-
-        tokens_text = f1.render('Здесь список токенов (левый - имба)', True, (180, 0, 0))
-        round_text = f1.render(f'Раунд {vms.round if vms.round else 0}', True, (0, 77, 255))
-        count_of_players = f1.render(f'Игроков: {vms.players_count if vms.players_count else 0}', True, (0, 77, 255))
-
-        clock = pygame.time.Clock()
-        input_box1 = InputBox(100, 100, 140, 32)
-        input_box2 = InputBox(100, 300, 140, 32)
-        input_boxes = [input_box1, input_box2]
 
         pygame.event.pump()
         event = pygame.event.wait()
@@ -54,22 +52,24 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
+            print(event)
             for box in input_boxes:
                 box.handle_event(event)
 
         for box in input_boxes:
             box.update()
+
         for box in input_boxes:
             box.draw(screen)
         mapp.output()
-        # for token in game.battle_tokens:
-        #     BattleToken(screen, token.caste, token.visible, token.typee, token.power, token.prov_from,
-        #                 token.prov_to).output()
-        # for token in game.control_tokens:
-        #     ControlToken(screen, token.caste, token.visible, token.prov)
-        # for token in pl.battle_tokens:
-        #     BattleToken(screen, token.caste, token.visible, token.typee, token.power, token.prov_from,
-        #                 token.prov_to).output()
+        # for token in vmb.battle_tokens:
+        #   BattleToken(screen, token.caste, token.visible, token.typee, token.power, token.prov_from,
+        #              token.prov_to).output()
+        # for token in vmb.control_tokens:
+        #    ControlToken(screen, token.caste, token.visible, token.prov)
+        # for token in vmh.active:
+        #   BattleToken(screen, token.caste, token.visible, token.typee, token.power, token.prov_from,
+        #              token.prov_to).output()
         PlayersAbility(screen, "crane").output()
 
         screen.blit(count_of_players, (10, 200))
@@ -81,7 +81,6 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
             nameCnt += 1
         screen.blit(now_moves1, (10, 400))
         screen.blit(now_moves2, (10, 430))
-        screen.blit(tokens_text, (500, 700))
         bt_in_province = []
         ct_in_province = []
 
@@ -117,9 +116,10 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
 
         pygame.display.flip()
 
-        # screen.blit(bg, (0, 0))  # Каждую итерацию необходимо всё перерисовывать
         pygame.display.update()  # обновление и вывод всех изменений на экран
-        clock.tick(200)
+        clock.tick(1)
+
+
 # run()
 
 
