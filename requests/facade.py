@@ -18,7 +18,10 @@ class GameFacade:
         return self.board.swap_player_readiness_value(player_id)
 
     def get_players(self) -> list[Player]:  # id, name, readiness value  !!! add readiness value !!!
-        return [*self.board.players.values()]
+        return list(self.board.players.values())
+
+    def get_all_special_tokens(self) -> list[(int, SpecialTokenType)]:  # (province_id, SpecialTokenType)
+        return self.board.get_special_tokens()
 
     def get_possible_positions_battle_token(self) -> list[list[int]]:
         # attack from id_1 to id_2 (1 - if can, 0 - else). if id_1 == id_2 -> can protect
@@ -58,15 +61,14 @@ class GameFacade:
     def get_all_battle_token(self) -> list[BattleToken]:
         return self.board.get_all_battle_token()
 
-    def use_card(self, player_id) -> bool:
-        return self.board.used_card(player_id)
+    def use_card(self, player_id, card_id: int, *data) -> bool:  # add card_id !!!
+        return self.board.used_card(player_id, card_id, *data)
 
     def unused_card(self, player_id: int) -> bool:
         return self.board.unused_card(player_id)
 
-    def get_all_cards(self):  # -> list[Card]:  !!!! Теперь не принимаем player_id !!!!
-        # card will include not soon
-        pass
+    def get_all_cards(self) -> list[Card]:  # !!!! Теперь не принимаем player_id !!!!
+        return list(self.board.all_card.values())
 
     def do_execution_phase(self) -> bool:
         return self.board.execution_phase()
