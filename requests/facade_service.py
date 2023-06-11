@@ -30,7 +30,7 @@ class FacadeService(pb2_grpc.FacadeServicer):
 
     def GetPlayers(self, request, context):
         list_int = pb2.ListName(
-            name=[pb2.Name(player_id=item[0], name=item[1], readiness=item[2]) for item in
+            name=[pb2.Name(player_id=item.player_id, name=item.name, readiness=item.ready_to_play) for item in
                   self.games[request.game_id].get_players()])
         return list_int
 

@@ -17,7 +17,7 @@ def draw(cl: Client, reg: Register):
     vms = ViewModelSystem(game_id=game_id, player_id=player_id, client_object=cl)
     vmh = ViewModelHand(game_id=game_id, player_id=player_id, client_object=cl)
     vmb = ViewModelBoard(game_id=game_id, player_id=player_id, client_object=cl)
-
+    reg.add(vms)
     run_game(player_id, name, game_id, reg, vms, vmh, vmb)  # Пока вот так вот рисуем...
 
 
@@ -25,23 +25,20 @@ def send(reg: Register, delay=0.1):
     reg.run(delay)
 
 
-def registration_window_run(host='localhost', port='8889'):
-    client = RegistrationClient(host=host, port=port)
-
-    login_form = Login(client, 'Login', 600, 400)
+def registration_window_run(client: RegistrationClient):
+    login_form = Login(client)
     login_form.run_form()
 
-    return login_form.get_login()
+    return login_form.login
 
 
-def game_window_run(host='localhost', port='8888'):
+def game_window_run(client: Client):
     result = []
 
-    client = Client(host=host, port=port)
     register = Register()
 
     t1 = Thread(target=draw, args=(client, register,))
-    t2 = Thread(target=send, args=(register, 1,), daemon=True)
+    t2 = Thread(target=send, args=(register,), daemon=True)
 
     t1.start()
     t2.start()
@@ -52,8 +49,11 @@ def game_window_run(host='localhost', port='8888'):
 
 
 if __name__ == "__main__":
-    my_login = registration_window_run()
+    reg_client = RegistrationClient()
+    my_login = registration_window_run(reg_client)
 
-    winner = game_window_run()  # host=HOST, port=PORT
+    game_client = Client()
+    winner = game_window_run(game_client)
 
-    print(f"Game over! My login: {my_login}... Winner: {winner}")
+    if my_login != "login":
+        reg_client.update_result(my_login, True)

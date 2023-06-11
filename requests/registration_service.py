@@ -21,5 +21,5 @@ class RegistrationService(pb2_grpc.RegistrationServicer):
         return list_res
 
     def UpdateResult(self, request, context):
-        generate_pwd.upd_result(request.login, request.final)
+        generate_pwd.upd_result(request.login, request.win)
         return pb2.Empty()

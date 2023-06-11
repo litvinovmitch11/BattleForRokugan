@@ -15,7 +15,7 @@ class Form(Tk):
 
 
 class Login(Form):
-    def __init__(self, client: RegistrationClient, title, width, height):
+    def __init__(self, client: RegistrationClient, title='Login', width=600, height=400):
         super().__init__(title, width, height)
         self.client = client
         self.login = 'guest'
@@ -47,15 +47,14 @@ class Login(Form):
         self.btn_results.pack()
 
     def login_as_guest(self):
-        self.destroy()
+        self.withdraw()
+        self.quit()
 
     def login_user(self, login, password):
-        if self.client.login_user(login, password):
+        if self.client.login_user(login, password).key:
             self.login = login
-            self.destroy()
-
-    def get_login(self):
-        return self.login
+            self.withdraw()
+            self.quit()
 
     def run_form(self):
         self.protocol('WM_DELETE_WINDOW', sys.exit)
@@ -97,8 +96,10 @@ class Registration(Form):
         self.btn_up.pack()
 
     def add_user(self, login, pwd1, pwd2):
-        if pwd1 == pwd2 and self.client.add_user(login, pwd1):
-            self.destroy()
+        if pwd1 == pwd2:
+            if self.client.add_user(login, pwd1).key:
+                self.withdraw()
+                self.quit()
 
 
 class Results(Form):
