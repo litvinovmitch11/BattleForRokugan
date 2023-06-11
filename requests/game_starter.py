@@ -56,4 +56,4 @@ if __name__ == "__main__":
     winner = game_window_run(game_client)
 
     if my_login != "login":
-        reg_client.update_result(my_login, True)
+        reg_client.update_result(my_login, False)

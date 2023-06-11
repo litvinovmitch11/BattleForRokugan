@@ -9,6 +9,7 @@ class Form(Tk):
         super().__init__()
         self.title(title)
         self.geometry(f"{width}x{height}")
+        self.protocol("WM_DELETE_WINDOW", lambda: sys.exit)
 
     def run_form(self):
         self.mainloop()
@@ -56,10 +57,6 @@ class Login(Form):
             self.withdraw()
             self.quit()
 
-    def run_form(self):
-        self.protocol('WM_DELETE_WINDOW', sys.exit)
-        super().run_form()
-
     def create_register_window(self):
         Registration(self.client, 'Register', 400, 300)
 
@@ -67,7 +64,21 @@ class Login(Form):
         Results(self.client, 'Results', 400, 300)
 
 
-class Registration(Form):
+def dismiss(window):
+    window.grab_release()
+    window.destroy()
+
+
+class TopWindow(Toplevel):
+    def __init__(self, title, width, height):
+        super().__init__()
+        self.title(title)
+        self.geometry(f"{width}x{height}")
+        self.protocol("WM_DELETE_WINDOW", lambda: dismiss(self))
+        self.grab_set()
+
+
+class Registration(TopWindow):
     def __init__(self, client: RegistrationClient, title, width, height):
         super().__init__(title, width, height)
         self.client = client
@@ -98,11 +109,10 @@ class Registration(Form):
     def add_user(self, login, pwd1, pwd2):
         if pwd1 == pwd2:
             if self.client.add_user(login, pwd1).key:
-                self.withdraw()
-                self.quit()
+                dismiss(self)
 
 
-class Results(Form):
+class Results(TopWindow):
     def __init__(self, client: RegistrationClient, title, width, height):
         super().__init__(title, width, height)
         self.client = client
