@@ -1,6 +1,7 @@
+import sys
 from tkinter import *
 from tkinter import ttk
-from generate_pwd import login_user, add_user
+from generate_pwd import login_user, add_user, get_result
 
 
 class Form(Tk):
@@ -41,6 +42,9 @@ class Login(Form):
         self.btn_guest = ttk.Button(self, text="Enter as guest", command=self.login_as_guest)
         self.btn_guest.pack()
 
+        self.btn_results = ttk.Button(self, text="Show results", command=create_results_window)
+        self.btn_results.pack()
+
     def login_as_guest(self):
         self.destroy()
 
@@ -51,6 +55,10 @@ class Login(Form):
 
     def get_login(self):
         return self.login
+
+    def run_form(self):
+        self.protocol('WM_DELETE_WINDOW', sys.exit)
+        super().run_form()
 
 
 class Registration(Form):
@@ -85,5 +93,36 @@ class Registration(Form):
             self.destroy()
 
 
+class Results(Form):
+    def __init__(self, title, width, height):
+        super().__init__(title, width, height)
+
+        self.label_title = ttk.Label(self, text="Results", font=('Georgia', 25), padding=10)
+        self.label_title.pack()
+
+        columns = ("Login", "Games", "Wins")
+        tree = ttk.Treeview(self, columns=columns, show="headings")
+        tree.heading("Login", text="Login", anchor=W)
+        tree.heading("Games", text="Games", anchor=W)
+        tree.heading("Wins", text="Wins", anchor=W)
+
+        tree.column("#1", width=175)
+        tree.column("#2", width=100)
+        tree.column("#3", width=100)
+
+        for player in get_result():
+            tree.insert("", END, values=player)
+
+        scroll = ttk.Scrollbar(self)
+        scroll.configure(command=tree.yview)
+        tree.configure(yscrollcommand=scroll.set)
+        scroll.pack(side=RIGHT, fill=BOTH)
+        tree.pack()
+
+
 def create_register_window():
     Registration('Register', 400, 300)
+
+
+def create_results_window():
+    Results('Results', 400, 300)

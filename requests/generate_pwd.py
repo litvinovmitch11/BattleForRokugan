@@ -37,8 +37,7 @@ def get_result():
         with connection.cursor() as cur:
             cur.execute(
                 f"select login, games_cnt, wins_cnt from client.players order by games_cnt desc, wins_cnt desc, login;")
-            for item in cur:
-                print(item)
+            return cur.fetchall()
 
 
 def upd_result(login, result: bool):

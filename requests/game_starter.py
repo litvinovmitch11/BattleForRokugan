@@ -1,4 +1,4 @@
-from config import *
+from config import HOST, PORT
 from menu import Menu
 from view_model import *
 from game import run_game
@@ -12,9 +12,9 @@ def draw(cl: Client, reg: Register):
     menu.run_menu()
 
     game_id, player_id, name = menu.get_params()
-    vms = ViewModelSystem(game_id=game_id, player_id=player_id, client_object=client)
-    vmh = ViewModelHand(game_id=game_id, player_id=player_id, client_object=client)
-    vmb = ViewModelBoard(game_id=game_id, player_id=player_id, client_object=client)
+    vms = ViewModelSystem(game_id=game_id, player_id=player_id, client_object=cl)
+    vmh = ViewModelHand(game_id=game_id, player_id=player_id, client_object=cl)
+    vmb = ViewModelBoard(game_id=game_id, player_id=player_id, client_object=cl)
 
     run_game(player_id, name, game_id, reg, vms, vmh, vmb)  # Пока вот так вот рисуем...
 
@@ -23,12 +23,10 @@ def send(reg: Register, delay=0.1):
     reg.run(delay)
 
 
-if __name__ == "__main__":
-    login_form = Login('Login', 600, 400)
-    login_form.run_form()
-    my_login = login_form.get_login()
+def game_run(host='localhost', port='8888'):
+    result = []
 
-    client = Client()  # host=HOST, port=PORT
+    client = Client(host=host, port=port)
     register = Register()
 
     t1 = Thread(target=draw, args=(client, register,))
@@ -39,4 +37,14 @@ if __name__ == "__main__":
 
     t1.join()
 
-    print("LOLOLOLOLOLOLOL")
+    return result
+
+
+if __name__ == "__main__":
+    login_form = Login('Login', 600, 400)
+    login_form.run_form()
+    my_login = login_form.get_login()
+
+    winner = game_run()  # host=HOST, port=PORT
+
+    print(f"Game over! My login: {my_login}... Winner: {winner}")
