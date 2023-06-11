@@ -28,7 +28,7 @@ class PlayersAbility:
         self.screen.blit(self.image, self.rect)
 
 
-class Button:
+'''class Button:
     def __init__(self, surface, color, x, y, length, height, width, text, text_color):
         self.surface = surface
         self.color = color
@@ -73,14 +73,33 @@ class Button:
                     if mouse[1] < self.rect.bottomright[1]:
                         print("Some button was pressed!")
                         return True
-                    else:
-                        return False
-                else:
-                    return False
-            else:
-                return False
+        return False
+'''
+
+class Button:
+    def __init__(self, screen, width, height):
+        self.screen = screen
+        self.width = width
+        self.height = height
+        self.inactive_clr = (13, 162, 58)
+        self.active_clr = (23, 204, 58)
+    def draw(self, x, y, message, action=None):
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+
+        if x < mouse[0] < x + self.width:
+            if y < mouse[1] < y + self.height:
+                pygame.draw.rect(self.screen, self.active_clr , (x,y, self.width, self.height))
+
+                if click[0] == 1:
+                    print("Done")
+                    pygame.draw.rect(self.screen, (255,160,122), (x, y, self.width, self.height))
+                    pygame.time.delay(300)
+                    if action is not None:
+                        action()
         else:
-            return False
+            pygame.draw.rect(self.screen, self.inactive_clr , (x, y, self.width, self.height))
+
 
 COLOR_INACTIVE = pygame.Color('lightskyblue3')
 COLOR_ACTIVE = pygame.Color('dodgerblue2')
@@ -123,7 +142,5 @@ class InputBox:
         self.rect.w = width
 
     def draw(self, screen):
-        # Blit the text.
         screen.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
-        # Blit the rect.
         pygame.draw.rect(screen, self.color, self.rect, 2)

@@ -17,9 +17,11 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
 
     reg.add(vms)
 
-    input_box1 = InputBox(100, 100, 140, 32)
-    input_box2 = InputBox(100, 300, 140, 32)
-    input_boxes = [input_box1, input_box2]
+    input_box1 = InputBox(1300, 400, 70, 32)
+    input_box2 = InputBox(1300, 460, 70, 32)
+    input_box3 = InputBox(1300, 520, 70, 32)
+
+    input_boxes = [input_box1, input_box2, input_box3]
     # Надо добавить vmh и vmb в reg, когда начнется 1-й раунд. Сделать это один раз за игру надо
 
     mapp = Map(screen)
@@ -111,8 +113,8 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
         BT2 = BattleToken(screen, "unicorn", "open", "infantry", 1, 0, 1)
         bt_in_province.append(BT2)
 
-        test_button = Button(screen, (50, 205, 50), 20, 500, 200, 30, 100, "aboba", (255, 255, 255))
-        test_button.create_button()
+        test_button = Button(screen, 100, 40)
+        test_button.draw(1300, 570, "Apply")
 
         pygame.display.flip()
 
