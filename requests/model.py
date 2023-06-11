@@ -1,4 +1,3 @@
-import base64
 import random
 from all_include import *
 
@@ -50,6 +49,12 @@ class BattleToken:
     def make_visible(self):
         self.visible = True
 
+    def to_reset(self):
+        self.on_board = (-1, -1)
+        self.in_reset = True
+        self.in_active = False
+        self.visible = True
+
 
 class ControlToken:
     def __init__(self, caste: Caste, power: int, ind: int):
@@ -61,6 +66,10 @@ class ControlToken:
 
     def make_visible(self):
         self.visible = True
+
+    def to_reset(self):
+        self.province_id = -1
+        self.visible = False
 
 
 class Player:
@@ -75,7 +84,7 @@ class Player:
         self.cards = dict()  # int: id card -> class Card
         self.ready_to_play = False  # bool
 
-    def set_clan(self, my_caste: Caste) -> bool:
+    def set_caste(self, my_caste: Caste) -> bool:
         if self.caste is not None:
             return False
         self.caste = my_caste
@@ -108,7 +117,7 @@ class Player:
     def take_control_token(self):
         global token_id
         power = 2 if self.caste == Caste.crab else 1
-        for i in range(30):
+        for i in range(150):
             self.control_tokens.append(ControlToken(self.caste, power, token_id))
             token_id += 1
 
@@ -312,6 +321,8 @@ class Province:
 
     def set_boost_to_winner(self, caste: Caste, control_token: ControlToken):
         if self.owning_caste == Caste.none or self.owning_caste != caste:
+            for c_t in self.control_tokens:
+                c_t.to_reset()
             self.control_tokens.clear()
             self.owning_caste = caste
             control_token.province_id = self.ind
@@ -348,7 +359,7 @@ class Board:
                 if prov.caste == Caste.crab:
                     card = CardAccessToTheSea()
                 if prov.caste == Caste.crane:
-                    pass
+                    card = CardDiplomaticMission()
                 if prov.caste == Caste.lion:
                     card = CardGloriousBattle()
                 if prov.caste == Caste.phoenix:
@@ -400,7 +411,7 @@ class Board:
     def set_caste_to_player(self, player_id: int, my_caste: Caste) -> bool:
         if my_caste not in self.get_free_caste() or player_id not in self.players.keys() or self.state.round != 0:
             return False
-        if not self.players[player_id].set_clan(my_caste):
+        if not self.players[player_id].set_caste(my_caste):
             return False
         for control_token in self.players[player_id].control_tokens:
             self.control_tokens[control_token.id] = control_token
@@ -513,10 +524,14 @@ class Board:
                     should_play = True
             if inside and should_play:
                 province.owning_caste = Caste.none
+                for token in province.battle_outside + province.battle_inside + province.protection_battle_token:
+                    token.to_reset()
                 province.battle_inside = []
                 province.battle_outside = []
-                province.control_tokens = []
                 province.protection_battle_token = []
+                for token in province.control_tokens:
+                    token.to_reset()
+                province.control_tokens = []
                 province.special_tokens = [SpecialTokenType.scorched_earth]
                 for i in range(31):
                     have_land_way[i][province.ind] = 0
@@ -527,13 +542,14 @@ class Board:
             for token in province.protection_battle_token:
                 if token.type == TokenType.diplomacy and province.owning_caste == token.caste:
                     province.special_tokens.append(SpecialTokenType.shrine)
+                    for my_token in province.battle_inside + province.protection_battle_token:
+                        my_token.to_reset()
                     province.battle_inside = []
                     province.protection_battle_token = []
 
         # do all battle
         for province in self.all_provinces:
             winner = province.get_winner()
-            used = False
             if winner != Caste.none:
                 for player in self.players.values():
                     if player.caste == winner:  # find winner
@@ -649,6 +665,74 @@ class Board:
         self.state.round = 0
         count_control_token = {2: 11, 3: 7, 4: 5, 5: 4}
         self.state.move_to_next_round = len(self.state.move_queue) * count_control_token[len(self.state.move_queue)]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class Card:
@@ -854,7 +938,7 @@ class CardDiplomaticMission(Card):  # Дипломатическая мисси�
 
     def __init__(self):
         super().__init__(7)
-        self.caste = Caste.lion
+        self.caste = Caste.crane
         self.data = [CardData.province, CardData.province]
         # any_province_not_shadow, any_province_not_shadow
 
