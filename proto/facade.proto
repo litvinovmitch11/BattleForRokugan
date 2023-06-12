@@ -7,32 +7,25 @@ service Facade{
   rpc GetUniqueId(Empty) returns (PlayerId){}
   rpc AddPlayer(Name) returns (Key){}
   rpc WhoseMove(Empty) returns (Player){}
-
   rpc GetFreeCaste(Empty) returns (ListCaste){}
-
   rpc GetPlayers(Empty) returns (ListName){}
+  rpc GetPhase(Empty) returns (Round){}
+  rpc GetRound(Empty) returns (Round){}
   rpc GetPossiblePositionsBattleToken(Empty) returns (Map){}
+  rpc GetPossiblePositionsControlToken(Empty) returns (ListPositionsControlTokens){}
   rpc GetAllBattleToken(Empty) returns (ListBattleTokens){}
   rpc GetAllControlToken(Empty) returns (ListControlTokens){}
   rpc GetAllSpecialToken(Empty) returns (ListSpecialTokens){}
-  rpc GetPossiblePositionsControlToken(Empty) returns (ListPositionsControlTokens){}
-
-  rpc GetPhase(Empty) returns (Round){}
-  rpc GetRound(Empty) returns (Round){}
   rpc GetAllCards(Empty) returns (ListCards){}
+  rpc SwapPlayerReadinessValue(PlayerId) returns (Key){}
   rpc GetSomeoneReset(Player) returns (ListBattleTokens){}
   rpc GetPlayerActive(Player) returns (ListBattleTokens){}
-
-  rpc DoExecutionPhase(Empty) returns (Key){}
-
-  rpc SwapPlayerReadinessValue(PlayerId) returns (Key){}
   rpc SetCaste(Caste) returns (Key){}
   rpc UseCard(CardForUse) returns (Key){}
+  rpc GetWinner(Empty) returns (Players){}
   rpc UnusedCard(Player) returns (Key){}
   rpc PutBattleToken(Attack) returns (Key){}
   rpc PutControlToken(Put) returns (Key){}
-
-  rpc GetWinner(Empty) returns (Players){}
 }
 
 message SuperEmpty {}

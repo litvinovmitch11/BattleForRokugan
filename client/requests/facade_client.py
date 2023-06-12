@@ -64,9 +64,6 @@ class Client:
     def get_all_cards(self, game_id):
         return self.game_stub.GetAllCards(facade_pb2.Player(game_id=game_id))
 
-    def do_execution_phase(self, game_id):
-        return self.game_stub.DoExecutionPhase(facade_pb2.Empty(game_id=game_id))
-
     def get_winner(self, game_id):
         return self.game_stub.GetWinner(facade_pb2.Empty(game_id=game_id))
 

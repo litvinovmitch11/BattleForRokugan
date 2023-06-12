@@ -116,7 +116,7 @@ class FacadeService(pb2_grpc.FacadeServicer):
         return list_tokens
 
     def UseCard(self, request, context):
-        result = {"key": self.games[request.game_id].use_card(request.player_id, request.card_id, *request.values)}
+        result = {"key": self.games[request.game_id].use_card(request.player_id, request.card_id, request.values)}
         return pb2.Key(**result)
 
     def UnusedCard(self, request, context):
@@ -133,10 +133,6 @@ class FacadeService(pb2_grpc.FacadeServicer):
                          used=card.used)
                 for card in self.games[request.game_id].get_all_card()])
         return list_cards
-
-    def DoExecutionPhase(self, request, context):
-        self.games[request.game_id].do_execution_phase()
-        return pb2.Empty()
 
     def GetWinner(self, request, context):
         self.games[request.game_id].get_winner()

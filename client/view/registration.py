@@ -25,7 +25,7 @@ class Login(Form):
         self.label_title = ttk.Label(self, text="Authorization", font=('Georgia', 40), padding=20)
         self.label_title.pack()
 
-        self.label_login = ttk.Label(self, text="Login", font=())
+        self.label_login = ttk.Label(self, text="Login")
         self.label_login.pack()
         self.entry_login = ttk.Entry(self)
         self.entry_login.pack()
