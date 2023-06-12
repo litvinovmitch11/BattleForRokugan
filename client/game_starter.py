@@ -63,5 +63,5 @@ if __name__ == "__main__":
     game_client = Client(HOST, PORTGM)
     winner = game_window_run(game_client)
 
-    if my_login != "login":
+    if my_login != "guest":
         reg_client.update_result(my_login, False)
