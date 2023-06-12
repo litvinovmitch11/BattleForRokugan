@@ -79,30 +79,73 @@ class PlayersAbility:
 
 
 class Button:
-    def __init__(self, screen, width, height):
+    def __init__(self, screen, button_type, width, height):
         self.screen = screen
+        self.button_type = button_type
         self.width = width
         self.height = height
         self.inactive_clr = (13, 162, 58)
         self.active_clr = (23, 204, 58)
+        self.message = None
+        self.clicked = False
 
-    def draw(self, x, y, message, action=None):
+    def draw(self,x, y, action=None):
+        def print_text():
+            f1 = pygame.font.Font(None, 36)
+            color = (0, 77, 255)
+            if self.button_type == 'ReadyButton':
+                if self.clicked:
+                    return f1.render('Ready', True, color)
+                return f1.render('Not ready', True, color)
+            elif self.button_type == 'ApplyButton':
+                return f1.render('Apply', True, color)
+            elif self.button_type == 'ChooseCrab':
+                if not self.clicked:
+                    return f1.render('Choose Crab', True, color)
+                return f1.render('', True, color)
+            elif self.button_type == 'ChooseCrane':
+                if not self.clicked:
+                    return f1.render('Choose Crane', True, color)
+                return f1.render('', True, color)
+            elif self.button_type == 'ChooseDragon':
+                if not self.clicked:
+                    return f1.render('Choose Dragon', True, color)
+                return f1.render('', True, color)
+            elif self.button_type == 'ChooseLion':
+                if not self.clicked:
+                    return f1.render('Choose Lion', True, color)
+                return f1.render('', True, color)
+            elif self.button_type == 'ChoosePhoenix':
+                if not self.clicked:
+                    return f1.render('Choose Phoenix', True, color)
+                return f1.render('', True, color)
+            elif self.button_type == 'ChooseScorpion':
+                if not self.clicked:
+                    return f1.render('Choose Scorpion', True, color)
+                return f1.render('', True, color)
+            elif self.button_type == 'ChooseUnicorn':
+                if not self.clicked:
+                    return f1.render('Choose Unicorn', True, color)
+                return f1.render('', True, color)
+
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
-
+        self.message = print_text()
         if x < mouse[0] < x + self.width:
             if y < mouse[1] < y + self.height:
                 pygame.draw.rect(self.screen, self.active_clr, (x, y, self.width, self.height))
-
+                self.screen.blit(self.message, (x, y))
                 if click[0] == 1:
-                    print("Done")
+                    self.clicked = True
                     pygame.draw.rect(self.screen, (255, 160, 122), (x, y, self.width, self.height))
+                    self.screen.blit(self.message, (x, y))
                     pygame.time.delay(300)
-                    if action is not None:
-                        action()
+                    #if action is not None:
+                      #  action()
         else:
-            pygame.draw.rect(self.screen, self.inactive_clr, (x, y, self.width, self.height))
-
+            if not self.clicked:
+                pygame.draw.rect(self.screen, self.inactive_clr, (x, y, self.width, self.height))
+                self.screen.blit(self.message, (x, y))
 
 COLOR_INACTIVE = pygame.Color('lightskyblue3')
 COLOR_ACTIVE = pygame.Color('dodgerblue2')

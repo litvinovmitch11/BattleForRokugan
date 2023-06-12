@@ -9,7 +9,7 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
     pygame.init()
 
     win_width = 1540  # Ширина создаваемого окна
-    win_height = 800  # Высота (пока ровно под карту, потом буду менять)
+    win_height = 900  # Высота (пока ровно под карту, потом буду менять)
     display = (win_width, win_height)
 
     screen = pygame.display.set_mode(display, HWSURFACE | DOUBLEBUF | RESIZABLE)
@@ -75,7 +75,7 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
         #              token.prov_to).output()
         PlayersAbility(screen, "crane").output()
 
-        screen.blit(count_of_players, (10, 200))
+        screen.blit(count_of_players, (10, 280))
 
         screen.blit(round_text, (10, 20))
         nameCnt = 0
@@ -114,8 +114,29 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
         BT2 = BattleToken(screen, "unicorn", "open", "infantry", 1, 0, 1)
         bt_in_province.append(BT2)
 
-        test_button = Button(screen, 100, 40)
-        test_button.draw(1300, 570, "Apply")
+        ApplyButton = Button(screen, 'ApplyButton', 100, 40)
+        ApplyButton.draw(1300, 570)
+        if ApplyButton.clicked == True: #вывод токена по заданным параметрам в трех текстовиках после нажания Apply
+            BT_to_place_taken = vmh.active[input_box1.text]
+            BT_to_place = BattleToken(screen, BT_to_place_taken.caste, "close", BT_to_place_taken.typee,
+                                      BT_to_place_taken.power, input_box2.text, input_box3.text)
+            BT_to_place.output()
+        ReadyButton = Button(screen, 'ReadyButton', 150, 40)
+        ReadyButton.draw(100, 700)
+        ChooseCrab = Button(screen, 'ChooseCrab', 200, 40)
+        ChooseCrab.draw(1300, 10)
+        ChooseCrane = Button(screen, 'ChooseCrane', 200, 40)
+        ChooseCrane.draw(1300, 60)
+        ChooseDragon = Button(screen, 'ChooseDragon', 200, 40)
+        ChooseDragon.draw(1300, 110)
+        ChooseLion = Button(screen, 'ChooseLion', 200, 40)
+        ChooseLion.draw(1300, 160)
+        ChoosePhoenix = Button(screen, 'ChoosePhoenix', 200, 40)
+        ChoosePhoenix.draw(1300, 210)
+        ChooseScorpion = Button(screen, 'ChooseScorpion', 200, 40)
+        ChooseScorpion.draw(1300, 260)
+        ChooseUnicorn = Button(screen, 'ChooseUnicorn', 200, 40)
+        ChooseUnicorn.draw(1300, 310)
 
         pygame.display.flip()
 
