@@ -14,11 +14,12 @@ service Facade{
   rpc GetPossiblePositionsBattleToken(Empty) returns (Map){}
   rpc GetAllBattleToken(Empty) returns (ListBattleTokens){}
   rpc GetAllControlToken(Empty) returns (ListControlTokens){}
+  rpc GetAllSpecialToken(Empty) returns (ListSpecialTokens){}
   rpc GetPossiblePositionsControlToken(Empty) returns (ListPositionsControlTokens){}
 
   rpc GetPhase(Empty) returns (Round){}
   rpc GetRound(Empty) returns (Round){}
-  rpc GetAllCards(Empty) returns (Empty){} // not soon
+  rpc GetAllCards(Empty) returns (ListCards){}
   rpc GetSomeoneReset(Player) returns (ListBattleTokens){}
   rpc GetPlayerActive(Player) returns (ListBattleTokens){}
 
@@ -26,10 +27,10 @@ service Facade{
 
   rpc SwapPlayerReadinessValue(PlayerId) returns (Key){}
   rpc SetCaste(Caste) returns (Key){}
-  rpc UseCard(Card) returns (Key){}
+  rpc UseCard(CardForUse) returns (Key){}
   rpc UnusedCard(Player) returns (Key){}
   rpc PutBattleToken(Attack) returns (Key){}
-  rpc PutControlToken(Token) returns (Key){}
+  rpc PutControlToken(Put) returns (Key){}
 
   rpc GetWinner(Empty) returns (Players){}
 }
@@ -122,10 +123,25 @@ message ListControlTokens {
   repeated ControlToken token = 2;
 }
 
+message Data {
+  int32 game_id = 1;
+  string data = 2;
+}
+
 message Card {
   int32 game_id = 1;
   int32 player_id = 2;
   int32 card_id = 3;
+  string caste = 4;
+  repeated Data data = 5;
+  bool used = 6;
+}
+
+message CardForUse {
+  int32 game_id = 1;
+  int32 player_id = 2;
+  int32 card_id = 3;
+  repeated int32 values = 4;
 }
 
 message Players {
@@ -154,4 +170,26 @@ message Token {
   int32 player_id = 2;
   int32 token_id = 3;
   int32 province_id = 4;
+}
+
+message ListCards {
+  int32 game_id = 1;
+  repeated Card card = 2;
+}
+
+message SpecialToken {
+  int32 game_id = 1;
+  string token = 2;
+  int32 province_id = 3;
+}
+
+message ListSpecialTokens {
+  int32 game_id = 1;
+  repeated SpecialToken token = 2;
+}
+
+message Put {
+  int32 game_id = 1;
+  int32 player_id = 2;
+  int32 province_id = 3;
 }

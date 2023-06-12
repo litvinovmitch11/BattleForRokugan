@@ -1,6 +1,7 @@
 import sys
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
 from registration_client import RegistrationClient
 
 
@@ -52,10 +53,15 @@ class Login(Form):
         self.quit()
 
     def login_user(self, login, password):
-        if self.client.login_user(login, password).key:
-            self.login = login
-            self.withdraw()
-            self.quit()
+        try:
+            if self.client.login_user(login, password).key:
+                self.login = login
+                self.withdraw()
+                self.quit()
+            else:
+                messagebox.showwarning("Warning", "Unknown login or wrong password!")
+        except:
+            messagebox.showerror("Error", "DataBase connection lost... Try to login as a guest...")
 
     def create_register_window(self):
         Registration(self.client, 'Register', 400, 300)
@@ -107,9 +113,18 @@ class Registration(TopWindow):
         self.btn_up.pack()
 
     def add_user(self, login, pwd1, pwd2):
-        if pwd1 == pwd2:
-            if self.client.add_user(login, pwd1).key:
-                dismiss(self)
+        try:
+            if pwd1 == pwd2:
+                if self.client.add_user(login, pwd1).key:
+                    dismiss(self)
+                else:
+                    messagebox.showwarning("Warning",
+                                           "Password and login can't be empty! Login can't be 'guest'!\n"
+                                           "Probably a user with this login exists")
+            else:
+                messagebox.showwarning("Warning", "Passwords doesn't equal!")
+        except:
+            messagebox.showerror("Error", "DataBase connection lost... Try to login as a guest...")
 
 
 class Results(TopWindow):
@@ -129,10 +144,11 @@ class Results(TopWindow):
         tree.column("#1", width=175)
         tree.column("#2", width=100)
         tree.column("#3", width=100)
-
-        for player in self.client.get_results().result:
-            tree.insert("", END, values=(player.login, player.games, player.wins))
-
+        try:
+            for player in self.client.get_results().result:
+                tree.insert("", END, values=(player.login, player.games, player.wins))
+        except:
+            messagebox.showerror("Error", "DataBase connection lost... Restart client and try again...")
         scroll = ttk.Scrollbar(self)
         scroll.configure(command=tree.yview)
         tree.configure(yscrollcommand=scroll.set)

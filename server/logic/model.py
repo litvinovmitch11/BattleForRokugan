@@ -118,7 +118,7 @@ class Player:
     def take_control_token(self):
         global token_id
         power = 2 if self.caste == Caste.crab else 1
-        for i in range(150):
+        for i in range(130):
             self.control_tokens.append(ControlToken(self.caste, power, token_id))
             token_id += 1
 
@@ -186,6 +186,7 @@ class GameState:
         self.round += 1
         # if round == 6 cringe
         self.phase = 1
+        self.id_move = random.randint(0, len(self.move_queue) - 1)
         self.move_to_next_round = len(self.move_queue)
         # for used/unused cards
 
@@ -466,12 +467,10 @@ class Board:
             # !!! do execution phase. IMPORTANT !!!
         return True
 
-    def put_on_board_control_token(self, player_id: int, control_token_id: int, province_id: int) -> bool:
-        if control_token_id not in self.control_tokens.keys():
+    def put_on_board_control_token(self, player_id: int, province_id: int) -> bool:  # only when round = 0 (preparation)
+        if player_id not in self.players:
             return False
-        my_control_token = self.control_tokens[control_token_id]
-        if self.players[player_id].caste != my_control_token.caste or my_control_token.province_id != -1:
-            return False
+        my_control_token = self.players[player_id].get_free_control_token()
         for item in self.all_provinces[province_id].control_tokens:
             if item.caste == my_control_token.caste:
                 my_control_token.visible = True
@@ -666,74 +665,6 @@ class Board:
         self.state.round = 0
         count_control_token = {2: 11, 3: 7, 4: 5, 5: 4}
         self.state.move_to_next_round = len(self.state.move_queue) * count_control_token[len(self.state.move_queue)]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class Card:
