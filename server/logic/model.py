@@ -604,7 +604,7 @@ class Board:
                 ans.append((province.ind, sp_t))
         return ans
 
-    def used_card(self, player_id: int, card_id: int, *data) -> bool:
+    def used_card(self, player_id: int, card_id: int, data: list[int]) -> bool:
         # need redone
         if not self.state.this_player_move(player_id) or self.state.phase != 1:
             return False
@@ -676,7 +676,7 @@ class Card:
         self.data = []
         self.used = False
 
-    def apply(self, board: Board, player_id: int, *data) -> bool:
+    def apply(self, board: Board, player_id: int, data: list[int]) -> bool:
         if player_id not in board.players or self.owner != player_id or not board.state.this_player_move(player_id) or \
                 board.state.phase != 1:
             return False
@@ -704,7 +704,7 @@ class CardMovingTowardsTheGoal(Card):  # двжиение к цели. Клан 
         self.data = [CardData.province, CardData.province]
         # owning_province, owning_province (not same)
 
-    def apply(self, board: Board, player_id: int, *data) -> bool:
+    def apply(self, board: Board, player_id: int, data: list[int]) -> bool:
         if not super().apply(board, player_id, data):
             return False
         # data contains prov_1_id and prov_2_id
@@ -732,7 +732,7 @@ class CardLightsOfTheUprising(Card):  # Огни восстания. Клан с
         self.data = [CardData.province]
         # province_with_peace
 
-    def apply(self, board: Board, player_id: int, *data) -> bool:
+    def apply(self, board: Board, player_id: int, data: list[int]) -> bool:
         if not super().apply(board, player_id, data):
             return False
         # data contains province_id
@@ -761,7 +761,7 @@ class CardCleansing(Card):  # Очищение. Клан Феникцса. ID=3
         self.data = [CardData.province]
         # province_with_scorched_earth
 
-    def apply(self, board: Board, player_id: int, *data) -> bool:
+    def apply(self, board: Board, player_id: int, data: list[int]) -> bool:
         if not super().apply(board, player_id, data):
             return False
         # data contains province_id
@@ -790,7 +790,7 @@ class CardCulturalExchange(Card):  # Культурный обмен. Клан �
         self.data = [CardData.province, CardData.province]
         # owning_province, other_owning_province
 
-    def apply(self, board: Board, player_id: int, *data) -> bool:
+    def apply(self, board: Board, player_id: int, data: list[int]) -> bool:
         # owning_prov_id, other_owning_prov_id
         if not super().apply(board, player_id, data):
             return False
@@ -829,7 +829,7 @@ class CardAccessToTheSea(Card):  # Выход к морю. Каста краба
         self.data = [CardData.province]
         # mainland_province
 
-    def apply(self, board: Board, player_id: int, *data) -> bool:
+    def apply(self, board: Board, player_id: int, data: list[int]) -> bool:
         # province_id
         if not super().apply(board, player_id, data):
             return False
@@ -852,7 +852,7 @@ class CardGloriousBattle(Card):  # Славная битва. Каста льв�
         self.data = [CardData.province]
         # any_province
 
-    def apply(self, board: Board, player_id: int, *data) -> bool:
+    def apply(self, board: Board, player_id: int, data: list[int]) -> bool:
         # province_id
         if not super().apply(board, player_id, data):
             return False
@@ -874,7 +874,7 @@ class CardDiplomaticMission(Card):  # Дипломатическая мисси�
         self.data = [CardData.province, CardData.province]
         # any_province_not_shadow, any_province_not_shadow
 
-    def apply(self, board: Board, player_id: int, *data) -> bool:
+    def apply(self, board: Board, player_id: int, data: list[int]) -> bool:
         # prov_1_id, prov_2_id
         if not super().apply(board, player_id, data):
             return False
@@ -897,7 +897,7 @@ class CardRichHarvest(Card):  # Богатый урожай. (9, 10, 11) про�
         self.data = [CardData.province]
         # owning_province
 
-    def apply(self, board: Board, player_id: int, *data) -> bool:
+    def apply(self, board: Board, player_id: int, data: list[int]) -> bool:
         # prov_1_id, prov_2_id
         if not super().apply(board, player_id, data):
             return False
@@ -922,7 +922,7 @@ class CardProsperity(Card):  # Процветание. (0, 1, 2) провинц�
         self.data = [CardData.province]
         # any_province_not_shadow
 
-    def apply(self, board: Board, player_id: int, *data) -> bool:
+    def apply(self, board: Board, player_id: int, data: list[int]) -> bool:
         # prov_id
         if not super().apply(board, player_id, data):
             return False
@@ -945,7 +945,7 @@ class CardThePowerOfTerror(Card):  # Власть ужаса. Теневая п�
 
     # owning_province_not_shadow, province_with_special_token, SpecialToken, province_with_special_token, SpecialToken
 
-    def apply(self, board: Board, player_id: int, *data) -> bool:
+    def apply(self, board: Board, player_id: int, data: list[int]) -> bool:
         if player_id not in board.players or self.owner != player_id or not board.state.this_player_move(player_id):
             return False
         if self.used or not (len(data) not in (1, 3, 5)) or type(data[0]) != int or board.state.phase != 2:
@@ -971,7 +971,7 @@ class CardKillingTheWeak(Card):  # Умерщвление слабых. Тене
         self.data = [CardData.battle_token, CardData.battle_token, CardData.battle_token]
         # battle_token_in_active_id, other_battle_token_on_board_id, other_battle_token_on_board_id
 
-    def apply(self, board: Board, player_id: int, *data) -> bool:
+    def apply(self, board: Board, player_id: int, data: list[int]) -> bool:
         if player_id not in board.players or self.owner != player_id or not board.state.this_player_move(player_id):
             return False
         if self.used or len(data) != 3 or type(data[0]) != int or type(data[1]) != int or type(data[2]) != int:

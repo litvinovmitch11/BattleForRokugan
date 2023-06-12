@@ -61,8 +61,8 @@ class GameFacade:
     def get_all_battle_token(self) -> list[BattleToken]:
         return self.board.get_all_battle_token()
 
-    def use_card(self, player_id, card_id: int, *data) -> bool:  # add card_id !!!
-        return self.board.used_card(player_id, card_id, *data)
+    def use_card(self, player_id: int, card_id: int, data: list[int]) -> bool:  # add card_id !!!
+        return self.board.used_card(player_id, card_id, data)
 
     def unused_card(self, player_id: int) -> bool:
         return self.board.unused_card(player_id)
