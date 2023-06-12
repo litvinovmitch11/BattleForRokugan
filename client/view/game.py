@@ -19,7 +19,8 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
     reg.add(vms)
 
     clock = pygame.time.Clock()
-    while True:
+    run = True
+    while run:  # ВНИМАНИЕ!!!!!!!!!!! ВЫХОДИТЬ НАДО ТЕПЕРЬ ЧЕРЕЗ BREAK ЦИКЛА, А НЕ SYS.EXIT!!!!!!!!!!!!!!
 
         input_box1 = InputBox(1300, 400, 70, 32)
         input_box2 = InputBox(1300, 460, 70, 32)
@@ -54,7 +55,7 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
             pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                exit()
+                run = False  # ВНИМАНИЕ!!!!!!!!!!! ВЫХОДИТЬ НАДО ТЕПЕРЬ ЧЕРЕЗ BREAK ЦИКЛА, А НЕ SYS.EXIT!!!!!!!!!!!!!!
             # print(event)
             for box in input_boxes:
                 box.handle_event(event)
@@ -116,7 +117,7 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
 
         ApplyButton = Button(screen, 'ApplyButton', 100, 40)
         ApplyButton.draw(1300, 570)
-        if ApplyButton.clicked == True: #вывод токена по заданным параметрам в трех текстовиках после нажания Apply
+        if ApplyButton.clicked == True:  # вывод токена по заданным параметрам в трех текстовиках после нажания Apply
             BT_to_place_taken = vmh.active[input_box1.text]
             BT_to_place = BattleToken(screen, BT_to_place_taken.caste, "close", BT_to_place_taken.typee,
                                       BT_to_place_taken.power, input_box2.text, input_box3.text)

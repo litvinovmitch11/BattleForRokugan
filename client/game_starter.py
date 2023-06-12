@@ -15,7 +15,7 @@ from game import run_game
 from player_config import HOST, PORTDB, PORTGM
 
 
-def draw(cl: Client, reg: Register):
+def draw(cl: Client, reg: Register, login):
     menu = Menu(cl)
     menu.create_menu()
     menu.run_menu()
@@ -26,6 +26,9 @@ def draw(cl: Client, reg: Register):
     vmb = ViewModelBoard(game_id=game_id, player_id=player_id, client_object=cl)
     reg.add(vms)
     run_game(player_id, name, game_id, reg, vms, vmh, vmb)  # Пока вот так вот рисуем...
+    result = player_id in vms.get_winner()
+    if login != "guest":
+        reg_client.update_result(my_login, result)
 
 
 def send(reg: Register, delay=0.1):
@@ -39,12 +42,11 @@ def registration_window_run(client: RegistrationClient):
     return login_form.login
 
 
-def game_window_run(client: Client):
-    result = []
-
+def game_window_run(client: Client, login):
+    result = False
     register = Register()
 
-    t1 = Thread(target=draw, args=(client, register,))
+    t1 = Thread(target=draw, args=(client, register, login))
     t2 = Thread(target=send, args=(register,), daemon=True)
 
     t1.start()
@@ -60,7 +62,4 @@ if __name__ == "__main__":
     my_login = registration_window_run(reg_client)
 
     game_client = Client()
-    winner = game_window_run(game_client)
-
-    if my_login != "guest":
-        reg_client.update_result(my_login, False)
+    winner = game_window_run(game_client, my_login)

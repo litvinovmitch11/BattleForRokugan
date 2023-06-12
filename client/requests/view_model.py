@@ -45,13 +45,13 @@ class ViewModelSystem(ViewModel):
         self.free_casts = self.client.get_free_caste(game_id=self.game_id).caste
 
     def swap_player_readiness_value(self):
-        self.client.swap_player_readiness_value(player_id=self.player_id, game_id=self.game_id)
+        return self.client.swap_player_readiness_value(player_id=self.player_id, game_id=self.game_id).key
 
     def set_caste(self, caste):
-        self.client.set_caste(player_id=self.player_id, game_id=self.game_id, caste=caste)
+        return self.client.set_caste(player_id=self.player_id, game_id=self.game_id, caste=caste).key
 
     def get_winner(self):
-        return self.client.get_winner(game_id=self.game_id)
+        return self.client.get_winner(game_id=self.game_id).player
 
 
 class ViewModelHand(ViewModel):
@@ -65,20 +65,21 @@ class ViewModelHand(ViewModel):
         self.cards = self.client.get_all_cards(game_id=self.game_id).card
 
     def use_card(self, card_id, values):
-        return self.client.use_card(game_id=self.game_id, player_id=self.player_id, card_id=card_id, values=values)
+        return self.client.use_card(game_id=self.game_id, player_id=self.player_id, card_id=card_id, values=values).key
 
     def unused_card(self):
-        return self.client.unused_card(game_id=self.game_id, player_id=self.player_id)
+        return self.client.unused_card(game_id=self.game_id, player_id=self.player_id).key
 
     def get_someone_reset(self, someone_player_id):
-        return self.client.get_someone_reset(player_id=someone_player_id, game_id=self.game_id)
+        return self.client.get_someone_reset(player_id=someone_player_id, game_id=self.game_id).token
 
     def put_control_token(self, province_id):
-        return self.client.put_control_token(player_id=self.player_id, game_id=self.game_id, province_id=province_id)
+        return self.client.put_control_token(player_id=self.player_id, game_id=self.game_id,
+                                             province_id=province_id).key
 
     def put_battle_token(self, my_token_id, province_from_id, province_to_id):
         return self.client.put_battle_token(player_id=self.player_id, game_id=self.game_id, my_token_id=my_token_id,
-                                            province_from_id=province_from_id, province_to_id=province_to_id)
+                                            province_from_id=province_from_id, province_to_id=province_to_id).key
 
 
 class ViewModelBoard(ViewModel):
