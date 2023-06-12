@@ -116,15 +116,23 @@ class FacadeService(pb2_grpc.FacadeServicer):
         return list_tokens
 
     def UseCard(self, request, context):
-        result = {"key": self.games[request.game_id].use_card(request.player_id, request.card_id)}
+        result = {"key": self.games[request.game_id].use_card(request.player_id, request.card_id, *request.values)}
         return pb2.Key(**result)
 
     def UnusedCard(self, request, context):
         result = {"key": self.games[request.game_id].unused_card(request.player_id)}
         return pb2.Key(**result)
 
-    def GetAllCards(self, request, context):  # Not soon
-        return pb2.Empty()
+    def GetAllCards(self, request, context):
+        list_cards = pb2.ListCards(
+            token=[
+                pb2.Card(player_id=card.owner,
+                         card_id=card.ind,
+                         caste=card.caste.value,
+                         data=[pb2.Data(data=item.value) for item in card.data],
+                         used=card.used)
+                for card in self.games[request.game_id].get_all_card()])
+        return list_cards
 
     def DoExecutionPhase(self, request, context):
         self.games[request.game_id].do_execution_phase()
@@ -149,10 +157,18 @@ class FacadeService(pb2_grpc.FacadeServicer):
         return list_pos_tokens
 
     def PutControlToken(self, request, context):
-        result = {"key": self.games[request.game_id].put_control_token(request.player_id, request.token_id,
-                                                                       request.province_id)}
+        result = {"key": self.games[request.game_id].put_control_token(request.player_id, request.province_id)}
         return pb2.Key(**result)
 
     def GetPhase(self, request, context):
         result = {"round": self.games[request.game_id].get_phase()}
         return pb2.Round(**result)
+
+    def GetAllSpecialToken(self, request, context):
+        list_tokens = pb2.ListBattleTokens(
+            token=[
+                pb2.SpecialToken(token=token[1].value,
+                                 province_id=tokens[0])
+                for tokens in self.games[request.game_id].get_all_special_tokens()]
+        )
+        return list_tokens

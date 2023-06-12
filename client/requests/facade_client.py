@@ -53,8 +53,10 @@ class Client:
     def get_all_battle_token(self, game_id):
         return self.game_stub.GetAllBattleToken(facade_pb2.Empty(game_id=game_id))
 
-    def use_card(self, player_id, card_id, game_id):
-        return self.game_stub.UseCard(facade_pb2.Card(game_id=game_id, player_id=player_id, card_id=card_id))
+    def use_card(self, player_id, card_id, game_id, values):
+        data = facade_pb2.CardForUse(game_id=game_id, player_id=player_id, card_id=card_id)
+        data.values.extend(values)
+        return self.game_stub.UseCard(data)
 
     def unused_card(self, player_id, game_id):
         return self.game_stub.UnusedCard(facade_pb2.Player(game_id=game_id, player_id=player_id))
@@ -77,9 +79,12 @@ class Client:
     def get_possible_positions_control_token(self, game_id):
         return self.game_stub.GetPossiblePositionsControlToken(facade_pb2.Empty(game_id=game_id))
 
-    def put_control_token(self, player_id, token_id, province_id, game_id):
+    def put_control_token(self, player_id, province_id, game_id):
         return self.game_stub.PutControlToken(
-            facade_pb2.Token(game_id=game_id, player_id=player_id, token_id=token_id, province_id=province_id))
+            facade_pb2.Put(game_id=game_id, player_id=player_id, province_id=province_id))
 
     def get_phase(self, game_id):
         return self.game_stub.GetPhase(facade_pb2.Empty(game_id=game_id))
+
+    def get_all_special_tokens(self, game_id):
+        return self.game_stub.GetAllSpecialTokens(facade_pb2.Player(game_id=game_id))
