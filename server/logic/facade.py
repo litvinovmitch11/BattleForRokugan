@@ -11,16 +11,16 @@ class GameFacade:
         self.unique_id += 1
         return self.unique_id
 
-    def add_player(self, player_id: int, name: str) -> list[Player]:  # should rewrite!!!
+    def add_player(self, player_id: int, name: str) -> list[Player]:
         return self.board.add_player((player_id, name))
 
     def swap_player_readiness_value(self, player_id: int) -> bool:  # return True if should start game
         return self.board.swap_player_readiness_value(player_id)
 
-    def get_players(self) -> list[Player]:  # id, name, readiness value  !!! add readiness value !!!
+    def get_players(self) -> list[Player]:
         return list(self.board.players.values())
 
-    def get_all_special_tokens(self) -> list[(int, SpecialTokenType)]:  # (province_id, SpecialTokenType)
+    def get_all_special_tokens(self) -> list[(int, SpecialTokenType)]:
         return self.board.get_special_tokens()
 
     def get_possible_positions_battle_token(self) -> list[list[int]]:
@@ -33,13 +33,13 @@ class GameFacade:
             return False
         return self.board.put_on_board_battle_token(player_id, my_token_id, province_from_id, province_to_id)
 
-    def get_someone_reset(self, player_id: int) -> list[BattleToken]:  # rename (was show)
+    def get_someone_reset(self, player_id: int) -> list[BattleToken]:
         # show players battle_token reset
 
         # return False, if error, list[BattleToken] else
         return self.board.players[player_id].get_reset()
 
-    def get_player_active(self, player_id: int) -> list[BattleToken]:  # rename (was show)
+    def get_player_active(self, player_id: int) -> list[BattleToken]:
         return self.board.players[player_id].get_active()
         # all token have status. Some on board (face up/down), some free, some used.
         pass
@@ -87,7 +87,7 @@ class GameFacade:
     def get_possible_positions_control_token(self) -> list[int]:
         return self.board.get_possible_position_to_put_control_token()
 
-    def put_control_token(self, player_id: int, control_token_id: int, province_id: int) -> bool:
+    def put_control_token(self, player_id: int, province_id: int) -> bool:  # del control_token_id
         if not self.board.state.this_player_move(player_id) or self.board.state.round != 0:
             return False
-        return self.board.put_on_board_control_token(player_id, control_token_id, province_id)
+        return self.board.put_on_board_control_token(player_id, province_id)

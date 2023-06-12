@@ -1,8 +1,13 @@
+import sys
+
+sys.path.append('../server/logic')
+sys.path.append('../common')
+
 from facade import *
 
 if __name__ == "__main__":
     facade = GameFacade()
-    for i in range(4):
+    for i in range(2):
         ind = facade.get_unique_id()
         facade.add_player(ind, "KAm" + str(ind))
     p = facade.get_players()
@@ -15,9 +20,8 @@ if __name__ == "__main__":
 
     while facade.get_round() != 1:
         id_player = facade.whose_move()
-        c_t = facade.board.players[id_player].get_free_control_token()
-        if facade.put_control_token(id_player, c_t.id, random.randint(0, 29)):
-            print("OK", id_player, c_t.id)
+        if facade.put_control_token(id_player, random.randint(0, 29)):
+            print("OK", id_player)
     # print(facade.round_count(), facade.board.state.phase)
 
     for q in range(5):
