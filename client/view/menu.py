@@ -1,4 +1,6 @@
 import pygame_menu
+import pygame
+import sys
 from pygame_menu.examples import create_example_window
 
 from facade_client import Client
@@ -6,6 +8,7 @@ from facade_client import Client
 
 class Menu:
     def __init__(self, client_object: Client, size=(600, 400)):
+        pygame.font.init()
         self.surface = create_example_window('Battle for Rokugan', size)
         self.client = client_object
         self.client_id = -1
@@ -21,6 +24,23 @@ class Menu:
             width=size[0]
         )
 
+    def create_error_window(self):
+        while True:
+            for i in pygame.event.get():
+                if i.type == pygame.QUIT:
+                    sys.exit()
+            f1 = pygame.font.Font(None, 30)
+            text1 = f1.render('Connection lost...', True, (0, 0, 0))
+            text2 = f1.render('Restart client and try again', True, (0, 0, 0))
+            text3 = f1.render('Possible problems:', True, (0, 0, 0))
+            text4 = f1.render('connection to the server lost, wrong lobby ID, etc...', True, (0, 0, 0))
+            self.surface.fill((192, 192, 192))
+            self.surface.blit(text1, (10, 50))
+            self.surface.blit(text2, (10, 100))
+            self.surface.blit(text3, (10, 150))
+            self.surface.blit(text4, (10, 200))
+            pygame.display.update()
+
     def start_game(self):
         self.user_name_val = self.user_name.get_value()
         self.client_id = self.client.get_unique_id(game_id=self.lobby_id_val).player_id
@@ -29,11 +49,17 @@ class Menu:
 
     def set_lobby_id_and_start(self):
         self.lobby_id_val = int(self.lobby_id.get_value())
-        self.start_game()
+        try:
+            self.start_game()
+        except:
+            self.create_error_window()
 
     def create_lobby_and_start(self):
-        self.lobby_id_val = self.client.create_new_game_session().game_id
-        self.start_game()
+        try:
+            self.lobby_id_val = self.client.create_new_game_session().game_id
+            self.start_game()
+        except:
+            self.create_error_window()
 
     def create_menu(self):
         self.user_name = self.menu.add.text_input('Name: ', default='Bob', maxchar=10)
