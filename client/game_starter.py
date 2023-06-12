@@ -6,7 +6,6 @@ sys.path.append('./requests/')
 sys.path.append('./view/')
 sys.path.append('../resources')
 
-
 from facade_client import Client
 from registration_client import RegistrationClient
 from registration import Login
@@ -57,10 +56,10 @@ def game_window_run(client: Client):
 
 
 if __name__ == "__main__":
-    reg_client = RegistrationClient(HOST, PORTDB)
+    reg_client = RegistrationClient()
     my_login = registration_window_run(reg_client)
 
-    game_client = Client(HOST, PORTGM)
+    game_client = Client()
     winner = game_window_run(game_client)
 
     if my_login != "guest":
