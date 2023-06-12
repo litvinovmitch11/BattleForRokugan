@@ -9,7 +9,7 @@ class Form(Tk):
         super().__init__()
         self.title(title)
         self.geometry(f"{width}x{height}")
-        self.protocol("WM_DELETE_WINDOW", lambda: sys.exit)
+        self.protocol("WM_DELETE_WINDOW", lambda: sys.exit())
 
     def run_form(self):
         self.mainloop()

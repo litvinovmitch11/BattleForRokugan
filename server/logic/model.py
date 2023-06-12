@@ -1,4 +1,5 @@
 import random
+
 from all_include import *
 
 token_id = 0

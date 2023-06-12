@@ -1,7 +1,8 @@
 import hashlib
 import os
-from config import *
 import psycopg2
+
+from server_config import DBNAME, DBUSER, DBPWD, HOST
 
 
 def encode_pwd(pwd):

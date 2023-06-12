@@ -1,10 +1,17 @@
+import sys
 from concurrent import futures
 from threading import Thread
 import grpc
+
+sys.path.append('../common/')
+sys.path.append('./logic/')
+sys.path.append('./requests/')
+
+from server_config import HOST, PORTDB, PORTGM
 import facade_service
+import facade_pb2_grpc as facade_pb2_grpc
 import registration_service
-import facade_pb2_grpc
-import registration_pb2_grpc
+import registration_pb2_grpc as registration_pb2_grpc
 
 
 def game_server(host='localhost', port='8888'):
@@ -32,8 +39,8 @@ def registration_server(host='localhost', port='8889'):
 
 
 if __name__ == '__main__':
-    t1 = Thread(target=game_server, args=())
-    t2 = Thread(target=registration_server, args=())
+    t1 = Thread(target=game_server, args=(HOST, PORTGM))
+    t2 = Thread(target=registration_server, args=(HOST, PORTDB))
 
     t1.start()
     t2.start()

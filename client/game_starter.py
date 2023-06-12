@@ -1,11 +1,19 @@
-from config import HOST, PORT
+import sys
+from threading import Thread
+
+sys.path.append('../common/')
+sys.path.append('./requests/')
+sys.path.append('./view/')
+sys.path.append('../resources')
+
+
 from facade_client import Client
 from registration_client import RegistrationClient
 from registration import Login
 from menu import Menu
 from view_model import Register, ViewModelSystem, ViewModelHand, ViewModelBoard
 from game import run_game
-from threading import Thread
+from player_config import HOST, PORTDB, PORTGM
 
 
 def draw(cl: Client, reg: Register):
@@ -49,10 +57,10 @@ def game_window_run(client: Client):
 
 
 if __name__ == "__main__":
-    reg_client = RegistrationClient()
+    reg_client = RegistrationClient(HOST, PORTDB)
     my_login = registration_window_run(reg_client)
 
-    game_client = Client()
+    game_client = Client(HOST, PORTGM)
     winner = game_window_run(game_client)
 
     if my_login != "login":

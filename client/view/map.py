@@ -2,10 +2,11 @@ import pygame
 
 pygame.init()
 
+
 class Map:
     def __init__(self, screen):
         self.screen = screen
-        self.image = pygame.image.load('BattleForRokugan_content/MAP31.jpg')
+        self.image = pygame.image.load('../resources/MAP31.jpg')
         self.image = pygame.transform.rotate(self.image, 90)
         self.rect = self.image.get_rect()
         self.screen_rect = screen.get_rect()
@@ -21,7 +22,7 @@ class PlayersAbility:
     def __init__(self, screen, caste):
         self.screen = screen
         self.caste = caste
-        self.image = pygame.image.load(f'BattleForRokugan_content/{caste}_shirm.png')
+        self.image = pygame.image.load(f'../resources/{caste}_shirm.png')
         self.rect = pygame.Rect(1000, 700, 200, 200)
 
     def output(self):
@@ -76,6 +77,7 @@ class PlayersAbility:
         return False
 '''
 
+
 class Button:
     def __init__(self, screen, width, height):
         self.screen = screen
@@ -83,29 +85,31 @@ class Button:
         self.height = height
         self.inactive_clr = (13, 162, 58)
         self.active_clr = (23, 204, 58)
+
     def draw(self, x, y, message, action=None):
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
 
         if x < mouse[0] < x + self.width:
             if y < mouse[1] < y + self.height:
-                pygame.draw.rect(self.screen, self.active_clr , (x,y, self.width, self.height))
+                pygame.draw.rect(self.screen, self.active_clr, (x, y, self.width, self.height))
 
                 if click[0] == 1:
                     print("Done")
-                    pygame.draw.rect(self.screen, (255,160,122), (x, y, self.width, self.height))
+                    pygame.draw.rect(self.screen, (255, 160, 122), (x, y, self.width, self.height))
                     pygame.time.delay(300)
                     if action is not None:
                         action()
         else:
-            pygame.draw.rect(self.screen, self.inactive_clr , (x, y, self.width, self.height))
+            pygame.draw.rect(self.screen, self.inactive_clr, (x, y, self.width, self.height))
 
 
 COLOR_INACTIVE = pygame.Color('lightskyblue3')
 COLOR_ACTIVE = pygame.Color('dodgerblue2')
 FONT = pygame.font.Font(None, 32)
-class InputBox:
 
+
+class InputBox:
 
     def __init__(self, x, y, w, h, text=''):
         self.rect = pygame.Rect(x, y, w, h)
@@ -138,9 +142,9 @@ class InputBox:
 
     def update(self):
         # Resize the box if the text is too long.
-        width = max(200, self.txt_surface.get_width()+10)
+        width = max(200, self.txt_surface.get_width() + 10)
         self.rect.w = width
 
     def draw(self, screen):
-        screen.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
+        screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))
         pygame.draw.rect(screen, self.color, self.rect, 2)

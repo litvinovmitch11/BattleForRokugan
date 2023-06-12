@@ -93,10 +93,9 @@ pos = [
      (350, 150), (320, 120)],  # 29
     [(1000, 270), (1000, 90), (870, 120), (1130, 520), -1, (1090, 470), -1, -1, -1, (950, 360), -1, (820, 240),
      (740, 220), (685, 220), (620, 170), (520, 180), -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-     -1, (320, 70)], # water
-    [(600, 700), (700, 700), (800, 700), (600, 800), (700, 800), (800, 800)] #hand
+     -1, (320, 70)],  # water
+    [(600, 700), (700, 700), (800, 700), (600, 800), (700, 800), (800, 800)]  # hand
 ]
-
 
 bt_in_province = []
 ct_in_province = []
@@ -111,9 +110,9 @@ class BattleToken:
         self.typee = typee
         self.power = power
         if visible == "open":
-            self.image = pygame.image.load(f'BattleForRokugan_content/{caste}_{typee}_{power}.png')
+            self.image = pygame.image.load(f'../resources/{caste}_{typee}_{power}.png')
         else:
-            self.image = pygame.image.load(f'BattleForRokugan_content/{caste}_bt_close.png')
+            self.image = pygame.image.load(f'../resources/{caste}_bt_close.png')
         self.screen = screen
         self.rect = pygame.Rect((pos[prov_from][prov_to])[0], (pos[prov_from][prov_to])[1], self.Token_Width,
                                 self.Token_Height)
@@ -130,7 +129,7 @@ class ControlToken:
         self.Token_Height = 16
         self.caste = caste
         self.status = visible
-        self.image = pygame.image.load(f'BattleForRokugan_content/{caste}_{visible}1.png')
+        self.image = pygame.image.load(f'../resources/{caste}_{visible}1.png')
         self.screen = screen
         self.rect = pygame.Rect((pos[province][province])[0], (pos[province][province])[1], self.Token_Width,
                                 self.Token_Height)

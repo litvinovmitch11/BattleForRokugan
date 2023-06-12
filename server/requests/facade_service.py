@@ -1,8 +1,7 @@
 import facade_pb2 as pb2
 import facade_pb2_grpc as pb2_grpc
-
-from facade import GameFacade
 from all_include import Caste
+from facade import GameFacade
 
 
 class FacadeService(pb2_grpc.FacadeServicer):
