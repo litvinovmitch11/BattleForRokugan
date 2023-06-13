@@ -1,4 +1,6 @@
 from sys import exit
+
+import pygame.time
 from pygame.locals import *
 from map import *
 from view_model import *
@@ -19,9 +21,30 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
     reg.add(vms)
 
     clock = pygame.time.Clock()
+
+    #for pl in vms.players:
+     #   if pl.player_id == client_id:
+      #      my_caste = pl.caste
+    caste_chose_flag = False
+    my_caste = None
+
+    ApplyButton = Button(screen, 'ApplyButton', 100, 40)
+    ReadyButton = Button(screen, 'ReadyButton', 150, 40)
+    ReadyButtons = [ReadyButton]
+
+    ChooseCrab = Button(screen, 'Choose_crab', 200, 40)
+    ChooseCrane = Button(screen, 'Choose_crane', 200, 40)
+    ChooseDragon = Button(screen, 'Choose_dragon', 200, 40)
+    ChooseLion = Button(screen, 'Choose_lion', 200, 40)
+    ChoosePhoenix = Button(screen, 'Choose_phoenix', 200, 40)
+    ChooseScorpion = Button(screen, 'Choose_scorpion', 200, 40)
+    ChooseUnicorn = Button(screen, 'Choose_unicorn', 200, 40)
+    chooseButtons = [ChooseCrab, ChooseCrane, ChooseDragon, ChooseLion, ChoosePhoenix, ChooseScorpion, ChooseUnicorn]
     run = True
     while run:  # ВНИМАНИЕ!!!!!!!!!!! ВЫХОДИТЬ НАДО ТЕПЕРЬ ЧЕРЕЗ BREAK ЦИКЛА, А НЕ SYS.EXIT!!!!!!!!!!!!!!
-
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
         input_box1 = InputBox(1300, 400, 70, 32)
         input_box2 = InputBox(1300, 460, 70, 32)
         input_box3 = InputBox(1300, 520, 70, 32)
@@ -44,6 +67,7 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
         now_moves2 = f1.render(f'{vms.whose_move if vms.whose_move else 0}', True, (0, 77, 255))
         round_text = f1.render(f'Раунд {vms.round if vms.round else 0}', True, (0, 77, 255))
         count_of_players = f1.render(f'Игроков: {vms.players_count if vms.players_count else 0}', True, (0, 77, 255))
+        id = f1.render(f'ID игры: {game_id}', True, (0, 77, 255))
 
         pygame.event.pump()
         event = pygame.event.wait()
@@ -53,18 +77,67 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
                 event.dict['size'], HWSURFACE | DOUBLEBUF | RESIZABLE)
             screen.blit(pygame.transform.scale(background_image, event.dict['size']), (0, 0))
             pygame.display.flip()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False  # ВНИМАНИЕ!!!!!!!!!!! ВЫХОДИТЬ НАДО ТЕПЕРЬ ЧЕРЕЗ BREAK ЦИКЛА, А НЕ SYS.EXIT!!!!!!!!!!!!!!
-            # print(event)
+
+
+
+        if vms.round == -1:
+            if len(ReadyButtons) > 0:
+                ReadyButton.draw(100, 700)
+                if ReadyButton.clicked:
+                    ReadyButtons = []
+                    vms.swap_player_readiness_value()
+
+        if vms.round == 0:
+            if not caste_chose_flag:
+                num_of_but = 0
+                for caste in vms.free_casts:
+                    but = Button(screen, f'Choose_{caste}', 200, 40)
+                    but.draw(1300, 10 + 50 * num_of_but)
+                    if but.clicked:
+                        #print("this is", vms.set_caste(but.button_type[7:]))
+                        pygame.time.delay(500)
+                        if vms.set_caste(but.button_type[7:]):
+                            my_caste = but.button_type[7:]
+                            caste_chose_flag = True
+                            break
+                    num_of_but += 1
+            else:
+                if vms.whose_move == client_id:
+                    apply_button = Button(screen, 'ApplyButton', 100, 40)
+                    input_box = InputBox(1300, 400, 70, 32)
+                    for event in pygame.event.get():
+                        input_box.handle_event(event)
+                    input_box.draw(screen)
+                    input_box.update()
+                    apply_button.draw(1300, 450)
+                    if apply_button.clicked:
+                        if not input_box.text.isdigit() or 0 <= int(input_box.text.isdigit()) <= 29:
+                            input_box.text = '0'
+                        else:
+                            if vmh.put_control_token(int(input_box.text)):
+                                ControlToken(screen, my_caste, "close", int(input_box.text)).output()
+
+        if vms.round == 1:
+             # ВНИМАНИЕ!!!!!!!!!!! ВЫХОДИТЬ НАДО ТЕПЕРЬ ЧЕРЕЗ BREAK ЦИКЛА, А НЕ SYS.EXIT!!!!!!!!!!!!!!
+                # print(event)
+            for event in pygame.event.get():
+                for box in input_boxes:
+                    box.handle_event(event)
+
             for box in input_boxes:
-                box.handle_event(event)
+                box.update()
 
-        for box in input_boxes:
-            box.update()
+            for box in input_boxes:
+                box.draw(screen)
 
-        for box in input_boxes:
-            box.draw(screen)
+            if vms.whose_move == client_id:
+                 ApplyButton.draw(1300, 570)
+                 if ApplyButton.clicked:  # вывод токена по заданным параметрам в трех текстовиках после нажания Apply
+                     BT_to_place_taken = vmh.active[input_box1.text]
+                     BT_to_place = BattleToken(screen, BT_to_place_taken.caste, "close", BT_to_place_taken.typee,
+                                               BT_to_place_taken.power, input_box2.text, input_box3.text)
+                     BT_to_place.output()
+
         mapp.output()
         # for token in vmb.battle_tokens:
         #   BattleToken(screen, token.caste, token.visible, token.typee, token.power, token.prov_from,
@@ -77,7 +150,7 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
         PlayersAbility(screen, "crane").output()
 
         screen.blit(count_of_players, (10, 280))
-
+        screen.blit(id, (10, 800))
         screen.blit(round_text, (10, 20))
         nameCnt = 0
         for name in player_names_text:
@@ -115,29 +188,7 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
         BT2 = BattleToken(screen, "unicorn", "open", "infantry", 1, 0, 1)
         bt_in_province.append(BT2)
 
-        ApplyButton = Button(screen, 'ApplyButton', 100, 40)
-        ApplyButton.draw(1300, 570)
-        if ApplyButton.clicked == True:  # вывод токена по заданным параметрам в трех текстовиках после нажания Apply
-            BT_to_place_taken = vmh.active[input_box1.text]
-            BT_to_place = BattleToken(screen, BT_to_place_taken.caste, "close", BT_to_place_taken.typee,
-                                      BT_to_place_taken.power, input_box2.text, input_box3.text)
-            BT_to_place.output()
-        ReadyButton = Button(screen, 'ReadyButton', 150, 40)
-        ReadyButton.draw(100, 700)
-        ChooseCrab = Button(screen, 'ChooseCrab', 200, 40)
-        ChooseCrab.draw(1300, 10)
-        ChooseCrane = Button(screen, 'ChooseCrane', 200, 40)
-        ChooseCrane.draw(1300, 60)
-        ChooseDragon = Button(screen, 'ChooseDragon', 200, 40)
-        ChooseDragon.draw(1300, 110)
-        ChooseLion = Button(screen, 'ChooseLion', 200, 40)
-        ChooseLion.draw(1300, 160)
-        ChoosePhoenix = Button(screen, 'ChoosePhoenix', 200, 40)
-        ChoosePhoenix.draw(1300, 210)
-        ChooseScorpion = Button(screen, 'ChooseScorpion', 200, 40)
-        ChooseScorpion.draw(1300, 260)
-        ChooseUnicorn = Button(screen, 'ChooseUnicorn', 200, 40)
-        ChooseUnicorn.draw(1300, 310)
+
 
         pygame.display.flip()
 

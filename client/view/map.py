@@ -1,5 +1,4 @@
 import pygame
-
 pygame.init()
 
 
@@ -99,31 +98,31 @@ class Button:
                 return f1.render('Not ready', True, color)
             elif self.button_type == 'ApplyButton':
                 return f1.render('Apply', True, color)
-            elif self.button_type == 'ChooseCrab':
+            elif self.button_type == 'Choose_crab':
                 if not self.clicked:
                     return f1.render('Choose Crab', True, color)
                 return f1.render('', True, color)
-            elif self.button_type == 'ChooseCrane':
+            elif self.button_type == 'Choose_crane':
                 if not self.clicked:
                     return f1.render('Choose Crane', True, color)
                 return f1.render('', True, color)
-            elif self.button_type == 'ChooseDragon':
+            elif self.button_type == 'Choose_dragon':
                 if not self.clicked:
                     return f1.render('Choose Dragon', True, color)
                 return f1.render('', True, color)
-            elif self.button_type == 'ChooseLion':
+            elif self.button_type == 'Choose_lion':
                 if not self.clicked:
                     return f1.render('Choose Lion', True, color)
                 return f1.render('', True, color)
-            elif self.button_type == 'ChoosePhoenix':
+            elif self.button_type == 'Choose_phoenix':
                 if not self.clicked:
                     return f1.render('Choose Phoenix', True, color)
                 return f1.render('', True, color)
-            elif self.button_type == 'ChooseScorpion':
+            elif self.button_type == 'Choose_scorpion':
                 if not self.clicked:
                     return f1.render('Choose Scorpion', True, color)
                 return f1.render('', True, color)
-            elif self.button_type == 'ChooseUnicorn':
+            elif self.button_type == 'Choose_unicorn':
                 if not self.clicked:
                     return f1.render('Choose Unicorn', True, color)
                 return f1.render('', True, color)
@@ -154,7 +153,7 @@ FONT = pygame.font.Font(None, 32)
 
 class InputBox:
 
-    def __init__(self, x, y, w, h, text=''):
+    def __init__(self, x, y, w, h, text='0'):
         self.rect = pygame.Rect(x, y, w, h)
         self.color = COLOR_INACTIVE
         self.text = text
@@ -173,10 +172,10 @@ class InputBox:
             self.color = COLOR_ACTIVE if self.active else COLOR_INACTIVE
         if event.type == pygame.KEYDOWN:
             if self.active:
-                if event.key == pygame.K_RETURN:
-                    print(self.text)
-                    self.text = ''
-                elif event.key == pygame.K_BACKSPACE:
+                #if event.key == pygame.K_RETURN:
+                 #   print(self.text)
+                  #  self.text = ''
+                if event.key == pygame.K_BACKSPACE:
                     self.text = self.text[:-1]
                 else:
                     self.text += event.unicode
