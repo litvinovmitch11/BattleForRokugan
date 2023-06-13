@@ -86,7 +86,7 @@ class Player:
         self.ready_to_play = False  # bool
 
     def set_caste(self, my_caste: Caste) -> bool:
-        if self.caste is not None:
+        if self.caste is not Caste.none:
             return False
         self.caste = my_caste
         self.take_battle_token()
