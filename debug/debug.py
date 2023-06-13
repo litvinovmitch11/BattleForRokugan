@@ -8,7 +8,7 @@ from facade import *
 
 if __name__ == "__main__":
     facade = GameFacade()
-    for i in range(2):
+    for i in range(4):
         ind = facade.get_unique_id()
         facade.add_player(ind, "KAm" + str(ind), "JOVNO", "piska")
     p = facade.get_players()
@@ -57,4 +57,5 @@ if __name__ == "__main__":
         while facade.get_phase() == 3:
             for id_p in players:
                 facade.swap_player_readiness_value(id_p)
+    print(facade.get_score())
     print(facade.get_winner())
