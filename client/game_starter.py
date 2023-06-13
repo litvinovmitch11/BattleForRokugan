@@ -49,10 +49,9 @@ def registration_window_run(client: RegistrationClient):
 
 
 def game_window_run(client: Client, login='guest', password=''):
-    result = False
     register = Register()
 
-    t1 = Thread(target=draw, args=(client, register, login, password))
+    t1 = Thread(target=draw, args=(client, register, login, password,))
     t2 = Thread(target=send, args=(register,), daemon=True)
 
     t1.start()
@@ -60,12 +59,10 @@ def game_window_run(client: Client, login='guest', password=''):
 
     t1.join()
 
-    return result
-
 
 if __name__ == "__main__":
-    reg_client = RegistrationClient()
+    reg_client = RegistrationClient(HOST, PORTDB)
     my_login, my_password = registration_window_run(reg_client)
 
-    game_client = Client()
-    winner = game_window_run(game_client, my_login, my_password)
+    game_client = Client(HOST, PORTGM)
+    game_window_run(game_client, my_login, my_password)
