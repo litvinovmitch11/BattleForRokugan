@@ -7,8 +7,10 @@ from facade_client import Client
 
 
 class Menu:
-    def __init__(self, client_object: Client, size=(600, 400)):
+    def __init__(self, client_object: Client, login, password, size=(600, 400)):
         pygame.font.init()
+        self.login = login
+        self.password = password
         self.surface = create_example_window('Battle for Rokugan', size)
         self.client = client_object
         self.client_id = -1
@@ -44,7 +46,8 @@ class Menu:
     def start_game(self):
         self.user_name_val = self.user_name.get_value()
         self.client_id = self.client.get_unique_id(game_id=self.lobby_id_val).player_id
-        self.client.add_player(player_id=self.client_id, name=self.user_name_val, game_id=self.lobby_id_val)
+        self.client.add_player(player_id=self.client_id, name=self.user_name_val, game_id=self.lobby_id_val,
+                               login=self.login, password=self.password)
         self.menu.disable()
 
     def set_lobby_id_and_start(self):

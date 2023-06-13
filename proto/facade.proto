@@ -5,7 +5,7 @@ package facade;
 service Facade{
   rpc CreateNewGameSession(SuperEmpty) returns (Empty){}
   rpc GetUniqueId(Empty) returns (PlayerId){}
-  rpc AddPlayer(Name) returns (Key){}
+  rpc AddPlayer(NameLogin) returns (Key){}
   rpc WhoseMove(Empty) returns (Player){}
   rpc GetFreeCaste(Empty) returns (ListCaste){}
   rpc GetPlayers(Empty) returns (ListName){}
@@ -39,17 +39,19 @@ message PlayerId {
   int32 player_id = 2;
 }
 
-message Name {
+message NameLogin {
   int32 game_id = 1;
   int32 player_id = 2;
   string name = 3;
   string caste = 4;
   bool readiness = 5;
+  string login = 6;
+  string password = 7;
 }
 
 message ListName {
   int32 game_id = 1;
-  repeated Name name = 2;
+  repeated NameLogin name = 2;
 }
 
 message List {

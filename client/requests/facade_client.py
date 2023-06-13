@@ -17,8 +17,9 @@ class Client:
     def get_unique_id(self, game_id):
         return self.game_stub.GetUniqueId(facade_pb2.Empty(game_id=game_id))
 
-    def add_player(self, player_id, name, game_id):
-        return self.game_stub.AddPlayer(facade_pb2.Name(game_id=game_id, player_id=player_id, name=name))
+    def add_player(self, player_id, name, game_id, login, password):
+        return self.game_stub.AddPlayer(
+            facade_pb2.NameLogin(game_id=game_id, player_id=player_id, name=name, login=login, password=password))
 
     def swap_player_readiness_value(self, player_id, game_id):
         return self.game_stub.SwapPlayerReadinessValue(facade_pb2.PlayerId(game_id=game_id, player_id=player_id))

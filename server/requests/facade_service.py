@@ -20,7 +20,8 @@ class FacadeService(pb2_grpc.FacadeServicer):
         return pb2.PlayerId(**result)
 
     def AddPlayer(self, request, context):
-        result = {"key": self.games[request.game_id].add_player(request.player_id, request.name)}
+        result = {"key": self.games[request.game_id].add_player(request.player_id, request.name, request.login,
+                                                                request.password)}
         return pb2.Key(**result)
 
     def SwapPlayerReadinessValue(self, request, context):
@@ -29,8 +30,9 @@ class FacadeService(pb2_grpc.FacadeServicer):
 
     def GetPlayers(self, request, context):
         list_int = pb2.ListName(
-            name=[pb2.Name(player_id=item.player_id, name=item.name, readiness=item.ready_to_play,
-                           caste=item.caste.value) for item in self.games[request.game_id].get_players()])
+            name=[pb2.NameLogin(player_id=item.player_id, name=item.name, readiness=item.ready_to_play,
+                                caste=item.caste.value, login=item.login, password='') for item in
+                  self.games[request.game_id].get_players()])
         return list_int
 
     def GetPossiblePositionsBattleToken(self, request, context):
