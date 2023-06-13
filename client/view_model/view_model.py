@@ -29,12 +29,12 @@ class Register:
 class ViewModelSystem(ViewModel):
     def __init__(self, game_id, player_id, client_object: Client):
         super().__init__(game_id, player_id, client_object)
-        self.round = None
-        self.players = None
-        self.players_count = None
-        self.whose_move = None
-        self.phase = None
-        self.free_casts = None
+        self.round = -1
+        self.players = []
+        self.players_count = 0
+        self.whose_move = -1
+        self.phase = -1
+        self.free_casts = []
 
     def update(self):
         self.round = self.client.get_round(game_id=self.game_id).round
@@ -57,8 +57,8 @@ class ViewModelSystem(ViewModel):
 class ViewModelHand(ViewModel):
     def __init__(self, game_id, player_id, client_object: Client):
         super().__init__(game_id, player_id, client_object)
-        self.active = None
-        self.cards = None
+        self.active = []
+        self.cards = []
 
     def update(self):
         self.active = self.client.get_player_active(player_id=self.player_id, game_id=self.game_id).token
@@ -85,11 +85,11 @@ class ViewModelHand(ViewModel):
 class ViewModelBoard(ViewModel):
     def __init__(self, game_id, player_id, client_object: Client):
         super().__init__(game_id, player_id, client_object)
-        self.control_tokens = None
-        self.battle_tokens = None
-        self.special_tokens = None
-        self.possible_position_battle_token = None
-        self.possible_position_control_token = None
+        self.control_tokens = []
+        self.battle_tokens = []
+        self.special_tokens = []
+        self.possible_position_battle_token = []
+        self.possible_position_control_token = []
 
     def update(self):
         self.control_tokens = self.client.get_all_control_token(game_id=self.game_id).token
