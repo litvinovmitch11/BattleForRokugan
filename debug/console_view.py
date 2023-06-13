@@ -49,7 +49,7 @@ class ConsoleDraw:
                          "Затем уберите с поля 2 особых жетона или меньше\n" \
                          "args:    индекс провинции под контролем, индекс провинции с особым жетоном, индекс типа " \
                          "особого жетона (от 0 до 6) (по желанию можно добавить:" \
-                         " индекс провинции с особым жетоном, индекс типа особого жетона (от 0 до 6))\n\n"\
+                         " индекс провинции с особым жетоном, индекс типа особого жетона (от 0 до 6))\n\n" \
                          "id 11:   Умерщвление слабых. (Вы можете сыграть эту карту в начале вашего хода в фазе" \
                          " размещения) Сбросьте жетон битвы из своего актива. В этот ход вы не размещаете " \
                          "жетон битвы. Затем раскройте 2 любых жетона битвы на поле и отправьте в сброс их кланов\n" \
@@ -176,9 +176,11 @@ class ConsoleDraw:
                       f"Province id: {token.province_id}")
             print()
         elif command == '-UC':
-            pass
+            card_id = int(input("Enter card_id:\n"))
+            card_data = list(map(int, input("Enter card data:\n").split()))
+            print(f"Correct? - {self.vmh.use_card(card_id, card_data)}\n")
         elif command == '-UNC':
-            pass
+            print(f"Correct? - {self.vmh.unused_card()}")
 
     def run(self):
         print(self.start_message)

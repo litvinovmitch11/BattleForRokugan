@@ -18,8 +18,8 @@ sys.path.append('../debug')
 from console_view import ConsoleDraw
 
 
-def draw(cl: Client, reg: Register, login):
-    menu = Menu(cl)
+def draw(cl: Client, reg: Register, login, password):
+    menu = Menu(cl, login, password)
     menu.create_menu()
     menu.run_menu()
 
@@ -36,10 +36,6 @@ def draw(cl: Client, reg: Register, login):
     # cd.register()
     # cd.run()
 
-    result = player_id in vms.get_winner()
-    if login != "guest":
-        reg_client.update_result(my_login, result)
-
 
 def send(reg: Register, delay=0.1):
     reg.run(delay)
@@ -49,14 +45,14 @@ def registration_window_run(client: RegistrationClient):
     login_form = Login(client)
     login_form.run_form()
 
-    return login_form.login
+    return login_form.login, login_form.password
 
 
-def game_window_run(client: Client, login):
+def game_window_run(client: Client, login='guest', password=''):
     result = False
     register = Register()
 
-    t1 = Thread(target=draw, args=(client, register, login))
+    t1 = Thread(target=draw, args=(client, register, login, password))
     t2 = Thread(target=send, args=(register,), daemon=True)
 
     t1.start()
@@ -69,7 +65,7 @@ def game_window_run(client: Client, login):
 
 if __name__ == "__main__":
     reg_client = RegistrationClient()
-    my_login = registration_window_run(reg_client)
+    my_login, my_password = registration_window_run(reg_client)
 
     game_client = Client()
-    winner = game_window_run(game_client, my_login)
+    winner = game_window_run(game_client, my_login, my_password)

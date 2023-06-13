@@ -21,6 +21,7 @@ class Login(Form):
         super().__init__(title, width, height)
         self.client = client
         self.login = 'guest'
+        self.password = ''
 
         self.label_title = ttk.Label(self, text="Authorization", font=('Georgia', 40), padding=20)
         self.label_title.pack()
@@ -56,6 +57,7 @@ class Login(Form):
         try:
             if self.client.login_user(login, password).key:
                 self.login = login
+                self.password = password
                 self.withdraw()
                 self.quit()
             else:

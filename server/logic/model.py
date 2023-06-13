@@ -3,37 +3,6 @@ import random
 from all_include import *
 
 token_id = 0
-have_land_way = [[1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                 [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                 [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                 [0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                 [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                 [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                 [0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
 
 class BattleToken:
@@ -74,13 +43,15 @@ class ControlToken:
 
 
 class Player:
-    def __init__(self, values: (int, str)):
+    def __init__(self, values: (int, str, str, str)):
         self.caste = Caste.none  # class Caste
         self.battle_tokens = []  # list BattleTokens
         self.control_tokens = []  # list ControlTokens
         self.active = []  # list BattleTokens
         self.player_id = values[0]  # int
         self.name = values[1]  # str
+        self.login = values[2]  # str
+        self.password = values[3]  # str
 
         self.cards = dict()  # int: id card -> class Card
         self.ready_to_play = False  # bool
@@ -380,7 +351,7 @@ class Board:
             self.all_card[card.ind] = card
             self.all_provinces[prov_id].card_id_inside = card.ind
 
-    def add_player(self, values: (int, str)):
+    def add_player(self, values: (int, str, str, str)):
         if 0 <= len(self.players) <= 4 and self.state.is_adding_players():
             player = Player(values)
             self.players[values[0]] = player
@@ -398,7 +369,7 @@ class Board:
             if self.state.round == -1:
                 self.start_game()
                 return True
-            elif self.state.phase == 3:
+            elif self.state.phase == 3 and 1 <= self.state.round <= 5:
                 self.execution_phase()
                 return True
         return False
@@ -567,6 +538,9 @@ class Board:
         for province in self.all_provinces:
             province.remove_token_after_battles()
         self.state.next_round()
+        if self.state.round == 6:
+            # DERNI
+            pass
         self.can_put_army_token = have_land_way
         for player in self.players.values():
             player.make_active()
@@ -592,10 +566,9 @@ class Board:
 
             for player in self.players.values():
                 if player.caste == owner:
+                    self.all_card[card_id].set_owner(player.player_id)
                     player.cards[card_id] = self.all_card[card_id]
-                    self.all_card[card_id].set_owner(player.player_id)
                     province_with_card.card_id_inside = -1
-                    self.all_card[card_id].set_owner(player.player_id)
                     break
 
     def make_all_battle_tokens_on_board_visible(self):
@@ -943,16 +916,18 @@ class CardProsperity(Card):  # Процветание. (0, 1, 2) провинц�
 class CardThePowerOfTerror(Card):  # Власть ужаса. Теневая провинция вниз. ID=10
 
     def __init__(self):
-        super().__init__(9)
+        super().__init__(10)
         self.data = [CardData.province, CardData.province, CardData.special_token, CardData.province,
                      CardData.special_token]
 
     # owning_province_not_shadow, province_with_special_token, SpecialToken, province_with_special_token, SpecialToken
 
     def apply(self, board: Board, player_id: int, data: list[int]) -> bool:
-        if player_id not in board.players or self.owner != player_id or not board.state.this_player_move(player_id):
+        if self.owner != player_id or not board.state.this_player_move(player_id) or self.used:
             return False
-        if self.used or not (len(data) not in (3, 5)) or not 0 <= data[2] <= 6:
+        if self.used or not (len(data) in [3, 5]) or board.state.phase != 2:
+            return False
+        if not 0 <= data[2] <= 6:
             return False
         sp_ts = [list(SpecialTokenType)[data[2]]]
         if len(data) == 5:
@@ -963,6 +938,8 @@ class CardThePowerOfTerror(Card):  # Власть ужаса. Теневая п�
             prov = board.all_provinces[data[i]]
             if sp_ts[i - 1 - i // 2] not in prov.special_tokens:
                 return False
+        prov = board.all_provinces[data[0]]
+        prov.control_tokens = prov.control_tokens[1:]
         for i in range(1, len(data), 2):
             prov = board.all_provinces[data[i]]
             prov.special_tokens.remove(sp_ts[i - 1 - i // 2])
@@ -977,9 +954,7 @@ class CardKillingTheWeak(Card):  # Умерщвление слабых. Тене
         # battle_token_in_active_id, other_battle_token_on_board_id, other_battle_token_on_board_id
 
     def apply(self, board: Board, player_id: int, data: list[int]) -> bool:
-        if player_id not in board.players or self.owner != player_id or not board.state.this_player_move(player_id):
-            return False
-        if self.used or len(data) != 3 or type(data[0]) != int or type(data[1]) != int or type(data[2]) != int:
+        if self.owner != player_id or not board.state.this_player_move(player_id) or self.used:
             return False
         if board.state.phase != 2:
             return False

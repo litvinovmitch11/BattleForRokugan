@@ -45,9 +45,10 @@ def get_result():
             return cur.fetchall()
 
 
-def upd_result(login, result: bool):
-    with psycopg2.connect(dbname=DBNAME, user=DBUSER, password=DBPWD, host=HOST) as connection:
-        with connection.cursor() as cur:
-            cur.execute(f"update client.players set games_cnt = games_cnt + 1 where login='{login}';")
-            if result:
-                cur.execute(f"update client.players set wins_cnt = wins_cnt + 1 where login='{login}';")
+def upd_result(login, password, result: bool):
+    if login != 'guest' and login_user(login, password):
+        with psycopg2.connect(dbname=DBNAME, user=DBUSER, password=DBPWD, host=HOST) as connection:
+            with connection.cursor() as cur:
+                cur.execute(f"update client.players set games_cnt = games_cnt + 1 where login='{login}';")
+                if result:
+                    cur.execute(f"update client.players set wins_cnt = wins_cnt + 1 where login='{login}';")
