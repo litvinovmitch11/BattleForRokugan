@@ -125,13 +125,13 @@ class FacadeService(pb2_grpc.FacadeServicer):
 
     def GetAllCards(self, request, context):
         list_cards = pb2.ListCards(
-            token=[
+            card=[
                 pb2.Card(player_id=card.owner,
                          card_id=card.ind,
                          caste=card.caste.value,
-                         data=[pb2.Data(data=item.value) for item in card.data],
+                         data=[pb2.Data(data=item) for item in card.data],
                          used=card.used)
-                for card in self.games[request.game_id].get_all_card()])
+                for card in self.games[request.game_id].get_all_cards()])
         return list_cards
 
     def GetWinner(self, request, context):

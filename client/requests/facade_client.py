@@ -62,7 +62,7 @@ class Client:
         return self.game_stub.UnusedCard(facade_pb2.Player(game_id=game_id, player_id=player_id))
 
     def get_all_cards(self, game_id):
-        return self.game_stub.GetAllCards(facade_pb2.Player(game_id=game_id))
+        return self.game_stub.GetAllCards(facade_pb2.Empty(game_id=game_id))
 
     def get_winner(self, game_id):
         return self.game_stub.GetWinner(facade_pb2.Empty(game_id=game_id))
@@ -84,4 +84,4 @@ class Client:
         return self.game_stub.GetPhase(facade_pb2.Empty(game_id=game_id))
 
     def get_all_special_tokens(self, game_id):
-        return self.game_stub.GetAllSpecialTokens(facade_pb2.Player(game_id=game_id))
+        return self.game_stub.GetAllSpecialToken(facade_pb2.Player(game_id=game_id))

@@ -14,6 +14,9 @@ from view_model import Register, ViewModelSystem, ViewModelHand, ViewModelBoard
 from game import run_game
 from player_config import HOST, PORTDB, PORTGM
 
+sys.path.append('../debug')
+from console_view import ConsoleDraw
+
 
 def draw(cl: Client, reg: Register, login):
     menu = Menu(cl)
@@ -24,8 +27,15 @@ def draw(cl: Client, reg: Register, login):
     vms = ViewModelSystem(game_id=game_id, player_id=player_id, client_object=cl)
     vmh = ViewModelHand(game_id=game_id, player_id=player_id, client_object=cl)
     vmb = ViewModelBoard(game_id=game_id, player_id=player_id, client_object=cl)
-    reg.add(vms)
-    run_game(player_id, name, game_id, reg, vms, vmh, vmb)  # Пока вот так вот рисуем...
+
+    # Pygame draw (comment cd and uncomment run_game)
+    run_game(player_id, name, game_id, reg, vms, vmh, vmb)
+
+    # Console draw (comment run_game and uncomment cd)
+    # cd = ConsoleDraw(player_id, name, game_id, reg, vms, vmh, vmb)
+    # cd.register()
+    # cd.run()
+
     result = player_id in vms.get_winner()
     if login != "guest":
         reg_client.update_result(my_login, result)
