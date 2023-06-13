@@ -29,8 +29,8 @@ class FacadeService(pb2_grpc.FacadeServicer):
 
     def GetPlayers(self, request, context):
         list_int = pb2.ListName(
-            name=[pb2.Name(player_id=item.player_id, name=item.name, readiness=item.ready_to_play) for item in
-                  self.games[request.game_id].get_players()])
+            name=[pb2.Name(player_id=item.player_id, name=item.name, readiness=item.ready_to_play,
+                           caste=item.caste.value) for item in self.games[request.game_id].get_players()])
         return list_int
 
     def GetPossiblePositionsBattleToken(self, request, context):

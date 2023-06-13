@@ -93,7 +93,8 @@ class ConsoleDraw:
             for player in self.vms.players:
                 print(f"Name: {player.name}, "
                       f"Player_id: {player.player_id}, "
-                      f"Readiness: {player.readiness}")
+                      f"Readiness: {player.readiness}, "
+                      f"Caste: {player.caste}")
             print()
         elif command == '-SR':
             print(f"All players ready? - {self.vms.swap_player_readiness_value()}\n")
