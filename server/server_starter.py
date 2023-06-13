@@ -4,8 +4,9 @@ from threading import Thread
 import grpc
 
 sys.path.append('../common/')
-sys.path.append('./logic/')
-sys.path.append('./requests/')
+sys.path.append('../server/')
+sys.path.append('../server/model/')
+sys.path.append('../server/requests/')
 
 from server_config import HOST, PORTDB, PORTGM
 import facade_service
@@ -39,8 +40,8 @@ def registration_server(host='localhost', port='8889'):
 
 
 if __name__ == '__main__':
-    t1 = Thread(target=game_server, args=(HOST, PORTGM,))
-    t2 = Thread(target=registration_server, args=(HOST, PORTDB,))
+    t1 = Thread(target=game_server, args=())
+    t2 = Thread(target=registration_server, args=())
 
     t1.start()
     t2.start()

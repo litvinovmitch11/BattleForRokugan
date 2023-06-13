@@ -1,6 +1,6 @@
 import sys
 
-sys.path.append('../server/logic')
+sys.path.append('../server/model')
 sys.path.append('../common')
 sys.path.append('../server')
 

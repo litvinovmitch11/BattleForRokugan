@@ -6,11 +6,14 @@ from server_config import DBNAME, DBUSER, DBPWD, HOST
 
 
 def encode_pwd(pwd):
-    pass
+    salt = os.urandom(32)
+    key = hashlib.pbkdf2_hmac('sha256', pwd.encode('utf-8'), salt, 100000)
+    return salt.hex(), key.hex()
 
 
 def check_pwd(salt, key, pwd):
-    pass
+    new_key = hashlib.pbkdf2_hmac('sha256', pwd.encode('utf-8'), bytes.fromhex(salt), 100000)
+    return new_key == bytes.fromhex(key)
 
 
 def add_user(login, password):
