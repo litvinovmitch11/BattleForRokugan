@@ -8,7 +8,7 @@ from facade import *
 
 if __name__ == "__main__":
     facade = GameFacade()
-    for i in range(2):
+    for i in range(4):
         ind = facade.get_unique_id()
         facade.add_player(ind, "KAm" + str(ind))
     p = facade.get_players()
@@ -27,21 +27,19 @@ if __name__ == "__main__":
     # print(facade.round_count(), facade.board.state.phase)
 
     for q in range(5):
-        # cas = dict()
-        # for id_player in players:
-        #     cas[facade.board.players[id_player].caste] = []
-        # for token in facade.get_all_control_token():
-        #     if token.province_id != -1:
-        #         cas[token.caste].append(token)
-        #         print("FREE -", token.id, token.caste, token.province_id)
-        # for cast in cas:
-        #     print(cast, len(cas[cast]))
+
+        cas = dict()
+        for id_player in players:
+            cas[facade.board.players[id_player].caste] = []
+        for token in facade.get_all_control_token():
+            if token.province_id != -1:
+                cas[token.caste].append(token)
+        for cast in cas:
+            print(cast, len(cas[cast]))
+
         print(facade.get_round(), facade.get_phase())
         while facade.get_phase() == 1:
             id_player = facade.whose_move()
-            if len(facade.board.players[id_player].cards) != 0:
-                if facade.use_card(id_player, list(facade.board.players[id_player].cards.keys())[0], [1]):
-                    print("USE_CARD!!!!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
             facade.unused_card(id_player)
         while facade.get_phase() == 2:
             f = random.randint(0, 29)
