@@ -74,13 +74,14 @@ class ControlToken:
 
 
 class Player:
-    def __init__(self, values: (int, str)):
+    def __init__(self, values: (int, str, str)):
         self.caste = Caste.none  # class Caste
         self.battle_tokens = []  # list BattleTokens
         self.control_tokens = []  # list ControlTokens
         self.active = []  # list BattleTokens
         self.player_id = values[0]  # int
         self.name = values[1]  # str
+        self.login = values[2]  # str
 
         self.cards = dict()  # int: id card -> class Card
         self.ready_to_play = False  # bool
@@ -380,7 +381,7 @@ class Board:
             self.all_card[card.ind] = card
             self.all_provinces[prov_id].card_id_inside = card.ind
 
-    def add_player(self, values: (int, str)):
+    def add_player(self, values: (int, str, str)):
         if 0 <= len(self.players) <= 4 and self.state.is_adding_players():
             player = Player(values)
             self.players[values[0]] = player
@@ -567,6 +568,9 @@ class Board:
         for province in self.all_provinces:
             province.remove_token_after_battles()
         self.state.next_round()
+        if self.state.round == 6:
+            # DERNI
+            self.state.round += 1
         self.can_put_army_token = have_land_way
         for player in self.players.values():
             player.make_active()

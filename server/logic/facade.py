@@ -11,8 +11,8 @@ class GameFacade:
         self.unique_id += 1
         return self.unique_id
 
-    def add_player(self, player_id: int, name: str) -> list[Player]:
-        return self.board.add_player((player_id, name))
+    def add_player(self, player_id: int, name: str, login: str) -> list[Player]:
+        return self.board.add_player((player_id, name, login))
 
     def swap_player_readiness_value(self, player_id: int) -> bool:  # return True if should start game
         return self.board.swap_player_readiness_value(player_id)
