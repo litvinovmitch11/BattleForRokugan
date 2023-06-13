@@ -4,6 +4,7 @@ from all_include import *
 
 token_id = 0
 
+
 class BattleToken:
     def __init__(self, caste: Caste, power: int, token_type: TokenType, ind: int):
         self.caste = caste
@@ -42,7 +43,7 @@ class ControlToken:
 
 
 class Player:
-    def __init__(self, values: (int, str, str)):
+    def __init__(self, values: (int, str, str, str)):
         self.caste = Caste.none  # class Caste
         self.battle_tokens = []  # list BattleTokens
         self.control_tokens = []  # list ControlTokens
@@ -50,6 +51,7 @@ class Player:
         self.player_id = values[0]  # int
         self.name = values[1]  # str
         self.login = values[2]  # str
+        self.password = values[3]  # str
 
         self.cards = dict()  # int: id card -> class Card
         self.ready_to_play = False  # bool
@@ -349,7 +351,7 @@ class Board:
             self.all_card[card.ind] = card
             self.all_provinces[prov_id].card_id_inside = card.ind
 
-    def add_player(self, values: (int, str, str)):
+    def add_player(self, values: (int, str, str, str)):
         if 0 <= len(self.players) <= 4 and self.state.is_adding_players():
             player = Player(values)
             self.players[values[0]] = player
