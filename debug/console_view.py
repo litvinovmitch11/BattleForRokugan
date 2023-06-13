@@ -13,6 +13,34 @@ class ConsoleDraw:
         self.start_message = "-----------------------------------------------------\n" \
                              "Well, now you can control game from console!\n" \
                              f"Your name: {self.name}, Your game_id: {self.game_id}, Your player_id: {self.player_id}\n"
+        self.card_help = "Description all cards by id:\n" \
+                         "id 1:    Движение к цели. Выберите 2 подконтрольные вам провинции и " \
+                         "поместите в каждую из них 1 жетон контроля лицевой стороной вверх\n" \
+                         "id 2:    Огни восстания. Уберите из любой провинции жетон мира. " \
+                         "Если вы контролируете эту провинцию, поместите в неё 2 жетона контроля " \
+                         "лицевой стороной вверх\n" \
+                         "id 3:    Очищиние. Уберите из любой провинции жетон выжженой земли. " \
+                         "Затем поместите в эту провинцию 2 ваших жетона контроля и " \
+                         "переверните один из них лицевой стороной вверх\n" \
+                         "id 4:    Культурный обмен. Выберите провинцию под вашим контролем " \
+                         "и провинцию под контролем противника. Поменяйте местами все жетоны контроля в вашей " \
+                         "провинции со всеми жетонами контроля в провинции противника (не переворачивайте их)\n" \
+                         "id 5:    Выход к морю. Выберите континентальную провинцию и поместите в неё жетон гавани. " \
+                         "Теперь эта провинция считается прибрежной\n" \
+                         "id 6:    Славная битва. Выберите провинцию и поместите в неё жетон славы. " \
+                         "В этой провинции нельзя размещать жетон дипломатии и погрома\n" \
+                         "id 7:    Кодекс чести. Выберите 2 провинции (кроме Теневых земель) " \
+                         "и поместите в каждую из них жетон бонуса к чести +1\n" \
+                         "id 8:    Богатый урожай. Выберите провинцию под вашим контролем и поместите в неё" \
+                         " 2 жетона контроля лицевой стороной вверх\n" \
+                         "id 9:    Процветание. Выберите провинцию (кроме Теневых земель)" \
+                         " и поместите в неё жетон бонуса к чести +2\n" \
+                         "id 10:   Власть ужаса. (Вы можете сыграть эту карту в начале вашего хода в фазе " \
+                         "размещения) Уберите свой жетон контроля из любой провинции, кроме Теневых земель. " \
+                         "Затем уберите с поля 2 особых жетона или меньше\n" \
+                         "id 11:   Умерщвление слабых. (Вы можете сыграть эту карту в начале вашего хода в фазе" \
+                         " размещения) Сбросьте жетон битвы из своего актива. В этот ход вы не размещаете " \
+                         "жетон битвы. Затем раскройте 2 любых жетона битвы на поле и отправьте в сброс их кланов\n"
         self.help = "List commands:\n" \
                     "-E                 exit client\n" \
                     "-H                 help reference\n" \
@@ -22,7 +50,12 @@ class ConsoleDraw:
                     "-SC                set your caste\n" \
                     "-GW                get winners ids\n" \
                     "-PCT               put control token\n" \
-                    "-PBT               put battle token\n"
+                    "-PBT               put battle token\n" \
+                    "-GSR               het someone reset\n" \
+                    "-HC                card help\n" \
+                    "-SAT               show info about all tokens\n" \
+                    "-UC                use card\n" \
+                    "-UNC               unused card\n"
 
     def register(self):
         self.reg.add(self.vms)
@@ -39,14 +72,14 @@ class ConsoleDraw:
         elif command == '-SI':
             print(f"Round: {self.vms.round}\n"
                   f"Which phase: {self.vms.phase}\n"
+                  f"Whose move: {self.vms.whose_move}\n"
                   f"Players count: {self.vms.players_count}\n"
                   f"Players: ")
             for player in self.vms.players:
                 print(f"Name: {player.name}, "
                       f"Player_id: {player.player_id}, "
                       f"Readiness: {player.readiness}")
-            print(f"Whose move: {self.vms.whose_move}\n"
-                  f"Free casts: {self.vms.free_casts}\n")
+            print()
         elif command == '-SR':
             print(f"All players ready? - {self.vms.swap_player_readiness_value()}\n")
         elif command == '-SC':
@@ -61,8 +94,17 @@ class ConsoleDraw:
             province_id = int(input("Enter province id:\n"))
             print(f"Correct? - {self.vmh.put_control_token(province_id)}\n")
         elif command == '-PBT':
-            print("Possible battle token id:")
-            print(self.vmh.active)
+            print("Possible battle tokens:")
+            for token in self.vmh.active:
+                print(f"Token_id: {token.id}, "
+                      f"Caste: {token.caste}, "
+                      f"Power: {token.power}, "
+                      f"Type: {token.type}, "
+                      f"In active: {token.in_active}, "
+                      f"In reset: {token.in_reset}, "
+                      f"On board from: {token.on_board_first}, "
+                      f"On board to: {token.on_board_second}, "
+                      f"Visible: {token.visible}")
             token_id = int(input("Enter token id:\n"))
             print("Possible position battle token:")
             print('   ', end='')
@@ -77,6 +119,50 @@ class ConsoleDraw:
             province_id_from = int(input("Enter province id from:\n"))
             province_id_to = int(input("Enter province id to:\n"))
             print(f"Correct? - {self.vmh.put_battle_token(token_id, province_id_from, province_id_to)}\n")
+        elif command == '-GSR':
+            some_one_id = int(input("Enter someone id:\n"))
+            print(f"{some_one_id} reset:")
+            for token in self.vmh.get_someone_reset(some_one_id):
+                print(f"Token_id: {token.id}, "
+                      f"Caste: {token.caste}, "
+                      f"Power: {token.power}, "
+                      f"Type: {token.type}, "
+                      f"In active: {token.in_active}, "
+                      f"In reset: {token.in_reset}, "
+                      f"On board from: {token.on_board_first}, "
+                      f"On board to: {token.on_board_second}, "
+                      f"Visible: {token.visible}")
+            print()
+        elif command == '-HC':
+            print(self.card_help)
+        elif command == '-SAT':
+            print("All battle tokens:")
+            for token in self.vmb.battle_tokens:
+                print(f"Token_id: {token.id}, "
+                      f"Caste: {token.caste}, "
+                      f"Power: {token.power}, "
+                      f"Type: {token.type}, "
+                      f"In active: {token.in_active}, "
+                      f"In reset: {token.in_reset}, "
+                      f"On board from: {token.on_board_first}, "
+                      f"On board to: {token.on_board_second}, "
+                      f"Visible: {token.visible}")
+            print("All control tokens:")
+            for token in self.vmb.control_tokens:
+                print(f"Token_id: {token.id}, "
+                      f"Caste: {token.caste}, "
+                      f"Power: {token.power}, "
+                      f"Province id: {token.province_id}, "
+                      f"Visible: {token.visible}")
+            print("All special tokens:")
+            for token in self.vmb.special_tokens:
+                print(f"Token type: {token.token}, "
+                      f"Province id: {token.province_id}")
+            print()
+        elif command == '-UC':
+            pass
+        elif command == '-UNC':
+            pass
 
     def run(self):
         print(self.start_message)
