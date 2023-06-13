@@ -22,24 +22,28 @@ if __name__ == "__main__":
     while facade.get_round() != 1:
         id_player = facade.whose_move()
         if facade.put_control_token(id_player, random.randint(0, 29)):
-            print("OK", id_player)
+            # print("OK", id_player)
+            pass
     # print(facade.round_count(), facade.board.state.phase)
 
     for q in range(5):
-        cas = dict()
-        for id_player in players:
-            cas[facade.board.players[id_player].caste] = []
-        for token in facade.get_all_control_token():
-            if token.province_id != -1:
-                cas[token.caste].append(token)
-                # print("FREE -", token.id, token.caste, token.province_id)
-        for cast in cas:
-            print(cast, len(cas[cast]))
+        # cas = dict()
+        # for id_player in players:
+        #     cas[facade.board.players[id_player].caste] = []
+        # for token in facade.get_all_control_token():
+        #     if token.province_id != -1:
+        #         cas[token.caste].append(token)
+        #         print("FREE -", token.id, token.caste, token.province_id)
+        # for cast in cas:
+        #     print(cast, len(cas[cast]))
         print(facade.get_round(), facade.get_phase())
-        while facade.board.state.phase == 1:
+        while facade.get_phase() == 1:
             id_player = facade.whose_move()
+            if len(facade.board.players[id_player].cards) != 0:
+                if facade.use_card(id_player, list(facade.board.players[id_player].cards.keys())[0], [1]):
+                    print("USE_CARD!!!!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
             facade.unused_card(id_player)
-        while facade.board.state.phase == 2:
+        while facade.get_phase() == 2:
             f = random.randint(0, 29)
             t = random.randint(0, 29)
             was = False
@@ -49,8 +53,10 @@ if __name__ == "__main__":
             for battle_token in facade.board.players[id_player].active:
                 ind = battle_token.id
                 if facade.put_battle_token(id_player, ind, f, t):
-                    print("OK", str(id_player), ind)
+                    # print("OK", str(id_player), ind)
                     was = True
                     break
-        facade.do_execution_phase()
+        while facade.get_phase() == 3:
+            for id_p in players:
+                facade.swap_player_readiness_value(id_p)
     print(facade.get_winner())

@@ -75,7 +75,7 @@ class ControlToken:
 
 class Player:
     def __init__(self, values: (int, str)):
-        self.caste = None  # class Caste
+        self.caste = Caste.none  # class Caste
         self.battle_tokens = []  # list BattleTokens
         self.control_tokens = []  # list ControlTokens
         self.active = []  # list BattleTokens
@@ -178,7 +178,7 @@ class GameState:
     def used_card(self, was_used: bool):
         if was_used:
             self.make_move()
-            self.move_to_next_round = len(self.move_queue)
+            self.move_to_next_round = len(self.move_queue) - 1
         else:
             self.make_move()
 
@@ -395,8 +395,12 @@ class Board:
         for id_player in self.players:
             all_ready &= self.players[id_player].ready_to_play
         if len(self.players) > 1 and all_ready:
-            self.start_game()
-            return True
+            if self.state.round == -1:
+                self.start_game()
+                return True
+            elif self.state.phase == 3:
+                self.execution_phase()
+                return True
         return False
 
     def get_free_caste(self) -> list[Caste]:
@@ -464,6 +468,9 @@ class Board:
         self.state.make_move()
         if self.state.move_to_next_round == 0:
             self.state.phase = 3
+            self.make_all_battle_tokens_on_board_visible()
+            for id_player in self.players:
+                self.players[id_player].ready_to_play = False
             # !!! do execution phase. IMPORTANT !!!
         return True
 
@@ -503,7 +510,6 @@ class Board:
         return list(self.control_tokens.values())
 
     def execution_phase(self):
-        self.make_all_battle_tokens_on_board_visible()
         for province in self.all_provinces:
             province.remove_fake_tokens()
 
@@ -606,11 +612,12 @@ class Board:
 
     def used_card(self, player_id: int, card_id: int, data: list[int]) -> bool:
         # need redone
-        if not self.state.this_player_move(player_id) or self.state.phase != 1:
+        if not self.state.this_player_move(player_id):
             return False
-        self.state.used_card(True)
-        self.all_card[card_id].apply(self, player_id, data)
-        return True
+        if self.all_card[card_id].apply(self, player_id, data):
+            self.state.used_card(True)
+            return True
+        return False
 
     def unused_card(self, player_id: int) -> bool:
         if not self.state.this_player_move(player_id) or self.state.phase != 1:
@@ -677,10 +684,7 @@ class Card:
         self.used = False
 
     def apply(self, board: Board, player_id: int, data: list[int]) -> bool:
-        if player_id not in board.players or self.owner != player_id or not board.state.this_player_move(player_id) or \
-                board.state.phase != 1:
-            return False
-        if self.used:
+        if not board.state.this_player_move(player_id) or board.state.phase != 1 or self.used:
             return False
 
     def set_owner(self, player_id):
@@ -866,7 +870,7 @@ class CardGloriousBattle(Card):  # Славная битва. Каста льв�
         return True
 
 
-class CardDiplomaticMission(Card):  # Дипломатическая миссия. Каста журавля. ID=7
+class CardDiplomaticMission(Card):  # Кодекс чести. Каста журавля. ID=7
 
     def __init__(self):
         super().__init__(7)
@@ -898,7 +902,7 @@ class CardRichHarvest(Card):  # Богатый урожай. (9, 10, 11) про�
         # owning_province
 
     def apply(self, board: Board, player_id: int, data: list[int]) -> bool:
-        # prov_1_id, prov_2_id
+        # prov_1_id
         if not super().apply(board, player_id, data):
             return False
         if len(data) != 1 or self.all_prov_id_correct(data):
@@ -948,19 +952,20 @@ class CardThePowerOfTerror(Card):  # Власть ужаса. Теневая п�
     def apply(self, board: Board, player_id: int, data: list[int]) -> bool:
         if player_id not in board.players or self.owner != player_id or not board.state.this_player_move(player_id):
             return False
-        if self.used or not (len(data) not in (1, 3, 5)) or type(data[0]) != int or board.state.phase != 2:
+        if self.used or not (len(data) not in (3, 5)) or not 0 <= data[2] <= 6:
             return False
-        if len(data) >= 3 and (type(data[1]) != int or type(data[2]) != SpecialTokenType):
-            return False
-        if len(data) == 5 and (type(data[3]) != int or type(data[4]) != SpecialTokenType):
-            return False
+        sp_ts = [list(SpecialTokenType)[data[2]]]
+        if len(data) == 5:
+            if not 0 <= data[4] <= 6:
+                return False
+            sp_ts.append(list(SpecialTokenType)[data[4]])
         for i in range(1, len(data), 2):
             prov = board.all_provinces[data[i]]
-            if data[i + 1] not in prov.special_tokens:
+            if sp_ts[i - 1 - i // 2] not in prov.special_tokens:
                 return False
         for i in range(1, len(data), 2):
             prov = board.all_provinces[data[i]]
-            prov.special_tokens.remove(data[i + 1])
+            prov.special_tokens.remove(sp_ts[i - 1 - i // 2])
         self.used = True
         return True
 
