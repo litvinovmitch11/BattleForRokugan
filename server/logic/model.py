@@ -1,6 +1,7 @@
 import random
 
 from all_include import *
+from generate_pwd import upd_result
 
 token_id = 0
 
@@ -539,8 +540,9 @@ class Board:
             province.remove_token_after_battles()
         self.state.next_round()
         if self.state.round == 6:
-            # DERNI
-            pass
+            for id_player in self.players:
+                my_player = self.players[id_player]
+                upd_result(my_player.login, my_player.password, id_player in self.get_game_winner())
         self.can_put_army_token = have_land_way
         for player in self.players.values():
             player.make_active()

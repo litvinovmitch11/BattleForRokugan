@@ -8,9 +8,9 @@ from facade import *
 
 if __name__ == "__main__":
     facade = GameFacade()
-    for i in range(4):
+    for i in range(2):
         ind = facade.get_unique_id()
-        facade.add_player(ind, "KAm" + str(ind))
+        facade.add_player(ind, "KAm" + str(ind), "JOVNO", "piska")
     p = facade.get_players()
     players = []
     for player in p:
