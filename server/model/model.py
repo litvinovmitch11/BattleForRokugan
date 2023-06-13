@@ -5,6 +5,9 @@ from generate_pwd import upd_result
 
 token_id = 0
 
+REGIONS = [(0, 1, 2), (5, 6, 7, 8), (9, 10, 11), (12, 13, 14), (15, 16, 17), (18, 19, 20), (21, 22, 23), (24, 25, 26),
+           (27, 28, 20)]
+
 
 class BattleToken:
     def __init__(self, caste: Caste, power: int, token_type: TokenType, ind: int):
@@ -85,6 +88,21 @@ class Player:
         self.battle_tokens.append(
             BattleToken(self.caste, 2 if self.caste == Caste.lion else 0, TokenType.empty, token_id + 2))
         token_id += 3
+        if self.caste == Caste.crab:
+            self.battle_tokens.append(BattleToken(self.caste, 3, TokenType.fleet, token_id))
+        elif self.caste == Caste.crane:
+            self.battle_tokens.append(BattleToken(self.caste, 0, TokenType.diplomacy, token_id))
+        elif self.caste == Caste.lion:
+            self.battle_tokens.append(BattleToken(self.caste, 6, TokenType.army, token_id))
+        elif self.caste == Caste.scorpion:
+            self.battle_tokens.append(BattleToken(self.caste, 3, TokenType.shinobi, token_id))
+        elif self.caste == Caste.unicorn:
+            self.battle_tokens.append(BattleToken(self.caste, 0, TokenType.pogrom, token_id))
+        elif self.caste == Caste.dragon:
+            self.battle_tokens.append(BattleToken(self.caste, 3, TokenType.blessing, token_id))
+        elif self.caste == Caste.phoenix:
+            self.battle_tokens.append(BattleToken(self.caste, 3, TokenType.blessing, token_id))
+        token_id += 1
         random.shuffle(self.battle_tokens)
 
     def take_control_token(self):
@@ -419,7 +437,7 @@ class Board:
                                   ind_finish: int) -> bool:
         if self.state.move_to_next_round <= 0 or self.state.phase != 2:
             return False
-        if not (min(ind_finish, ind_start) >= 0 and max(ind_finish, ind_start) <= 30) \
+        if not (min(ind_finish, ind_start) >= 0 and ind_start <= 30 and ind_finish <= 29) \
                 or self.can_put_army_token[ind_start][ind_finish] == 0 \
                 or battle_token_id not in self.battle_tokens.keys():
             return False
@@ -443,7 +461,7 @@ class Board:
             self.make_all_battle_tokens_on_board_visible()
             for id_player in self.players:
                 self.players[id_player].ready_to_play = False
-            # !!! do execution phase. IMPORTANT !!!
+                # !!! do execution phase. IMPORTANT !!!
         return True
 
     def put_on_board_control_token(self, player_id: int, province_id: int) -> bool:  # only when round = 0 (preparation)
@@ -603,7 +621,7 @@ class Board:
             self.state.move_to_next_round = len(self.state.move_queue) * 5
         return True
 
-    def get_game_winner(self) -> list[int]:
+    def count_score(self) -> list[(int, int)]:  # player_id, here score
         if self.state.round != 6:
             return []
         points = dict()
@@ -616,31 +634,26 @@ class Board:
         for token in self.control_tokens.values():
             if token.province_id != -1 and token.visible:
                 points[token.caste] += 1
-        # point for secret goal
-        for caste in Caste:
-            if caste == Caste.none:
-                continue
-            region = []
-            for province in self.all_provinces:
-                if province.caste == caste:
-                    region.append(province)
 
-            one_owning = True
-            for i in range(len(region)):
-                province = region[i]
-                if province.owning_caste != region[0].owning_caste:
-                    one_owning = False
-            if one_owning:
-                points[region[0].owning_caste] += 5
+        for region in REGIONS:
+            owning = self.all_provinces[region[0]].owning_caste
+            for prov in region:
+                if self.all_provinces[prov].owning_caste != owning:
+                    owning = Caste.none
+            points[owning] += 5
+        for player in self.players.values():
+            ans.append((player.player_id, points[player.caste]))
+        return ans
 
+    def get_game_winner(self) -> list[int]:
+        points = self.count_score()
+        ans = []
         max_point = 0
-        for caste in Caste:
-            max_point = max(max_point, points[caste])
-        for caste in Caste:
-            if points[caste] == max_point:
-                for player in self.players.values():
-                    if player.caste == caste:
-                        ans.append(player.player_id)
+        for score in points:
+            max_point = max(max_point, score[1])
+        for score in points:
+            if score[1] == max_point:
+                ans.append(score[0])
         return ans
 
     def start_game(self):

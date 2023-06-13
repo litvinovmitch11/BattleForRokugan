@@ -91,3 +91,6 @@ class GameFacade:
         if not self.board.state.this_player_move(player_id) or self.board.state.round != 0:
             return False
         return self.board.put_on_board_control_token(player_id, province_id)
+
+    def get_score(self) -> list[(int, int)]:  # return empty list if round != 6
+        return self.board.count_score()
