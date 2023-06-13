@@ -40,7 +40,7 @@ def registration_server(host='localhost', port='8889'):
 
 if __name__ == '__main__':
     t1 = Thread(target=game_server, args=(HOST, PORTGM,))
-    t2 = Thread(target=registration_server, args=(HOST, PORTDB))
+    t2 = Thread(target=registration_server, args=(HOST, PORTDB,))
 
     t1.start()
     t2.start()
