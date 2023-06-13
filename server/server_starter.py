@@ -8,7 +8,7 @@ sys.path.append('../server/')
 sys.path.append('../server/model/')
 sys.path.append('../server/requests/')
 
-from server_config import HOST, PORTDB, PORTGM
+from server_config import *
 import facade_service
 import facade_pb2_grpc as facade_pb2_grpc
 import registration_service
@@ -40,8 +40,8 @@ def registration_server(host='localhost', port='8889'):
 
 
 if __name__ == '__main__':
-    t1 = Thread(target=game_server, args=())
-    t2 = Thread(target=registration_server, args=())
+    t1 = Thread(target=registration_server, args=(HOSTDB, PORTDB,))
+    t2 = Thread(target=game_server, args=(HOSTGM, PORTGM,))
 
     t1.start()
     t2.start()

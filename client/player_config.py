@@ -1,5 +1,6 @@
-HOST = 'localhost'
+HOSTDB = 'localhost'
 PORTDB = '8889'
+HOSTGM = 'localhost'
 PORTGM = '8888'
 RUNKEY = 'CONSOLE'
 # RUNKEY = 'VIEW'

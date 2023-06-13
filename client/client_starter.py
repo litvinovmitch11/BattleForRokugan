@@ -9,7 +9,7 @@ sys.path.append('../client/view/')
 sys.path.append('../client/view_model/')
 sys.path.append('../resources/')
 
-from player_config import HOST, PORTDB, PORTGM, RUNKEY
+from player_config import *
 from facade_client import Client
 from registration_client import RegistrationClient
 from registration import Login
@@ -61,8 +61,8 @@ def game_window_run(client: Client, login='guest', password=''):
 
 
 if __name__ == "__main__":
-    reg_client = RegistrationClient(HOST, PORTDB)
+    reg_client = RegistrationClient(HOSTDB, PORTDB)
     my_login, my_password = registration_window_run(reg_client)
 
-    game_client = Client(HOST, PORTGM)
+    game_client = Client(HOSTGM, PORTGM)
     game_window_run(game_client, my_login, my_password)
