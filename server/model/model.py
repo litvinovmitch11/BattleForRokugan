@@ -431,7 +431,7 @@ class Board:
     def get_possible_position_to_put_control_token(self) -> list[int]:
         ans = []
         for province in self.all_provinces:
-            if len(province.control_tokens) == 0:
+            if len(province.control_tokens) == 0 and province.ind != 30:
                 ans.append(province.ind)
         return ans
 
@@ -478,6 +478,7 @@ class Board:
                 my_control_token.visible = False
                 return False
         self.all_provinces[province_id].control_tokens.append(my_control_token)
+        self.all_provinces[province_id].owning_caste = self.players[player_id].caste
         my_control_token.province_id = province_id
         self.state.make_move()
         if self.state.move_to_next_round == 0 and self.state.round == 0:
