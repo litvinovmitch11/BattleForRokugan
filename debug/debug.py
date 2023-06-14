@@ -8,7 +8,7 @@ from facade import *
 
 if __name__ == "__main__":
     facade = GameFacade()
-    for i in range(4):
+    for i in range(2):
         ind = facade.get_unique_id()
         facade.add_player(ind, "KAm" + str(ind), "JOVNO", "piska")
     p = facade.get_players()
@@ -17,7 +17,7 @@ if __name__ == "__main__":
         facade.swap_player_readiness_value(player.player_id)
         players.append(player.player_id)
     for id_player in players:
-        facade.set_caste(id_player, facade.get_free_caste()[2])
+        facade.set_caste(id_player, facade.get_free_caste()[0])
 
     while facade.get_round() != 1:
         id_player = facade.whose_move()

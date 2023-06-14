@@ -1,7 +1,6 @@
 import random
 import copy
 
-
 from all_include import *
 from generate_pwd import upd_result
 
@@ -110,7 +109,7 @@ class Player:
     def take_control_token(self):
         global token_id
         power = 2 if self.caste == Caste.crab else 1
-        for i in range(130):
+        for i in range(40):
             self.control_tokens.append(ControlToken(self.caste, power, token_id))
             token_id += 1
 
@@ -295,7 +294,8 @@ class Province:
                 winner = [caste]
             elif points[caste] == max_power:
                 winner.append(caste)
-
+        if max_power == 0:
+            return Caste.none
         points[self.owning_caste] -= self.control_power
         phoenix_win = True
         for caste in Caste:
