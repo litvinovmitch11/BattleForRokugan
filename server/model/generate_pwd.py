@@ -2,7 +2,7 @@ import hashlib
 import os
 import psycopg2
 
-from server_config import DBNAME, DBUSER, DBPWD, HOSTDB
+from server_config import *
 
 
 def encode_pwd(pwd):
@@ -20,7 +20,7 @@ def add_user(login, password):
     login = login.strip()
     password = password.strip()
     if login != '' and login != 'guest' and password != '':
-        with psycopg2.connect(dbname=DBNAME, user=DBUSER, password=DBPWD, host=HOSTDB) as conn:
+        with psycopg2.connect(dbname=DBNAME, user=DBUSER, password=DBPWD, host=HOST) as conn:
             with conn.cursor() as cursor:
                 cursor.execute(f"select * from client.players where client.players.login='{login}';")
                 if not cursor.rowcount:
@@ -31,7 +31,7 @@ def add_user(login, password):
 
 
 def login_user(login, password):
-    with psycopg2.connect(dbname=DBNAME, user=DBUSER, password=DBPWD, host=HOSTDB) as conn:
+    with psycopg2.connect(dbname=DBNAME, user=DBUSER, password=DBPWD, host=HOST) as conn:
         with conn.cursor() as cursor:
             cursor.execute(f"select * from client.players where client.players.login='{login}';")
             if cursor.rowcount:
@@ -41,7 +41,7 @@ def login_user(login, password):
 
 
 def get_result():
-    with psycopg2.connect(dbname=DBNAME, user=DBUSER, password=DBPWD, host=HOSTDB) as connection:
+    with psycopg2.connect(dbname=DBNAME, user=DBUSER, password=DBPWD, host=HOST) as connection:
         with connection.cursor() as cur:
             cur.execute(
                 f"select login, games_cnt, wins_cnt from client.players order by games_cnt desc, wins_cnt desc, login;")
@@ -50,7 +50,7 @@ def get_result():
 
 def upd_result(login, password, result: bool):
     if login != 'guest' and login_user(login, password):
-        with psycopg2.connect(dbname=DBNAME, user=DBUSER, password=DBPWD, host=HOSTDB) as connection:
+        with psycopg2.connect(dbname=DBNAME, user=DBUSER, password=DBPWD, host=HOST) as connection:
             with connection.cursor() as cur:
                 cur.execute(f"update client.players set games_cnt = games_cnt + 1 where login='{login}';")
                 if result:
