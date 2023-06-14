@@ -1,6 +1,6 @@
 DBNAME = 'bfr'
-DBUSER = 'postgres'
-DBPWD = 'postgres'
+DBUSER = 'clientbfr'
+DBPWD = 'clientpwd'
 HOSTDB = 'localhost'
 PORTDB = '8889'
 HOSTGM = 'localhost'

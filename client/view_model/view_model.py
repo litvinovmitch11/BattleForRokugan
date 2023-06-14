@@ -99,12 +99,12 @@ class ViewModelBoard(ViewModel):
         self.possible_position_battle_token = self.client.get_possible_positions_battle_token(game_id=self.game_id).line
         self.possible_position_control_token = self.client.get_possible_positions_control_token(
             game_id=self.game_id).position
-        for token in self.vmb.battle_tokens:
+        for token in self.battle_tokens:
             if token.on_board_first == token.on_board_second and token.on_board_first in self.count_tokens:
                 self.count_tokens[token.on_board_first] += 1
-        for token in self.vmb.control_tokens:
+        for token in self.control_tokens:
             if token.province_id in self.count_tokens:
                 self.count_tokens[token.province_id] += 1
-        for token in self.vmb.special_tokens:
+        for token in self.special_tokens:
             if token.province_id in self.count_tokens:
                 self.count_tokens[token.province_id] += 1
