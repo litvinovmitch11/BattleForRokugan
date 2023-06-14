@@ -165,7 +165,7 @@ class FacadeService(pb2_grpc.FacadeServicer):
     def GetAllSpecialToken(self, request, context):
         list_tokens = pb2.ListSpecialTokens(
             token=[
-                pb2.SpecialToken(token=token[1].value,
+                pb2.SpecialToken(token=tokens[1].value,
                                  province_id=tokens[0])
                 for tokens in self.games[request.game_id].get_all_special_tokens()]
         )
