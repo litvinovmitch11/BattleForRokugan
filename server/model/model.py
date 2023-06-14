@@ -336,7 +336,7 @@ class Board:
         self.control_tokens = dict()  # id -> Class ControlToken
         self.battle_tokens = dict()  # id -> Class BattleToken
 
-        for i in range(30):
+        for i in range(31):
             self.all_provinces.append(Province(i))
 
         self.all_card = dict()  # id -> class Card

@@ -41,9 +41,14 @@ if __name__ == "__main__":
         while facade.get_phase() == 1:
             id_player = facade.whose_move()
             facade.unused_card(id_player)
+        # for player in players:
+        #     print(len(facade.get_player_active(player)))
+            # for token in facade.get_player_active(player):
+            #     print(token.caste, end=" ")
+            # print()
         while facade.get_phase() == 2:
-            f = random.randint(0, 29)
-            t = random.randint(0, 29)
+            f = random.randint(0, 30)
+            t = random.randint(0, 30)
             was = False
 
             active = []
