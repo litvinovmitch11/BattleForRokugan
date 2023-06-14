@@ -169,7 +169,7 @@ class GameState:
     def used_card(self, was_used: bool):
         if was_used:
             self.make_move()
-            self.move_to_next_round = len(self.move_queue) - 1
+            self.move_to_next_round = len(self.move_queue)
         else:
             self.make_move()
 
