@@ -63,11 +63,12 @@ class ConsoleDraw:
                     "-SI                system info\n" \
                     "-SR                swap readiness value\n" \
                     "-SC                set your caste\n" \
-                    "-GW                get winners ids\n" \
+                    "-GW                get winners ids and score\n" \
                     "-PCT               put control token\n" \
                     "-PBT               put battle token\n" \
-                    "-GSR               het someone reset\n" \
+                    "-GSR               get someone reset\n" \
                     "-HC                card help\n" \
+                    "-SAC               show info about all cards\n" \
                     "-SAT               show info about all tokens\n" \
                     "-UC                use card\n" \
                     "-UNC               unused card\n"
@@ -168,6 +169,16 @@ class ConsoleDraw:
             print()
         elif command == '-HC':
             print(self.card_help)
+        elif command == '-SAC':
+            print("All cards:")
+            for card in self.vmh.cards:
+                print(
+                    f"Player id: {card.player_id}, Card id: {card.card_id}, Caste: {card.caste}, Used: {card.used} "
+                    f"Data:", end=" ")
+                for num in card.data:
+                    print(num.data, end=' ')
+                print()
+            print()
         elif command == '-SAT':
             print("All battle tokens:")
             for token in self.vmb.battle_tokens:
