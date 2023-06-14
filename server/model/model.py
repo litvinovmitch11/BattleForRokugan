@@ -458,6 +458,7 @@ class Board:
         self.state.make_move()
         if self.state.move_to_next_round == 0:
             self.state.phase = 3
+            self.can_put_army_token = have_land_way
             self.make_all_battle_tokens_on_board_visible()
             for id_player in self.players:
                 self.players[id_player].ready_to_play = False
