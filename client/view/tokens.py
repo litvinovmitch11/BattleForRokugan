@@ -1,4 +1,5 @@
 import pygame
+from view_model import *
 
 pos = [
     [(1050, 220), (1050, 173), (980, 185), -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -141,11 +142,11 @@ class ControlToken:
 
 
 class SpecialToken:
-    def __init__(self, screen, type, province):
+    def __init__(self, screen, typee, province):
         self.screen = screen
-        self.type = type
+        self.type = typee
         self.province = province
-        self.image = pygame.image.load(f'../resources/{type}.png')
+        self.image = pygame.image.load(f'../resources/{typee}.png')
         self.rect = pygame.Rect((pos[province][province])[0], (pos[province][province])[1], 30, 30)
         self.screen_rect = screen.get_rect()
 
