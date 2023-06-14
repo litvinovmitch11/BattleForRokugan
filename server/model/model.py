@@ -109,7 +109,7 @@ class Player:
     def take_control_token(self):
         global token_id
         power = 2 if self.caste == Caste.crab else 1
-        for i in range(40):
+        for i in range(100):
             self.control_tokens.append(ControlToken(self.caste, power, token_id))
             token_id += 1
 
@@ -415,7 +415,7 @@ class Board:
             self.control_tokens[control_token.id] = control_token
         for battle_token in self.players[player_id].battle_tokens:
             self.battle_tokens[battle_token.id] = battle_token
-        self.set_control_token_to_capital(my_caste, self.players[player_id].control_tokens[0])
+        self.set_control_token_to_capital(my_caste, self.players[player_id].get_free_control_token())
         return True
 
     def get_all_provinces_without_control_token(self) -> list[int]:
@@ -457,6 +457,8 @@ class Board:
             self.all_provinces[ind_start].battle_outside.append(my_battle_token)
             self.all_provinces[ind_finish].battle_inside.append(my_battle_token)
             self.can_put_army_token[ind_start][ind_finish] = 0
+            self.can_put_army_token[ind_finish][ind_start] = 0
+
         self.state.make_move()
         if self.state.move_to_next_round == 0:
             self.state.phase = 3
@@ -468,7 +470,7 @@ class Board:
         return True
 
     def put_on_board_control_token(self, player_id: int, province_id: int) -> bool:  # only when round = 0 (preparation)
-        if player_id not in self.players:
+        if player_id not in self.players or province_id not in self.get_possible_position_to_put_control_token():
             return False
         my_control_token = self.players[player_id].get_free_control_token()
         for item in self.all_provinces[province_id].control_tokens:
@@ -496,6 +498,7 @@ class Board:
         for province in self.all_provinces:
             if province.capital and province.caste == my_caste:
                 province.control_tokens.append(my_control_token)
+                province.owning_caste = my_caste
 
     def get_all_battle_token(self) -> list[BattleToken]:
         return list(self.battle_tokens.values())
@@ -678,12 +681,13 @@ class Card:
     def apply(self, board: Board, player_id: int, data: list[int]) -> bool:
         if not board.state.this_player_move(player_id) or board.state.phase != 1 or self.used:
             return False
+        return True
 
     def set_owner(self, player_id):
         self.owner = player_id
 
     @staticmethod
-    def all_prov_id_correct(*data):
+    def all_prov_id_correct(data: list[int]):
         inside = []
         for elem in data:
             if type(elem) != int or not 0 <= elem <= 29 or elem in inside:
