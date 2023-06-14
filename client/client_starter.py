@@ -61,8 +61,12 @@ def game_window_run(client: Client, login='guest', password=''):
 
 
 if __name__ == "__main__":
-    reg_client = RegistrationClient(HOSTDB, PORTDB)
-    my_login, my_password = registration_window_run(reg_client)
+    if DISABLE_REGISTRATION:
+        game_client = Client(HOST, PORTGM)
+        game_window_run(game_client)
+    else:
+        reg_client = RegistrationClient(HOST, PORTDB)
+        my_login, my_password = registration_window_run(reg_client)
 
-    game_client = Client(HOSTGM, PORTGM)
-    game_window_run(game_client, my_login, my_password)
+        game_client = Client(HOST, PORTGM)
+        game_window_run(game_client, my_login, my_password)

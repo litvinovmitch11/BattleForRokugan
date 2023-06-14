@@ -1,6 +1,7 @@
-HOSTDB = 'localhost'
+HOST = 'localhost'
 PORTDB = '8889'
-HOSTGM = 'localhost'
 PORTGM = '8888'
 RUNKEY = 'CONSOLE'
 # RUNKEY = 'VIEW'
+DISABLE_REGISTRATION = False
+# DISABLE_REGISTRATION = True

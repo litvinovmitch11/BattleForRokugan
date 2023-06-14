@@ -1,7 +1,6 @@
 DBNAME = 'bfr'
 DBUSER = 'clientbfr'
 DBPWD = 'clientpwd'
-HOSTDB = 'localhost'
+HOST = 'localhost'
 PORTDB = '8889'
-HOSTGM = 'localhost'
 PORTGM = '8888'
