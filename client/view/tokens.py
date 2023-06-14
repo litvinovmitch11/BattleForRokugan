@@ -96,7 +96,7 @@ pos = [
      -1, (320, 70)],  # water
     [(600, 700), (700, 700), (800, 700), (600, 800), (700, 800), (800, 800)]  # hand
 ]
-
+tokens_in_province = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 bt_in_province = []
 ct_in_province = []
 
@@ -120,6 +120,7 @@ class BattleToken:
 
     def output(self):
         bt_in_province.append(self)
+        self.image = pygame.transform.scale(self.image, (30, 30))
         self.screen.blit(self.image, self.rect)
 
 
@@ -136,4 +137,18 @@ class ControlToken:
         self.screen_rect = screen.get_rect()
 
     def output(self):
+        self.screen.blit(self.image, self.rect)
+
+
+class SpecialToken:
+    def __init__(self, screen, type, province):
+        self.screen = screen
+        self.type = type
+        self.province = province
+        self.image = pygame.image.load(f'../resources/{type}.png')
+        self.rect = pygame.Rect((pos[province][province])[0], (pos[province][province])[1], 30, 30)
+        self.screen_rect = screen.get_rect()
+
+    def output(self):
+        self.image = pygame.transform.scale(self.image, (30, 30))
         self.screen.blit(self.image, self.rect)
