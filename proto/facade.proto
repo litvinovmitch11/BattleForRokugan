@@ -1,0 +1,203 @@
+syntax = "proto3";
+
+package facade;
+
+service Facade{
+  rpc CreateNewGameSession(SuperEmpty) returns (Empty){}
+  rpc GetUniqueId(Empty) returns (PlayerId){}
+  rpc AddPlayer(NameLogin) returns (Key){}
+  rpc WhoseMove(Empty) returns (Player){}
+  rpc GetFreeCaste(Empty) returns (ListCaste){}
+  rpc GetPlayers(Empty) returns (ListName){}
+  rpc GetPhase(Empty) returns (Round){}
+  rpc GetRound(Empty) returns (Round){}
+  rpc GetPossiblePositionsBattleToken(Empty) returns (Map){}
+  rpc GetPossiblePositionsControlToken(Empty) returns (ListPositionsControlTokens){}
+  rpc GetAllBattleToken(Empty) returns (ListBattleTokens){}
+  rpc GetAllControlToken(Empty) returns (ListControlTokens){}
+  rpc GetAllSpecialToken(Empty) returns (ListSpecialTokens){}
+  rpc GetAllCards(Empty) returns (ListCards){}
+  rpc SwapPlayerReadinessValue(PlayerId) returns (Key){}
+  rpc GetSomeoneReset(Player) returns (ListBattleTokens){}
+  rpc GetPlayerActive(Player) returns (ListBattleTokens){}
+  rpc SetCaste(Caste) returns (Key){}
+  rpc UseCard(CardForUse) returns (Key){}
+  rpc GetWinner(Empty) returns (Players){}
+  rpc UnusedCard(Player) returns (Key){}
+  rpc PutBattleToken(Attack) returns (Key){}
+  rpc PutControlToken(Put) returns (Key){}
+  rpc GetScore(Empty) returns (FinalScore){}
+}
+
+message SuperEmpty {}
+
+message Empty {
+  int32 game_id = 1;
+}
+
+message PlayerId {
+  int32 game_id = 1;
+  int32 player_id = 2;
+}
+
+message NameLogin {
+  int32 game_id = 1;
+  int32 player_id = 2;
+  string name = 3;
+  string caste = 4;
+  bool readiness = 5;
+  string login = 6;
+  string password = 7;
+}
+
+message ListName {
+  int32 game_id = 1;
+  repeated NameLogin name = 2;
+}
+
+message List {
+  int32 game_id = 1;
+  repeated int32 cell = 2;
+}
+
+message Map {
+  int32 game_id = 1;
+  repeated List line = 2;
+}
+
+message Attack {
+  int32 game_id = 1;
+  int32 player_id = 2;
+  int32 my_token_id = 3;
+  int32 province_from_id = 4;
+  int32 province_to_id = 5;
+}
+
+message Key {
+  int32 game_id = 1;
+  bool key = 2;
+}
+
+message Player {
+  int32 game_id = 1;
+  int32 player_id = 2;
+}
+
+message BattleToken {
+  int32 game_id = 1;
+  string caste = 2;
+  int32 power = 3;
+  string type = 4;
+  int32 on_board_first = 5;
+  int32 on_board_second = 6;
+  bool in_reset = 7;
+  bool in_active = 8;
+  bool visible = 9;
+  int32 id = 10;
+}
+
+message ListBattleTokens {
+  int32 game_id = 1;
+  repeated BattleToken token = 2;
+}
+
+message Round {
+  int32 game_id = 1;
+  int32 round = 2;
+}
+
+message ControlToken {
+  int32 game_id = 1;
+  bool visible = 2;
+  int32 province_id = 3;
+  int32 power = 4;
+  string caste = 5;
+  int32 id = 6;
+}
+
+message ListControlTokens {
+  int32 game_id = 1;
+  repeated ControlToken token = 2;
+}
+
+message Data {
+  int32 game_id = 1;
+  string data = 2;
+}
+
+message Card {
+  int32 game_id = 1;
+  int32 player_id = 2;
+  int32 card_id = 3;
+  string caste = 4;
+  repeated Data data = 5;
+  bool used = 6;
+}
+
+message CardForUse {
+  int32 game_id = 1;
+  int32 player_id = 2;
+  int32 card_id = 3;
+  repeated int32 values = 4;
+}
+
+message Players {
+  int32 game_id = 1;
+  repeated Player player = 2;
+}
+
+message ListCaste {
+  int32 game_id = 1;
+  repeated string caste = 2;
+}
+
+message Caste {
+  int32 game_id = 1;
+  int32 player_id = 2;
+  string caste = 3;
+}
+
+message ListPositionsControlTokens {
+  int32 game_id = 1;
+  repeated int32 position = 2;
+}
+
+message Token {
+  int32 game_id = 1;
+  int32 player_id = 2;
+  int32 token_id = 3;
+  int32 province_id = 4;
+}
+
+message ListCards {
+  int32 game_id = 1;
+  repeated Card card = 2;
+}
+
+message SpecialToken {
+  int32 game_id = 1;
+  string token = 2;
+  int32 province_id = 3;
+}
+
+message ListSpecialTokens {
+  int32 game_id = 1;
+  repeated SpecialToken token = 2;
+}
+
+message Put {
+  int32 game_id = 1;
+  int32 player_id = 2;
+  int32 province_id = 3;
+}
+
+message Points {
+  int32 game_id = 1;
+  int32 player_id = 2;
+  int32 score = 3;
+}
+
+message FinalScore {
+  int32 game_id = 1;
+  repeated Points points = 2;
+}

@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package registration;
+
+service Registration{
+  rpc AddUser(LoginInformation) returns (Key){}
+  rpc LoginUser(LoginInformation) returns (Key){}
+  rpc GetResult(Empty) returns (ListResult){}
+  rpc UpdateResult(Final) returns (Empty){}
+}
+
+message Empty {}
+
+message Key {
+  bool key = 1;
+}
+
+message LoginInformation {
+  string login = 1;
+  string password = 2;
+}
+
+message Result {
+  string login = 1;
+  int32 games = 2;
+  int32 wins = 3;
+}
+
+message ListResult {
+  repeated Result result = 1;
+}
+
+message Final {
+  string login = 1;
+  bool win = 2;
+}
