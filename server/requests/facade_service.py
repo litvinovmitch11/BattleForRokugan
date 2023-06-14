@@ -137,8 +137,9 @@ class FacadeService(pb2_grpc.FacadeServicer):
         return list_cards
 
     def GetWinner(self, request, context):
-        self.games[request.game_id].get_winner()
-        return pb2.Empty()
+        list_winners = pb2.Players(
+            player=[pb2.Player(player_id=winner) for winner in self.games[request.game_id].get_winner()])
+        return list_winners
 
     def GetFreeCaste(self, request, context):
         list_caste = pb2.ListCaste()

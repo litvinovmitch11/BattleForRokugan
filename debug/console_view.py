@@ -104,8 +104,10 @@ class ConsoleDraw:
             caste = input("Enter caste:\n")
             print(f"Correct? - {self.vms.set_caste(caste)}\n")
         elif command == '-GW':
-            print(f"Winners ids: {self.vms.get_winner()}")
-            print(f"Score:")
+            print("Winners ids:", end=' ')
+            for score in self.vms.get_winner():
+                print(score.player_id, end=' ')
+            print(f"\nScore:")
             for score in self.vms.get_score():
                 print(f"Player_id: {score.player_id}, Score: {score.score}")
             print()
