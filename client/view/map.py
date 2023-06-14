@@ -1,4 +1,5 @@
 import pygame
+
 pygame.init()
 
 
@@ -88,7 +89,7 @@ class Button:
         self.message = None
         self.clicked = False
 
-    def draw(self,x, y, action=None):
+    def draw(self, x, y, action=None):
         def print_text():
             f1 = pygame.font.Font(None, 36)
             color = (0, 77, 255)
@@ -139,12 +140,13 @@ class Button:
                     pygame.draw.rect(self.screen, (255, 160, 122), (x, y, self.width, self.height))
                     self.screen.blit(self.message, (x, y))
                     pygame.time.delay(300)
-                    #if action is not None:
-                      #  action()
+                    # if action is not None:
+                    #  action()
         else:
             if not self.clicked:
                 pygame.draw.rect(self.screen, self.inactive_clr, (x, y, self.width, self.height))
                 self.screen.blit(self.message, (x, y))
+
 
 COLOR_INACTIVE = pygame.Color('lightskyblue3')
 COLOR_ACTIVE = pygame.Color('dodgerblue2')
@@ -153,7 +155,7 @@ FONT = pygame.font.Font(None, 32)
 
 class InputBox:
 
-    def __init__(self, x, y, w, h, text='0'):
+    def __init__(self, x, y, w, h, text=''):
         self.rect = pygame.Rect(x, y, w, h)
         self.color = COLOR_INACTIVE
         self.text = text
@@ -172,9 +174,9 @@ class InputBox:
             self.color = COLOR_ACTIVE if self.active else COLOR_INACTIVE
         if event.type == pygame.KEYDOWN:
             if self.active:
-                #if event.key == pygame.K_RETURN:
-                 #   print(self.text)
-                  #  self.text = ''
+                if event.key == pygame.K_RETURN:
+                    print(self.text)
+                    self.text = ''
                 if event.key == pygame.K_BACKSPACE:
                     self.text = self.text[:-1]
                 else:
@@ -190,3 +192,41 @@ class InputBox:
     def draw(self, screen):
         screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))
         pygame.draw.rect(screen, self.color, self.rect, 2)
+
+
+class Card:
+    def __init__(self, screen, card_id, x, y):
+        self.screen = screen
+        self.x = x
+        self.y = y
+        self.card_id = card_id
+        if card_id == 1:
+            self.image = pygame.image.load('get_2_ct_special_card.png')
+        if card_id == 2:
+            self.image = pygame.image.load('del_piece_special_card.png')
+        if card_id == 3:
+            self.image = pygame.image.load('del_burned_earth_special_card.png')
+        if card_id == 4:
+            self.image = pygame.image.load('replace_2_ct_special_card.png')
+        if card_id == 5:
+            self.image = pygame.image.load('harbor_special_card.png')
+        if card_id == 6:
+            self.image = pygame.image.load('battlefield_special_card.png')
+        if card_id == 7:
+            self.image = pygame.image.load('1_points_special_card.png')
+        if card_id == 8:
+            self.image = pygame.image.load('get_2_ct_to_1_prov_special_card.png')
+        if card_id == 9:
+            self.image = pygame.image.load('2_points_special_card.png')
+        if card_id == 10:
+            self.image = pygame.image.load('del_2_special_tokens_special_card.png')
+        if card_id == 11:
+            self.image = pygame.image.load('del_2_bt_special_card.png')
+
+        self.rect = self.image.get_rect()
+        self.screen_rect = screen.get_rect()
+        self.rect = pygame.Rect(x, y, 70, 200)
+
+    def output(self):
+        self.image = pygame.transform.scale(self.image, (70, 200))
+        self.screen.blit(self.image, self.rect)
