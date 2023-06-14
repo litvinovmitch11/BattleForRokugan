@@ -163,7 +163,7 @@ class FacadeService(pb2_grpc.FacadeServicer):
         return pb2.Round(**result)
 
     def GetAllSpecialToken(self, request, context):
-        list_tokens = pb2.ListBattleTokens(
+        list_tokens = pb2.ListSpecialTokens(
             token=[
                 pb2.SpecialToken(token=token[1].value,
                                  province_id=tokens[0])
