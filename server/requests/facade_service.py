@@ -170,3 +170,12 @@ class FacadeService(pb2_grpc.FacadeServicer):
                 for tokens in self.games[request.game_id].get_all_special_tokens()]
         )
         return list_tokens
+
+    def GetScore(self, request, context):
+        list_points = pb2.FinalScore(
+            points=[
+                pb2.Points(player_id=item[0],
+                           score=item[1])
+                for item in self.games[request.game_id].get_score()]
+        )
+        return list_points

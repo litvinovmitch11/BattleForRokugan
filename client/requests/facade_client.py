@@ -85,4 +85,7 @@ class Client:
         return self.game_stub.GetPhase(facade_pb2.Empty(game_id=game_id))
 
     def get_all_special_tokens(self, game_id):
-        return self.game_stub.GetAllSpecialToken(facade_pb2.Player(game_id=game_id))
+        return self.game_stub.GetAllSpecialToken(facade_pb2.Empty(game_id=game_id))
+
+    def get_score(self, game_id):
+        return self.game_stub.GetScore(facade_pb2.Empty(game_id=game_id))

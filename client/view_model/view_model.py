@@ -53,6 +53,9 @@ class ViewModelSystem(ViewModel):
     def get_winner(self):
         return self.client.get_winner(game_id=self.game_id).player
 
+    def get_score(self):
+        return self.client.get_score(game_id=self.game_id).points
+
 
 class ViewModelHand(ViewModel):
     def __init__(self, game_id, player_id, client_object: Client):

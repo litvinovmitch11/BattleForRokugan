@@ -26,6 +26,7 @@ service Facade{
   rpc UnusedCard(Player) returns (Key){}
   rpc PutBattleToken(Attack) returns (Key){}
   rpc PutControlToken(Put) returns (Key){}
+  rpc GetScore(Empty) returns (FinalScore){}
 }
 
 message SuperEmpty {}
@@ -188,4 +189,15 @@ message Put {
   int32 game_id = 1;
   int32 player_id = 2;
   int32 province_id = 3;
+}
+
+message Points {
+  int32 game_id = 1;
+  int32 player_id = 2;
+  int32 score = 3;
+}
+
+message FinalScore {
+  int32 game_id = 1;
+  repeated Points points = 2;
 }
