@@ -15,7 +15,7 @@ class Menu:
         self.client = client_object
         self.client_id = -1
         self.user_name = None
-        self.user_name_val = "Smorchok"
+        self.user_name_val = "Juk"
         self.lobby_id = None
         self.lobby_id_val = -1
 
@@ -65,7 +65,7 @@ class Menu:
             self.create_error_window()
 
     def create_menu(self):
-        self.user_name = self.menu.add.text_input('Name: ', default='Smorchok', maxchar=10)
+        self.user_name = self.menu.add.text_input('Name: ', default='Juk', maxchar=10)
         self.menu.add.button('Create lobby', self.create_lobby_and_start)
         self.lobby_id = self.menu.add.text_input('Lobby ID: ', default='0', maxchar=10)
         self.menu.add.button('Connect', self.set_lobby_id_and_start)

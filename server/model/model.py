@@ -49,17 +49,17 @@ class ControlToken:
 
 class Player:
     def __init__(self, values: (int, str, str, str)):
-        self.caste = Caste.none  # class Caste
+        self.caste = Caste.none
         self.battle_tokens = []  # list BattleTokens
         self.control_tokens = []  # list ControlTokens
         self.active = []  # list BattleTokens
-        self.player_id = values[0]  # int
-        self.name = values[1]  # str
-        self.login = values[2]  # str
-        self.password = values[3]  # str
+        self.player_id = values[0]
+        self.name = values[1]
+        self.login = values[2]
+        self.password = values[3]
 
-        self.cards = dict()  # int: id card -> class Card
-        self.ready_to_play = False  # bool
+        self.cards = dict()  # id -> class Card
+        self.ready_to_play = False
 
     def set_caste(self, my_caste: Caste) -> bool:
         if self.caste is not Caste.none:
@@ -148,7 +148,7 @@ class Player:
 class GameState:
 
     def __init__(self):
-        self.id_move = 0  # 1st player start all time?
+        self.id_move = 0
         self.move_queue = []  # player_ids
         self.round = -1  # -1 -> adding_players, 0 -> putting control_tokens/choose caste,  1-5 -> round of game
         self.move_to_next_round = 0
@@ -175,7 +175,6 @@ class GameState:
 
     def next_round(self):
         self.round += 1
-        # if round == 6 cringe
         self.phase = 1
         self.id_move = random.randint(0, len(self.move_queue) - 1)
         self.move_to_next_round = len(self.move_queue)
@@ -189,7 +188,7 @@ class Province:
 
     def __init__(self, ind: int):
         self.capital = False
-        self.mainland = False  # материковая. False - если прибрежная
+        self.mainland = False
         self.shadow = False
         self.caste = Caste.none
         self.owning_caste = Caste.none
@@ -272,7 +271,6 @@ class Province:
                 token.in_reset = True
 
     def get_winner(self) -> Caste:
-        # suppose all tokens.py are correct. NO, smth can be token.on_board == (-1, -1)
         points = dict()
         for caste in Caste:
             points[caste] = 0
@@ -367,7 +365,7 @@ class Board:
                 prov.card_id_inside = card.ind
         independent_region = {0: CardProsperity(), 3: CardThePowerOfTerror(), 4: CardKillingTheWeak(),
                               9: CardRichHarvest()}
-        for prov_id in [0, 3, 4, 9]:  # add cards
+        for prov_id in [0, 3, 4, 9]:
             card = independent_region[prov_id]
             self.all_card[card.ind] = card
             self.all_provinces[prov_id].card_id_inside = card.ind
@@ -466,7 +464,6 @@ class Board:
             self.make_all_battle_tokens_on_board_visible()
             for id_player in self.players:
                 self.players[id_player].ready_to_play = False
-                # !!! do execution phase. IMPORTANT !!!
         return True
 
     def put_on_board_control_token(self, player_id: int, province_id: int) -> bool:  # only when round = 0 (preparation)
@@ -484,14 +481,12 @@ class Board:
         my_control_token.province_id = province_id
         self.state.make_move()
         if self.state.move_to_next_round == 0 and self.state.round == 0:
-            # use card instead random in future
             self.state.id_move = random.randrange(len(self.state.move_queue))
             self.state.phase = 1
             self.state.round = 1
             self.state.move_to_next_round = len(self.state.move_queue)
             for player in self.players.values():
                 player.make_active()
-            # try to use card
         return True
 
     def set_control_token_to_capital(self, my_caste: Caste, my_control_token: ControlToken):
@@ -628,7 +623,7 @@ class Board:
             self.state.move_to_next_round = len(self.state.move_queue) * 5
         return True
 
-    def count_score(self) -> list[(int, int)]:  # player_id, here score
+    def count_score(self) -> list[(int, int)]:  # player_id, his score
         if self.state.round != 6:
             return []
         points = dict()
@@ -673,7 +668,7 @@ class Card:
 
     def __init__(self, card_id=-1):
         self.ind = card_id
-        self.owner = -1  # player_id
+        self.owner = -1
         self.caste = Caste.none
         self.data = []
         self.used = False

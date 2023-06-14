@@ -10,8 +10,8 @@ from tokens import ControlToken, BattleToken, SpecialToken
 def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh: ViewModelHand, vmb: ViewModelBoard):
     pygame.init()
 
-    win_width = 1540  # Ширина создаваемого окна
-    win_height = 900  # Высота (пока ровно под карту, потом буду менять)
+    win_width = 1540
+    win_height = 900
     display = (win_width, win_height)
 
     screen = pygame.display.set_mode(display, HWSURFACE | DOUBLEBUF | RESIZABLE)
@@ -199,7 +199,5 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
 
         pygame.display.flip()
 
-        pygame.display.update()  # обновление и вывод всех изменений на экран
+        pygame.display.update()
         clock.tick(1)
-
-# run()
