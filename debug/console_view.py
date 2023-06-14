@@ -108,7 +108,11 @@ class ConsoleDraw:
         elif command == '-PCT':
             print(f"Possible position control token:")
             print(self.vmb.possible_position_control_token)
-            province_id = int(input("Enter province id:\n"))
+            province_id = input("Enter province id:\n")
+            if not province_id.isdigit():
+                print("Invalid input!\n")
+                return
+            province_id = int(province_id)
             print(f"Correct? - {self.vmh.put_control_token(province_id)}\n")
         elif command == '-PBT':
             print("Possible battle tokens:")
@@ -122,7 +126,11 @@ class ConsoleDraw:
                       f"On board from: {token.on_board_first}, "
                       f"On board to: {token.on_board_second}, "
                       f"Visible: {token.visible}")
-            token_id = int(input("Enter token id:\n"))
+            token_id = input("Enter token id:\n")
+            if not token_id.isdigit():
+                print("Invalid input!\n")
+                return
+            token_id = int(token_id)
             print("Possible position battle token:")
             print('   ', end='')
             for i in range(31):
@@ -133,11 +141,19 @@ class ConsoleDraw:
                 for num2, item in enumerate(line.cell):
                     print(item, end='  ')
                 print()
-            province_id_from = int(input("Enter province id from:\n"))
-            province_id_to = int(input("Enter province id to:\n"))
+            province_id_from = input("Enter province id from:\n")
+            province_id_to = input("Enter province id to:\n")
+            if not province_id_to.isdigit() or not province_id_from.isdigit():
+                print("Invalid input!\n")
+                return
+            province_id_to, province_id_from = int(province_id_to), int(province_id_from)
             print(f"Correct? - {self.vmh.put_battle_token(token_id, province_id_from, province_id_to)}\n")
         elif command == '-GSR':
-            some_one_id = int(input("Enter someone id:\n"))
+            some_one_id = input("Enter someone id:\n")
+            if not some_one_id.isdigit():
+                print("Invalid input!\n")
+                return
+            some_one_id = int(some_one_id)
             print(f"{some_one_id} reset:")
             for token in self.vmh.get_someone_reset(some_one_id):
                 print(f"Token_id: {token.id}, "
@@ -177,7 +193,11 @@ class ConsoleDraw:
                       f"Province id: {token.province_id}")
             print()
         elif command == '-UC':
-            card_id = int(input("Enter card_id:\n"))
+            card_id = input("Enter card_id:\n")
+            if not card_id.isdigit():
+                print("Invalid input!\n")
+                return
+            card_id = int(card_id)
             card_data = list(map(int, input("Enter card data:\n").split()))
             print(f"Correct? - {self.vmh.use_card(card_id, card_data)}\n")
         elif command == '-UNC':
