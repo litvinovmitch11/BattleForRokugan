@@ -6,7 +6,7 @@ pygame.init()
 class Map:
     def __init__(self, screen):
         self.screen = screen
-        self.image = pygame.image.load('../resources/MAP31.jpg')
+        self.image = pygame.image.load('../client/resources/MAP31.jpg')
         self.image = pygame.transform.rotate(self.image, 90)
         self.rect = self.image.get_rect()
         self.screen_rect = screen.get_rect()
@@ -22,60 +22,11 @@ class PlayersAbility:
     def __init__(self, screen, caste):
         self.screen = screen
         self.caste = caste
-        self.image = pygame.image.load(f'../resources/{caste}_shirm.png')
+        self.image = pygame.image.load(f'../client/resources/{caste}_shirm.png')
         self.rect = pygame.Rect(1000, 700, 200, 200)
 
     def output(self):
         self.screen.blit(self.image, self.rect)
-
-
-'''class Button:
-    def __init__(self, surface, color, x, y, length, height, width, text, text_color):
-        self.surface = surface
-        self.color = color
-        self.x = x
-        self.y = y
-        self.length = length
-        self.height = height
-        self.width = width
-        self.text = text
-        self.text_color = text_color
-    def create_button(self):
-        surface = self.draw_button(self.surface, self.color, self.length, self.height, self.x, self.y, self.width)
-        surface = self.write_text(surface, self.text, self.text_color, self.length, self.height, self.x, self.y)
-        self.rect = pygame.Rect(self.x, self.y, self.length, self.height)
-        return surface
-
-    def write_text(self, surface, text, text_color, length, height, x, y):
-        font_size = int(length // len(text))
-        myFont = pygame.font.SysFont("Calibri", font_size)
-        myText = myFont.render(text, True, text_color)
-        surface.blit(myText, ((x + length / 2) - myText.get_width() / 2, (y + height / 2) - myText.get_height() / 2))
-        return surface
-
-    def draw_button(self, surface, color, length, height, x, y, width):
-        for i in range(1, 10):
-            s = pygame.Surface((length + (i * 2), height + (i * 2)))
-            s.fill(color)
-            alpha = (255 / (i + 2))
-            if alpha <= 0:
-                alpha = 1
-            s.set_alpha(alpha)
-            pygame.draw.rect(s, color, (x - i, y - i, length + i, height + i), width)
-            surface.blit(s, (x - i, y - i))
-        pygame.draw.rect(surface, color, (x, y, length, height), 0)
-        pygame.draw.rect(surface, (190, 190, 190), (x, y, length, height), 1)
-        return surface
-
-    def pressed(self, mouse):
-        if mouse[0] > self.rect.topleft[0]:
-            if mouse[1] > self.rect.topleft[1]:
-                if mouse[0] < self.rect.bottomright[0]:
-                    if mouse[1] < self.rect.bottomright[1]:
-                        print("Some button was pressed!")
-                        return True
-        return False
-'''
 
 
 class Button:
@@ -89,7 +40,7 @@ class Button:
         self.message = None
         self.clicked = False
 
-    def draw(self, x, y, action=None):
+    def draw(self, x, y):
         def print_text():
             f1 = pygame.font.Font(None, 36)
             color = (0, 77, 255)
@@ -201,27 +152,27 @@ class Card:
         self.y = y
         self.card_id = card_id
         if card_id == 1:
-            self.image = pygame.image.load('../resources/get_2_ct_special_card.png')
+            self.image = pygame.image.load('../client/resources/get_2_ct_special_card.png')
         if card_id == 2:
-            self.image = pygame.image.load('../resources/del_piece_special_card.png')
+            self.image = pygame.image.load('../client/resources/del_piece_special_card.png')
         if card_id == 3:
-            self.image = pygame.image.load('../resources/del_burned_earth_special_card.png')
+            self.image = pygame.image.load('../client/resources/del_burned_earth_special_card.png')
         if card_id == 4:
-            self.image = pygame.image.load('../resources/replace_2_ct_special_card.png')
+            self.image = pygame.image.load('../client/resources/replace_2_ct_special_card.png')
         if card_id == 5:
-            self.image = pygame.image.load('../resources/harbor_special_card.png')
+            self.image = pygame.image.load('../client/resources/harbor_special_card.png')
         if card_id == 6:
             self.image = pygame.image.load('../resources/battlefield_special_card.png')
         if card_id == 7:
-            self.image = pygame.image.load('../resources/1_points_special_card.png')
+            self.image = pygame.image.load('../client/resources/1_points_special_card.png')
         if card_id == 8:
-            self.image = pygame.image.load('../resources/get_2_ct_to_1_prov_special_card.png')
+            self.image = pygame.image.load('../client/resources/get_2_ct_to_1_prov_special_card.png')
         if card_id == 9:
-            self.image = pygame.image.load('../resources/2_points_special_card.png')
+            self.image = pygame.image.load('../client/resources/2_points_special_card.png')
         if card_id == 10:
-            self.image = pygame.image.load('../resources/del_2_special_tokens_special_card.png')
+            self.image = pygame.image.load('../client/resources/del_2_special_tokens_special_card.png')
         if card_id == 11:
-            self.image = pygame.image.load('../resources/del_2_bt_special_card.png')
+            self.image = pygame.image.load('../client/resources/del_2_bt_special_card.png')
 
         self.rect = self.image.get_rect()
         self.screen_rect = screen.get_rect()

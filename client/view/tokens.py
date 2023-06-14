@@ -111,9 +111,9 @@ class BattleToken:
         self.typee = typee
         self.power = power
         if visible == "open":
-            self.image = pygame.image.load(f'../resources/{caste}_{typee}_{power}.png')
+            self.image = pygame.image.load(f'../client/resources/{caste}_{typee}_{power}.png')
         else:
-            self.image = pygame.image.load(f'../resources/{caste}_bt_close.png')
+            self.image = pygame.image.load(f'../client/resources/{caste}_bt_close.png')
         self.screen = screen
         self.rect = pygame.Rect((pos[prov_from][prov_to])[0], (pos[prov_from][prov_to])[1], self.Token_Width,
                                 self.Token_Height)
@@ -131,7 +131,7 @@ class ControlToken:
         self.Token_Height = 16
         self.caste = caste
         self.status = visible
-        self.image = pygame.image.load(f'../resources/{caste}_{visible}1.png')
+        self.image = pygame.image.load(f'../client/resources/{caste}_{visible}1.png')
         self.screen = screen
         self.rect = pygame.Rect((pos[province][province])[0], (pos[province][province])[1], self.Token_Width,
                                 self.Token_Height)
@@ -146,7 +146,7 @@ class SpecialToken:
         self.screen = screen
         self.type = typee
         self.province = province
-        self.image = pygame.image.load(f'../resources/{typee}.png')
+        self.image = pygame.image.load(f'../client/resources/{typee}.png')
         self.rect = pygame.Rect((pos[province][province])[0], (pos[province][province])[1], 30, 30)
         self.screen_rect = screen.get_rect()
 
