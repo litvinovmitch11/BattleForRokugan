@@ -201,32 +201,32 @@ class Card:
         self.y = y
         self.card_id = card_id
         if card_id == 1:
-            self.image = pygame.image.load('get_2_ct_special_card.png')
+            self.image = pygame.image.load('../resources/get_2_ct_special_card.png')
         if card_id == 2:
-            self.image = pygame.image.load('del_piece_special_card.png')
+            self.image = pygame.image.load('../resources/del_piece_special_card.png')
         if card_id == 3:
-            self.image = pygame.image.load('del_burned_earth_special_card.png')
+            self.image = pygame.image.load('../resources/del_burned_earth_special_card.png')
         if card_id == 4:
-            self.image = pygame.image.load('replace_2_ct_special_card.png')
+            self.image = pygame.image.load('../resources/replace_2_ct_special_card.png')
         if card_id == 5:
-            self.image = pygame.image.load('harbor_special_card.png')
+            self.image = pygame.image.load('../resources/harbor_special_card.png')
         if card_id == 6:
-            self.image = pygame.image.load('battlefield_special_card.png')
+            self.image = pygame.image.load('../resources/battlefield_special_card.png')
         if card_id == 7:
-            self.image = pygame.image.load('1_points_special_card.png')
+            self.image = pygame.image.load('../resources/1_points_special_card.png')
         if card_id == 8:
-            self.image = pygame.image.load('get_2_ct_to_1_prov_special_card.png')
+            self.image = pygame.image.load('../resources/get_2_ct_to_1_prov_special_card.png')
         if card_id == 9:
-            self.image = pygame.image.load('2_points_special_card.png')
+            self.image = pygame.image.load('../resources/2_points_special_card.png')
         if card_id == 10:
-            self.image = pygame.image.load('del_2_special_tokens_special_card.png')
+            self.image = pygame.image.load('../resources/del_2_special_tokens_special_card.png')
         if card_id == 11:
-            self.image = pygame.image.load('del_2_bt_special_card.png')
+            self.image = pygame.image.load('../resources/del_2_bt_special_card.png')
 
         self.rect = self.image.get_rect()
         self.screen_rect = screen.get_rect()
-        self.rect = pygame.Rect(x, y, 70, 200)
+        self.rect = pygame.Rect(x, y, 100, 200)
 
     def output(self):
-        self.image = pygame.transform.scale(self.image, (70, 200))
+        self.image = pygame.transform.scale(self.image, (100, 200))
         self.screen.blit(self.image, self.rect)
