@@ -1,4 +1,6 @@
 import random
+import copy
+
 
 from all_include import *
 from generate_pwd import upd_result
@@ -331,7 +333,7 @@ class Board:
         self.state = GameState()
 
         self.all_provinces = []
-        self.can_put_army_token = have_land_way
+        self.can_put_army_token = copy.deepcopy(have_land_way)
 
         self.control_tokens = dict()  # id -> Class ControlToken
         self.battle_tokens = dict()  # id -> Class BattleToken
@@ -419,7 +421,7 @@ class Board:
     def get_all_provinces_without_control_token(self) -> list[int]:
         ans = []
         for province in self.all_provinces:
-            if province.owning_caste is None:
+            if province.owning_caste is None and province.ind != 30:
                 ans.append(province.ind)
         return ans
 
@@ -458,7 +460,7 @@ class Board:
         self.state.make_move()
         if self.state.move_to_next_round == 0:
             self.state.phase = 3
-            self.can_put_army_token = have_land_way
+            self.can_put_army_token = copy.deepcopy(have_land_way)
             self.make_all_battle_tokens_on_board_visible()
             for id_player in self.players:
                 self.players[id_player].ready_to_play = False
@@ -562,7 +564,7 @@ class Board:
             for id_player in self.players:
                 my_player = self.players[id_player]
                 upd_result(my_player.login, my_player.password, id_player in self.get_game_winner())
-        self.can_put_army_token = have_land_way
+        self.can_put_army_token = copy.deepcopy(have_land_way)
         for player in self.players.values():
             player.make_active()
 

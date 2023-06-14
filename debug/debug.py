@@ -27,7 +27,6 @@ if __name__ == "__main__":
     # print(facade.round_count(), facade.board.state.phase)
 
     for q in range(5):
-
         cas = dict()
         for id_player in players:
             cas[facade.board.players[id_player].caste] = []
