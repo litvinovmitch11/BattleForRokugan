@@ -12,7 +12,7 @@ if __name__ == "__main__":
     facade = GameFacade()
     for i in range(2):
         ind = facade.get_unique_id()
-        facade.add_player(ind, "KAm" + str(ind), "JOVNO", "piska")
+        facade.add_player(ind, "KAm" + str(ind), "login", "password")
     p = facade.get_players()
     players = []
     for player in p:
