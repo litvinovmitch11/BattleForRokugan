@@ -105,7 +105,10 @@ class ConsoleDraw:
             print(f"Correct? - {self.vms.set_caste(caste)}\n")
         elif command == '-GW':
             print(f"Winners ids: {self.vms.get_winner()}")
-            print(f"Score: {self.vms.get_score()}\n")
+            print(f"Score:")
+            for score in self.vms.get_score():
+                print(f"Player_id: {score.player_id}, Score: {score.score}")
+            print()
         elif command == '-PCT':
             print(f"Possible position control token:")
             print(self.vmb.possible_position_control_token)
