@@ -30,6 +30,8 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
     ReadyButton = Button(screen, 'ReadyButton', 150, 40)
     ReadyButtons = [ReadyButton]
 
+    unuse_card_button = Button(screen, 'UnuseCard', 100, 40)
+
     input_box1 = InputBox(1300, 400, 70, 32)
     input_box2 = InputBox(1300, 460, 70, 32)
     input_box3 = InputBox(1300, 520, 70, 32)
@@ -79,12 +81,10 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
 
         if caste_chose_flag:
             PlayersAbility(screen, my_caste).output()
-        if vms.round == -1:
-            if len(ReadyButtons) > 0:
-                ReadyButton.draw(100, 700)
-                if ReadyButton.clicked:
-                    ReadyButtons = []
-                    vms.swap_player_readiness_value()
+        if vms.round == -1 or len(vmh.active) == 1:
+            ReadyButton.draw(100, 700)
+            if ReadyButton.clicked:
+                vms.swap_player_readiness_value()
         if vms.round == 0:
             if not caste_chose_flag:
                 num_of_but = 0
@@ -121,19 +121,12 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
                 i += 1
 
         if 0 < vms.round < 6:
-            i, j = 0, 0
-            for pl in vms.players:
-                for token in vmh.get_someone_reset(pl.player_id):
-                    BattleToken(screen, token.caste, "open", token.type, token.power, 1100 + i * 40, 70 + j * 40)
-                    i += 1
-                    if i == 12:
-                        i = 0
-                        j += 1
             for ct in vmb.control_tokens:
-                visibility = "close"
-                if ct.visible:
-                    visibility = "open"
-                ControlToken(screen, ct.caste, visibility, ct.province_id).output()
+                if ct.province_id != -1:
+                    visibility = "close"
+                    if ct.visible:
+                        visibility = "open"
+                    ControlToken(screen, ct.caste, visibility, ct.province_id).output()
             i = 0
             for bt in vmh.active:
                 print("bt from active", bt.caste, bt.visible, bt.power, 31, i)
@@ -155,16 +148,19 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
                     Card(screen, card.card_id, 10 + i * 70, 680).output()
                     i += 1
             if vms.whose_move == client_id:
+                unuse_card_button.draw(140, 500)
                 for box in input_boxes:
                     box.draw(screen)
                 for box in input_boxes:
                     box.update()
                 ApplyButton.draw(1300, 570)
-                ApplyButton2.draw(600, 150)
-
+                ApplyButton2.draw(20, 500)
+                if unuse_card_button.clicked:
+                    vmh.unused_card()
+                    unuse_card_button.clicked = 0
                 if ApplyButton.clicked:  # вывод токена по заданным параметрам в трех текстовиках после нажания Apply
                     if input_box1.text.isdigit():
-                        if -1 < int(input_box1.text) < 6:
+                        if -1 < int(input_box1.text) < len(vmh.active):
                             if input_box2.text.isdigit():
                                 if -1 < int(input_box2.text) < 31:
                                     if input_box3.text.isdigit():
@@ -173,14 +169,17 @@ def run_game(client_id, name, game_id, reg: Register, vms: ViewModelSystem, vmh:
                                             print(BT_to_place.id, int(input_box2.text), int(input_box3.text))
                                             print(vmh.put_battle_token(int(BT_to_place.id), int(input_box2.text),
                                                                        int(input_box3.text)))
+                                            ApplyButton.clicked = 0
+                #print(len(vmh.active))
 
                     # input_box1.text, input_box2.text, input_box3.text = '', '', ''
                 if ApplyButton2.clicked:  # использование карты
                     if input_box4.text.isdigit() and -1 < int(input_box4.text) < len(vmh.cards):
                         card_to_use = vmh.cards[int(input_box4.text)]
                         vmh.use_card(card_to_use.card_id, list(map(int, input_box5.text.split())))
-                    input_box4.text, input_box5.text = '', ''
-
+                        ApplyButton2.clicked = 0
+            else:
+                input_box1.text, input_box2.text, input_box3.text, input_box4.text, input_box5.text = '', '', '', '', ''
         if vms.round == 6:
             screen.fill((255, 255, 255))
             gameover = f2.render('Game Over', True, (0, 77, 255))
