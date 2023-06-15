@@ -44,7 +44,9 @@ class Button:
         def print_text():
             f1 = pygame.font.Font(None, 36)
             color = (0, 77, 255)
-            if self.button_type == 'ReadyButton':
+            if self.button_type == 'UnuseCard':
+                return f1.render('Unuse cards', True, color)
+            elif self.button_type == 'ReadyButton':
                 if self.clicked:
                     return f1.render('Ready', True, color)
                 return f1.render('Not ready', True, color)
